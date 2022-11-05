@@ -10,7 +10,7 @@ add_executable(Codierungstheorie
         "Codierungstheorie/Source Files/main.cpp"
         "Codierungstheorie/Header Files/Helper.h"
         "Codierungstheorie/Header Files/Codierungstheorie.h"
-        )
+        "Codierungstheorie/Source Files/ModularArithmetic.cpp" "Codierungstheorie/Header Files/ModularArithmetic.h")
 
 target_include_directories(Codierungstheorie PUBLIC Codierungstheorie/Header Files)
 
@@ -19,6 +19,6 @@ target_include_directories(Codierungstheorie PUBLIC Codierungstheorie/Header Fil
 add_executable(Testlab
     "Testlab/Source Files/Testlab.cpp"
     "Testlab/Header Files/doctest.h"
-    )
+        "Codierungstheorie/Source Files/ModularArithmetic.cpp" "Codierungstheorie/Header Files/ModularArithmetic.h")
 
 target_include_directories(Testlab PUBLIC Testlab/Header Files)
