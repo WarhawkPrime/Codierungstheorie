@@ -18,6 +18,7 @@ namespace MA {
         return gcd(b, rest);
     }
 
+                                    // 1 , 0                            0, 1
     exgcd_result exgcd(int a, int b, std::pair<int, int> xs, std::pair<int, int> ys) {
         auto rest = mmod(a, b);
         auto q = a / b;
