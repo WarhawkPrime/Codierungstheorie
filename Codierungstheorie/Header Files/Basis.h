@@ -16,7 +16,7 @@ public:
      * @param modulo
      * @return the modulo of the input number
      */
-    inline int modulo_group_mod(const int number, const int modulo)
+    static inline int modulo_group_mod(const int number, const int modulo)
     {
         const auto result = number % modulo;
         return result >= 0 ? result : result + modulo;
@@ -95,6 +95,8 @@ public:
     {
 
     }
+
+
 
 
 };
