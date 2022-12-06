@@ -3,6 +3,8 @@ project(Codierungstheorie)
 
 set(CMAKE_CXX_STANDARD 23)
 
+include(CTest)
+
 include_directories(Codierungstheorie)
 include_directories(Testlab)
 
@@ -28,3 +30,5 @@ add_executable(Testlab
         "Codierungstheorie/Header Files/EGF.h")
 
 target_include_directories(Testlab PUBLIC Testlab/Header Files)
+
+add_test(Testlab Testlab)
