@@ -174,4 +174,19 @@ TEST_SUITE("Polynom Tests" * doctest::description("optional")) {
 
         CHECK_EQ(result.to_vector_str(), "(0, 1, 2)");
     }
+
+    TEST_CASE("Polynom modolo integer fuzzy") {
+
+        for (int i = 1; i < 1000; ++i) {
+
+            auto a = Polynom(i);
+            auto b = Polynom(i + 1);
+
+            auto classToTest = (a + b) % 2;
+
+            for (const auto &item : classToTest.get_coefficients()) {
+                CHECK_LT(item, 2);
+            }
+        }
+    }
 }
