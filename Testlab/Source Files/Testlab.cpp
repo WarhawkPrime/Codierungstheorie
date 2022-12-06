@@ -19,8 +19,12 @@ int main(int argc, char **argv) {
 
     // defaults
     context.setOption("order-by", "name"); // sort the test cases by their name
+    context.setOption("reporters", "junit");
+    context.setOption("out", "report.xml");
+
     // Relevant for the fuzzy tests
-    // context.setOption("abort-after", 5); // stop test execution after 5 failed assertions
+    context.setOption("abort-after", 100);
+
     context.applyCommandLine(argc, argv);
 
     // overrides
