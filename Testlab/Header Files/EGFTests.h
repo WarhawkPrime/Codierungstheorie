@@ -25,8 +25,8 @@ TEST_SUITE("Control Tests of polynom operations in a EGF" *
     TEST_CASE("Division with remainder") {
         EGF aEGF(3, 2, Polynom({2, 1, 1})); // EGF(3^2) : 2 + x + x^2
 
-        Polynom r = Polynom({0});
-        Polynom s = Polynom({0});
+        Polynom r = Polynom(0);
+        Polynom s = Polynom(0);
         aEGF.modular_reduction(Polynom({1, 2, 0, 1, 2}), r, s);
 
         Polynom r_exp = Polynom({1, 1});
