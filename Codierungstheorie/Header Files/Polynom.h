@@ -6,6 +6,7 @@
 #define CODIERUNGSTHEORIE_POLYNOM_H
 
 #include "Basis.h"
+#include <bitset>
 #include <iostream>
 #include <math.h>
 #include <vector>
