@@ -51,8 +51,8 @@ TEST_SUITE("Polynom Tests" * doctest::description("optional")) {
         CHECK(vector_str == "(0, 1, 1)");
         CHECK_EQ(asInt, 6);
 
-        coeff = {1, 1};
-        classToTest = Polynom(coeff);
+        auto coeff2 = {1, 1};
+        classToTest = Polynom(coeff2);
 
         polynom_str = classToTest.to_polynom_str();
         vector_str = classToTest.to_vector_str();
@@ -62,8 +62,8 @@ TEST_SUITE("Polynom Tests" * doctest::description("optional")) {
         CHECK(vector_str == "(1, 1)");
         CHECK_EQ(asInt, 3);
 
-        coeff = {2, 2, 1};
-        classToTest = Polynom(coeff);
+        auto coeff3 = {2, 2, 1};
+        classToTest = Polynom(coeff3);
 
         polynom_str = classToTest.to_polynom_str();
         vector_str = classToTest.to_vector_str();

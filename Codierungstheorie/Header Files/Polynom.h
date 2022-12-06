@@ -148,7 +148,7 @@ class Polynom {
      * removes 0 from the back (highest exponents) until non-zero number is met
      */
     inline void trim() {
-        for (std::vector<int>::reverse_iterator rit = coefficients.rbegin();
+        for (auto rit = coefficients.rbegin();
              rit != coefficients.rend();) {
             if (*rit == 0) {
                 std::advance(rit, 1);
@@ -158,12 +158,12 @@ class Polynom {
         }
     }
 
+    // TODO fuzzy test
     inline int to_q_adic_number(int p, int e) {
         int result = this->get_coefficient(0);
-        int i = 0;
 
         for (int i = 1; i < this->get_coefficients().size(); i++) {
-            result += this->get_coefficient(i) * pow(p, i);
+            result += get_coefficient(i) * pow(p, i);
         }
 
         return result;
