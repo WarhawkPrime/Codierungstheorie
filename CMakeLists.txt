@@ -15,10 +15,21 @@ add_executable(Codierungstheorie
 target_include_directories(Codierungstheorie PUBLIC Codierungstheorie/Header Files)
 
 
-
 add_executable(Testlab
-    "Testlab/Source Files/Testlab.cpp"
-    "Testlab/Header Files/doctest.h"
+        "Testlab/Source Files/Testlab.cpp"
+        "Testlab/Header Files/doctest.h"
         "Codierungstheorie/Source Files/ModularArithmetic.cpp" "Codierungstheorie/Header Files/ModularArithmetic.h" "Codierungstheorie/Source Files/Basis.cpp" "Codierungstheorie/Header Files/Basis.h" "Codierungstheorie/Source Files/Polynom.cpp" "Codierungstheorie/Header Files/Polynom.h" "Codierungstheorie/Source Files/EGF.cpp" "Codierungstheorie/Header Files/EGF.h")
 
 target_include_directories(Testlab PUBLIC Testlab/Header Files)
+
+
+add_executable(PolynomTests
+        "Testlab/Source Files/PolynomTests.cpp"
+        "Testlab/Header Files/doctest.h"
+        "Codierungstheorie/Source Files/Polynom.cpp"
+        "Codierungstheorie/Header Files/Polynom.h"
+        )
+
+target_include_directories(PolynomTests PUBLIC Testlab/Header Files)
+
+# TODO: Executable for all test @Dennis

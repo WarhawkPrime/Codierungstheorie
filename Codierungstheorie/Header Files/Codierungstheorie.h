@@ -10,9 +10,6 @@
  * OUTPUT: Konstruktion einer Multiplikationstabelle für den Körper GF(2^e)
  * INPUT: das irreduzible Polynom
  */
-void table_construction()
-{
+void table_construction() {}
 
-}
-
-#endif //CODIERUNGSTHEORIE_CODIERUNGSTHEORIE_H
+#endif // CODIERUNGSTHEORIE_CODIERUNGSTHEORIE_H
