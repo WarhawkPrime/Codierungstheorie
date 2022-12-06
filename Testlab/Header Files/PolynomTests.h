@@ -1,9 +1,7 @@
 //
 // Created by Noah Ruben on 24.11.22.
 //
-#define DOCTEST_CONFIG_IMPLEMENT
-
-#include <Header Files/doctest.h>
+#include "doctest.h"
 
 #include "Header Files/Polynom.h"
 
@@ -162,7 +160,7 @@ TEST_SUITE("Polynom Tests" * doctest::description("optional")) {
 
         auto p3 = a * 0;
 
-        CHECK(p3.to_vector_str() == "()");
+        CHECK(p3.to_vector_str() == "(0)");
     }
     TEST_CASE("Polynom modolo integer") {
         Polynom a = Polynom({3, 1, 2});
@@ -174,24 +172,6 @@ TEST_SUITE("Polynom Tests" * doctest::description("optional")) {
 
         result = b % 3;
 
-        CHECK_EQ(result.to_vector_str(), "(1, 1)");
+        CHECK_EQ(result.to_vector_str(), "(0, 1, 2)");
     }
-}
-
-int main(int argc, char **argv) {
-    doctest::Context context;
-
-    // defaults
-    context.setOption("order-by", "name"); // sort the test cases by their name
-    context.applyCommandLine(argc, argv);
-
-    // overrides
-    context.setOption("no-breaks",
-                      true); // don't break in the debugger when assertions fail
-    context.setOption("no_skip", true);
-    int res = context.run(); // run
-
-    if (context.shouldExit()) // important - query flags (and --exit) rely on
-                              // the user doing this
-        return res;           // propagate the result of the tests
 }
