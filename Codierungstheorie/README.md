@@ -19,9 +19,8 @@ IFS=$'\n'   # file names looking at you @Dennis
 
 for FILE in $(git diff --cached --name-only | grep -E '.*\.(c|cpp|h|hpp)\b')
 do
-        escFN=\'${FILE}\'
-        clang-format -i \'${escFN}\'
+        clang-format -i $FILE --verbose
 done
-
-IFS="$OIFS" # Retun to normal bash behavior...
+echo "----------------------------"
+IFS="$OIFS"
 ```
