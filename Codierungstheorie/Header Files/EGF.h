@@ -44,9 +44,9 @@ class EGF {
 
     Polynom multiplicative_inverse(const Polynom &a);
 
-    void print_multiplication_table(Polynom::Format output_format = Polynom::number, bool to_file = false);
+    void print_multiplication_table(Polynom::Format output_format = Polynom::number, std::string file_name = "");
 
-    void print_addition_table(Polynom::Format output_format = Polynom::number, bool to_file = false) const;
+    void print_addition_table(Polynom::Format output_format = Polynom::number, std::string file_name = "") const;
 
     void print_elements(Polynom::Format output_format = Polynom::number) const;
 };

@@ -102,7 +102,7 @@ void EGF::modular_reduction(const Polynom &a, Polynom &r, Polynom &s) {
     }
 }
 
-void EGF::print_addition_table(Polynom::Format output_format, bool to_file) const {
+void EGF::print_addition_table(Polynom::Format output_format, std::string file_name) const {
     const char sep = ';';
     std::string result;
 
@@ -129,11 +129,11 @@ void EGF::print_addition_table(Polynom::Format output_format, bool to_file) cons
         result = result.substr(0, result.size() - 1);
         result += "\n";
     }
-    if (to_file) {
+    if (!file_name.empty()) {
         // Create and open a text file
         std::ofstream myfile;
 
-        myfile.open("example.txt");
+        myfile.open(file_name);
 
         // Write to the file
         myfile << result;

@@ -1,0 +1,138 @@
+[gd_scene load_steps=3 format=3 uid="uid://rg5cckkxqppt"]
+
+[ext_resource type="Script" path="res://Main.gd" id="1_l4553"]
+[ext_resource type="Texture2D" uid="uid://paax8paj02n1" path="res://icon.svg" id="2_x05n1"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Main" type="VBoxContainer" parent="." node_paths=PackedStringArray("fileDialog")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_l4553")
+fileDialog = NodePath("../FileDialog")
+
+[node name="HSeparator" type="HSeparator" parent="Main"]
+layout_mode = 2
+offset_right = 1152.0
+offset_bottom = 4.0
+
+[node name="Toolbar" type="HBoxContainer" parent="Main"]
+custom_minimum_size = Vector2i(0, 100)
+layout_mode = 2
+offset_top = 8.0
+offset_right = 1152.0
+offset_bottom = 138.0
+
+[node name="OpenFile" type="Button" parent="Main/Toolbar"]
+custom_minimum_size = Vector2i(100, 50)
+layout_mode = 2
+offset_top = 40.0
+offset_right = 100.0
+offset_bottom = 90.0
+size_flags_vertical = 4
+text = "Open file ..."
+
+[node name="Color" type="VBoxContainer" parent="Main/Toolbar"]
+layout_mode = 2
+offset_left = 104.0
+offset_right = 204.0
+offset_bottom = 130.0
+
+[node name="Label" type="Label" parent="Main/Toolbar/Color"]
+layout_mode = 2
+offset_left = 29.0
+offset_right = 71.0
+offset_bottom = 26.0
+size_flags_horizontal = 4
+text = "Color"
+horizontal_alignment = 1
+
+[node name="ColorPickerButton" type="ColorPickerButton" parent="Main/Toolbar/Color"]
+custom_minimum_size = Vector2i(100, 100)
+layout_mode = 2
+offset_top = 30.0
+offset_right = 100.0
+offset_bottom = 130.0
+icon = ExtResource("2_x05n1")
+expand_icon = true
+edit_alpha = false
+
+[node name="Scale" type="Label" parent="Main/Toolbar"]
+layout_mode = 2
+offset_left = 208.0
+offset_top = 52.0
+offset_right = 248.0
+offset_bottom = 78.0
+text = "Scale"
+
+[node name="HSlider" type="HSlider" parent="Main/Toolbar"]
+layout_mode = 2
+offset_left = 252.0
+offset_top = 57.0
+offset_right = 1120.0
+offset_bottom = 73.0
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 500.0
+value = 100.0
+allow_greater = true
+ticks_on_borders = true
+
+[node name="Value" type="Label" parent="Main/Toolbar"]
+layout_mode = 2
+offset_left = 1124.0
+offset_top = 52.0
+offset_right = 1152.0
+offset_bottom = 78.0
+text = "100"
+
+[node name="HSeparator2" type="HSeparator" parent="Main"]
+layout_mode = 2
+offset_top = 142.0
+offset_right = 1152.0
+offset_bottom = 146.0
+
+[node name="HSeparator3" type="HSeparator" parent="Main"]
+layout_mode = 2
+offset_top = 150.0
+offset_right = 1152.0
+offset_bottom = 154.0
+
+[node name="MatrixContainer" type="ColorRect" parent="Main"]
+layout_mode = 2
+offset_top = 158.0
+offset_right = 1152.0
+offset_bottom = 648.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color(1, 1, 1, 0)
+
+[node name="FileDialog" type="FileDialog" parent="."]
+title = "Open a File"
+size = Vector2i(325, 162)
+popup_window = true
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.csv")
+
+[connection signal="pressed" from="Main/Toolbar/OpenFile" to="Main" method="_on_open_file_pressed"]
+[connection signal="color_changed" from="Main/Toolbar/Color/ColorPickerButton" to="Main" method="_on_color_picker_button_color_changed"]
+[connection signal="popup_closed" from="Main/Toolbar/Color/ColorPickerButton" to="Main" method="_on_color_picker_button_popup_closed"]
+[connection signal="drag_ended" from="Main/Toolbar/HSlider" to="Main" method="_on_h_slider_drag_ended"]
+[connection signal="value_changed" from="Main/Toolbar/HSlider" to="Main" method="_on_h_slider_value_changed"]
+[connection signal="file_selected" from="FileDialog" to="Main" method="_on_file_dialog_file_selected"]

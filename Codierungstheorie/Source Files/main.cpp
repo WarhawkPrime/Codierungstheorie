@@ -13,9 +13,10 @@ int main(int argc, char **argv) {
 
     sep("EGF e=1");
 
-    EGF gf = EGF(2, 2, irreduciblePolynom);
-    gf.print_elements(Polynom::vector);
-    gf.print_addition_table(Polynom::number);
+    for (int i = 1; i < 9; ++i) {
+        EGF gf = EGF(2, i, irreduciblePolynom);
+        gf.print_addition_table(Polynom::number, "result_" + std::to_string(i) + ".csv");
+    }
 
     std::cout << std::endl;
 }
