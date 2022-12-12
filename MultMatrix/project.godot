@@ -8,6 +8,16 @@
 
 config_version=5
 
+_global_script_classes=[{
+"base": "ColorRect",
+"class": &"MatrixCell",
+"language": &"GDScript",
+"path": "res://MatrixCell.gd"
+}]
+_global_script_class_icons={
+"MatrixCell": ""
+}
+
 [application]
 
 config/name="MultMatrix"

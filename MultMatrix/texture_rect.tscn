@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3 uid="uid://qtdex8wkvq81"]
+
+[sub_resource type="Texture2D" id="Texture2D_xvfmw"]
+resource_local_to_scene = false
+resource_name = ""
+
+[sub_resource type="GDScript" id="GDScript_rqijf"]
+script/source = "extends TextureRect
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	var rid = self.texture.get_rid()
+	self.texture.draw_rect(rid, Rect2(Vector2(), Vector2(1000, 1000)), false)
+	queue_redraw()
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	pass
+"
+
+[node name="TextureRect" type="TextureRect"]
+offset_right = 40.0
+offset_bottom = 40.0
+texture = SubResource("Texture2D_xvfmw")
+script = SubResource("GDScript_rqijf")

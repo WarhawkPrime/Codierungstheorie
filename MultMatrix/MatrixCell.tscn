@@ -1,19 +1,20 @@
-[gd_scene load_steps=3 format=3 uid="uid://bqr6thqmf1sq0"]
+[gd_scene load_steps=3 format=3 uid="uid://cmgf4sclncl5g"]
 
-[ext_resource type="Script" path="res://MatrixRect.gd" id="1_m12f0"]
+[ext_resource type="Script" path="res://MatrixCell.gd" id="1_mjito"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_q44af"]
 outline_size = 1
 outline_color = Color(0, 0, 0, 1)
 
-[node name="ColorRect" type="ColorRect"]
+[node name="MatrixCell" type="ColorRect"]
 offset_right = 50.0
 offset_bottom = 50.0
-script = ExtResource("1_m12f0")
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1_mjito")
 
 [node name="Label" type="Label" parent="."]
 modulate = Color(0.117647, 0.831373, 0.0392157, 1)
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
