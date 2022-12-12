@@ -30,10 +30,10 @@ int Polynom::get_degree() const {
     return coefficients.size() - 1;
 }
 
-std::string Polynom::to_vector_str() {
+std::string Polynom::to_vector_str() const {
     return to_vector_str(0);
 }
-std::string Polynom::to_vector_str(const int _size) {
+std::string Polynom::to_vector_str(const int _size) const {
 
     std::string result = "(";
     int size;
@@ -56,18 +56,18 @@ std::string Polynom::to_vector_str(const int _size) {
     return result;
 }
 
-std::string Polynom::to_polynom_str() {
+std::string Polynom::to_polynom_str() const {
     int lenght = coefficients.size();
-    std::string result = std::to_string(coefficients[0]) + "+";
+    std::string result = std::to_string(coefficients[0]) + " + ";
     for (int i = 1; i < lenght; ++i) {
         result +=
-            std::to_string(coefficients[i]) + "x^" + std::to_string(i) + "+";
+            std::to_string(coefficients[i]) + "x^" + std::to_string(i) + " + ";
     }
-    result = result.substr(0, result.length() - 1);
+    result = result.substr(0, result.length() - 3);
     return result;
 }
 
-std::string Polynom::to_print_string(Polynom::Format format) {
+std::string Polynom::to_print_string(Polynom::Format format) const {
     switch (format) {
     case polynom:
         return to_polynom_str();
@@ -85,7 +85,7 @@ std::string Polynom::to_print_string(Polynom::Format format) {
  * ! This means all coefficients will be interpreted as 0 or 1 !
  * @return
  */
-int Polynom::as_int() {
+int Polynom::as_int() const {
     int result = 0;
     auto size = coefficients.size();
     for (int i = size - 1; i >= 0; --i) {
@@ -94,7 +94,7 @@ int Polynom::as_int() {
 
     return result;
 }
-std::string Polynom::to_print_string(Polynom::Format format, int _size) {
+std::string Polynom::to_print_string(Polynom::Format format, int _size) const {
     if (format == vector) {
         return to_vector_str(_size);
     } else {

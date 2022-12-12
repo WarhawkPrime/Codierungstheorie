@@ -39,15 +39,15 @@ class Polynom {
      */
     int get_degree() const;
 
-    std::string to_vector_str();
-    std::string to_vector_str(int _size);
+    std::string to_vector_str() const;
+    std::string to_vector_str(int _size) const;
 
-    std::string to_polynom_str();
+    std::string to_polynom_str() const;
 
-    std::string to_print_string(Polynom::Format depiction);
-    std::string to_print_string(Polynom::Format depiction, int _size);
+    std::string to_print_string(Polynom::Format depiction) const;
+    std::string to_print_string(Polynom::Format depiction, int _size) const;
 
-    int as_int();
+    int as_int() const;
 
     inline int get_coefficient(int index) const {
         return coefficients.size() > index ? coefficients.at(index) : 0;
