@@ -26,23 +26,37 @@ class EGF {
     const int e;
     const Polynom irreducible_polynom;
 
-    int order;
-
     [[nodiscard]] Polynom multiplication_with_polynomial_reduction(const Polynom &a, const Polynom &b) const;
 
   public:
-    EGF(const int p, const int e, const Polynom &irreducible_polynom) : p(p), e(e), order(pow(p, e)), irreducible_polynom(irreducible_polynom) {
+    const int order;
+    EGF(const int p, const int e, const Polynom &irreducible_polynom) : p(p), e(e), order(pow(p, e)),
+                                                                        irreducible_polynom(irreducible_polynom) {
     }
-    EGF(const int e, const Polynom &irreducible_polynom) : p(2), e(e), order(pow(p, e)), irreducible_polynom(irreducible_polynom) {
+
+    EGF(const int e, const Polynom &irreducible_polynom) : p(2), e(e), order(pow(p, e)),
+                                                           irreducible_polynom(irreducible_polynom) {
     }
 
     [[nodiscard]] Polynom modulo_addition(const Polynom &a, const Polynom &b) const;
 
     [[nodiscard]] Polynom modulo_multiplication(const Polynom &a, const Polynom &b) const;
 
+    Polynom multiplication(const Polynom &a, const Polynom &b) const;
+    Polynom addition(const Polynom &a, const Polynom &b) const;
+    /**
+     *
+     * @param a The polynomial to reduce
+     * @param r MOD
+     * @param s DIV
+     */
     void modular_reduction(const Polynom &a, Polynom &r, Polynom &s) const;
 
-    Polynom multiplicative_inverse(const Polynom &a);
+    Polynom multiplicative_inverse(const Polynom &a) const;
+
+    std::vector<Polynom> field_elements() const;
+
+    Polynom polynomial_reduction_bin(const Polynom &a, const Polynom &b) const;
 
     void print_multiplication_table(Polynom::Format output_format = Polynom::number, std::string file_name = "") const;
 
