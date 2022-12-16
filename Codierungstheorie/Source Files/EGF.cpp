@@ -129,9 +129,28 @@ Polynom EGF::multiplication_with_polynomial_reduction(const Polynom &a, const Po
     auto s = zero_polynom;
 
     auto temp = modulo_multiplication(a, b);
-
     modular_reduction(temp, r, s);
     return r;
+}
+
+Polynom EGF::polynomial_reduction_bin(const Polynom &a, const Polynom &b) const {
+    assert(p == 2);
+    int f = a.as_int();
+    int r = b.as_int();
+    int tem = f;
+    auto temp = Polynom(tem);
+
+    // TODO @Noah binäre reductio nwenn p == 2 ist
+    while (!(a.get_degree() < b.get_degree())) {
+        while (tem > r) {
+            r = r << 1;
+        }
+        r = r + 1;
+        tem = (f | r);
+        temp = Polynom(tem);
+    }
+
+    return temp;
 }
 
 void EGF::print_multiplication_table(Polynom::Format output_format, std::string file_name) const {

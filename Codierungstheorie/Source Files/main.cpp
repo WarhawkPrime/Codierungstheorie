@@ -61,18 +61,34 @@ void lax() {
     //    std::cout << "r " << r.to_print_string(Polynom::polynom) << std::endl;
     //    std::cout << "s " << s.to_print_string(Polynom::polynom) << std::endl;
 
-    for (const Polynom &item : ip_by_degree) {
-        std::cout << item.as_int() << ": " << item.to_polynom_str() << std::endl;
-    }
+    //    for (const Polynom &item : ip_by_degree) {
+    //        std::cout << item.as_int() << ": " << item.to_polynom_str() << std::endl;
+    //    }
+    //
+    //    std::cout << std::endl;
 
+    auto i_p = Polynom({1, 1, 1});
+
+    auto a = Polynom(2) * Polynom(3);
+    std::cout << "a " << a.to_print_string(Polynom::polynom) << std::endl;
+
+    auto s = Polynom(0);
+    auto r = Polynom(0);
+
+    auto egf = EGF(2, 2, i_p);
+
+    egf.modular_reduction(a, r, s);
+    std::cout << "r " << r.to_print_string(Polynom::polynom) << std::endl;
+    s = egf.polynomial_reduction_bin(a, i_p);
+    std::cout << "s " << s.to_print_string(Polynom::polynom) << std::endl;
     std::cout << std::endl;
 }
 
 int main(int argc, char **argv) {
 
-    //    lax();
+    lax();
 
-    task1();
+    //    task1();
 
     return 0;
 }

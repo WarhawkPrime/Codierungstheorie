@@ -49,6 +49,7 @@ class EGF {
     void print_addition_table(Polynom::Format output_format = Polynom::number, std::string file_name = "") const;
 
     void print_elements(Polynom::Format output_format = Polynom::number) const;
+    Polynom polynomial_reduction_bin(const Polynom &a, const Polynom &b) const;
 };
 
 #endif // CODIERUNGSTHEORIE_EGF_H

@@ -47,7 +47,7 @@ TEST_SUITE("Polynom Tests" * doctest::description("optional")) {
         auto vector_str = classToTest.to_vector_str();
         auto asInt = classToTest.as_int();
 
-        CHECK(polynom_str == "0+1x^1+1x^2");
+        CHECK(polynom_str == "0 + 1x^1 + 1x^2");
         CHECK(vector_str == "(0, 1, 1)");
         CHECK_EQ(asInt, 6);
 
@@ -58,7 +58,7 @@ TEST_SUITE("Polynom Tests" * doctest::description("optional")) {
         vector_str = classToTest.to_vector_str();
         asInt = classToTest.as_int();
 
-        CHECK(polynom_str == "1+1x^1");
+        CHECK(polynom_str == "1 + 1x^1");
         CHECK(vector_str == "(1, 1)");
         CHECK_EQ(asInt, 3);
 
@@ -68,7 +68,7 @@ TEST_SUITE("Polynom Tests" * doctest::description("optional")) {
         polynom_str = classToTest.to_polynom_str();
         vector_str = classToTest.to_vector_str();
 
-        CHECK(polynom_str == "2+2x^1+1x^2");
+        CHECK(polynom_str == "2 + 2x^1 + 1x^2");
         CHECK(vector_str == "(2, 2, 1)");
     }
 
@@ -80,7 +80,7 @@ TEST_SUITE("Polynom Tests" * doctest::description("optional")) {
         auto vector_str = classToTest.to_vector_str();
         auto asInt = classToTest.as_int();
 
-        CHECK(polynom_str == "0+1x^1+1x^2");
+        CHECK(polynom_str == "0 + 1x^1 + 1x^2");
         CHECK(vector_str == "(0, 1, 1)");
         CHECK_EQ(asInt, 6);
 
