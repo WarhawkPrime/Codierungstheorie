@@ -162,6 +162,7 @@ TEST_SUITE("Polynom Tests" * doctest::description("optional")) {
 
         CHECK(p3.to_vector_str() == "(0)");
     }
+
     TEST_CASE("Polynom modolo integer") {
         Polynom a = Polynom({3, 1, 2});
         Polynom b = Polynom({9, 4, 11});

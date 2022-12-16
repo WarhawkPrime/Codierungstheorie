@@ -134,23 +134,28 @@ Polynom EGF::multiplication_with_polynomial_reduction(const Polynom &a, const Po
 }
 
 Polynom EGF::polynomial_reduction_bin(const Polynom &a, const Polynom &b) const {
+    std::cout << a.to_vector_str() << std::endl
+              << b.to_vector_str() << std::endl;
+
     assert(p == 2);
-    int f = a.as_int();
-    int r = b.as_int();
-    int tem = f;
-    auto temp = Polynom(tem);
+    int lhs = a.as_int();
+    int rhs = b.as_int();
 
-    // TODO @Noah binäre reductio nwenn p == 2 ist
-    while (!(a.get_degree() < b.get_degree())) {
-        while (tem > r) {
-            r = r << 1;
-        }
-        r = r + 1;
-        tem = (f | r);
-        temp = Polynom(tem);
+    auto diff = a.get_degree() - b.get_degree();
+    auto shifted_rhs = rhs;
+    while (diff > 0) {
+        shifted_rhs = (rhs << (diff));
+        auto x = std::bitset<32>(shifted_rhs);
+        std::cout << x << std::endl;
+        diff = a.get_degree() - Polynom(shifted_rhs).get_degree();
     }
+    std::cout << std::bitset<32>(lhs) << std::endl
+              << std::bitset<32>(rhs) << std::endl;
+    auto result = (lhs ^= shifted_rhs);
+    std::cout << std::bitset<32>(result) << std::endl
+              << Polynom(result).as_int() << std::endl;
 
-    return temp;
+    return Polynom(0);
 }
 
 void EGF::print_multiplication_table(Polynom::Format output_format, std::string file_name) const {

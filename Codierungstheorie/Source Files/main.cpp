@@ -69,18 +69,24 @@ void lax() {
 
     auto i_p = Polynom({1, 1, 1});
 
-    auto a = Polynom(2) * Polynom(3);
+    auto a = Polynom(3) * Polynom(3);
+    a = a % 2;
     std::cout << "a " << a.to_print_string(Polynom::polynom) << std::endl;
+    sep("");
 
     auto s = Polynom(0);
     auto r = Polynom(0);
 
-    auto egf = EGF(2, 2, i_p);
+    auto egf = EGF(2, 3, Polynom({1, 0, 1, 1}));
 
-    egf.modular_reduction(a, r, s);
+    auto x = Polynom({0, 0, 1, 0, 1});
+    std::cout << x.to_polynom_str() << std::endl;
+    egf.modular_reduction(x, r, s);
     std::cout << "r " << r.to_print_string(Polynom::polynom) << std::endl;
-    s = egf.polynomial_reduction_bin(a, i_p);
     std::cout << "s " << s.to_print_string(Polynom::polynom) << std::endl;
+    sep("BIN");
+
+    s = egf.polynomial_reduction_bin(Polynom({1, 0, 1, 0, 0}), Polynom({1, 0, 1, 1}));
     std::cout << std::endl;
 }
 
