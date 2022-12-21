@@ -19,9 +19,10 @@ int main(int argc, char **argv) {
 
     // defaults
     context.setOption("order-by", "name"); // sort the test cases by their name
+#if (defined(CMAKE_BUILD_TYPE) && (CMAKE_BUILD_TYPE == Release))
     context.setOption("reporters", "junit");
     context.setOption("out", "report.xml");
-
+#endif
     // Relevant for the fuzzy tests
     context.setOption("abort-after", 100);
 

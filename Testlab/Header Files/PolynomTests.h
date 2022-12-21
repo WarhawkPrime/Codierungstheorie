@@ -23,6 +23,10 @@ TEST_SUITE("Polynom Tests" * doctest::description("optional")) {
 
         CHECK_EQ(classToTest.get_degree(), 0);
 
+        classToTest = Polynom({0, 0, 1, 0, 1});
+
+        CHECK_EQ(classToTest.get_degree(), 4);
+
         classToTest = Polynom(8);
 
         CHECK_EQ(classToTest.get_degree(), 3);
@@ -189,5 +193,19 @@ TEST_SUITE("Polynom Tests" * doctest::description("optional")) {
                 CHECK_LT(item, 2);
             }
         }
+    }
+    TEST_CASE("Polynom modolo polynom") {
+        // Setup
+        auto i_p = Polynom({1, 0, 1, 1});
+        auto s = Polynom(0);
+        auto r = Polynom(0);
+
+        auto egf = EGF(2, 3, i_p);
+
+        auto a = Polynom({0, 0, 1, 0, 1});
+        egf.modular_reduction(a, r, s);
+
+        auto result_bin = egf.polynomial_reduction_bin(a, i_p);
+        std::cout << std::endl;
     }
 }

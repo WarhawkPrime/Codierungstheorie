@@ -86,7 +86,7 @@ void lax() {
     std::cout << "s " << s.to_print_string(Polynom::polynom) << std::endl;
     sep("BIN");
 
-    s = egf.polynomial_reduction_bin(Polynom({1, 0, 1, 0, 0}), Polynom({1, 0, 1, 1}));
+    s = egf.polynomial_reduction_bin(x, Polynom({1, 0, 1, 1}));
     std::cout << std::endl;
 }
 

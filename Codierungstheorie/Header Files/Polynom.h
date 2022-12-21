@@ -21,9 +21,11 @@ class Polynom {
     std::vector<int> coefficients;
 
   public:
-    enum Format { number,
-                  vector,
-                  polynom };
+    enum Format {
+        number,
+        vector,
+        polynom
+    };
 
     explicit Polynom(std::vector<int> coefficients);
 
@@ -40,11 +42,13 @@ class Polynom {
     int get_degree() const;
 
     std::string to_vector_str() const;
+
     std::string to_vector_str(int _size) const;
 
     std::string to_polynom_str() const;
 
     std::string to_print_string(Polynom::Format depiction) const;
+
     std::string to_print_string(Polynom::Format depiction, int _size) const;
 
     int as_int() const;
@@ -122,10 +126,31 @@ class Polynom {
                    : true;
     }
 
-    // TODO @NOAH mit bit shift ? eher nicht
-    // TODO @NOAH fast mod mit bit schift als funktion.
+    /**
+     * This only works for GF(2)
+     * @param rhs_polynom
+     */
     Polynom operator%(Polynom const &rhs_polynom) const {
-        return Polynom(0);
+        int lhs = this->as_int();
+        int rhs = rhs_polynom.as_int();
+
+        auto diff = this->get_degree() - rhs_polynom.get_degree();
+        auto shifted_rhs = rhs;
+        while (diff >= 0) {
+            //        std::cout << "Diff: " << diff << std::endl;
+            // Shift till same degree
+            shifted_rhs = (rhs << (diff));
+            //        std::cout << std::bitset<32>(rhs) << std::endl;
+            //        std::cout << std::bitset<32>(shifted_rhs) << std::endl;
+            //        std::cout << std::bitset<32>(lhs) << std::endl;
+            // XOR with polynomial to reduce
+            lhs = (lhs ^= shifted_rhs);
+            //        std::cout << std::bitset<32>(lhs) << std::endl << std::endl;
+
+            // Recalculate degree diff
+            diff = Polynom(lhs).get_degree() - Polynom(rhs).get_degree();
+        }
+        return Polynom(lhs);
     }
 
     Polynom operator%(int const &rhs_integer) const {

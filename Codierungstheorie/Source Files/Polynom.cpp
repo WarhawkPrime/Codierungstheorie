@@ -13,11 +13,11 @@ Polynom::Polynom(std::vector<int> coefficients) {
 Polynom::Polynom(int coefficients_as_number) {
     auto size = ((sizeof coefficients_as_number) * 8);
 
-    auto temp_coefficients = std::vector<int>(size);
+    auto temp_coefficients = std::vector<int>(0);
 
     auto bs = std::bitset<32>(coefficients_as_number);
 
-    for (int i = size; i >= 0; --i) {
+    for (int i = size - 1; i >= 0; --i) {
         temp_coefficients.push_back(bs[i]);
     }
     std::reverse(temp_coefficients.begin(), temp_coefficients.end());

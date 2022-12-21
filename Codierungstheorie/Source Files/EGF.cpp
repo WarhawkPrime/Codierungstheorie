@@ -3,6 +3,7 @@
 //
 
 #include "Header Files/EGF.h"
+#include <cassert>
 
 /**
  *
@@ -134,28 +135,27 @@ Polynom EGF::multiplication_with_polynomial_reduction(const Polynom &a, const Po
 }
 
 Polynom EGF::polynomial_reduction_bin(const Polynom &a, const Polynom &b) const {
-    std::cout << a.to_vector_str() << std::endl
-              << b.to_vector_str() << std::endl;
-
     assert(p == 2);
     int lhs = a.as_int();
     int rhs = b.as_int();
 
     auto diff = a.get_degree() - b.get_degree();
     auto shifted_rhs = rhs;
-    while (diff > 0) {
+    while (diff >= 0) {
+        //        std::cout << "Diff: " << diff << std::endl;
+        // Shift till same degree
         shifted_rhs = (rhs << (diff));
-        auto x = std::bitset<32>(shifted_rhs);
-        std::cout << x << std::endl;
-        diff = a.get_degree() - Polynom(shifted_rhs).get_degree();
-    }
-    std::cout << std::bitset<32>(lhs) << std::endl
-              << std::bitset<32>(rhs) << std::endl;
-    auto result = (lhs ^= shifted_rhs);
-    std::cout << std::bitset<32>(result) << std::endl
-              << Polynom(result).as_int() << std::endl;
+        //        std::cout << std::bitset<32>(rhs) << std::endl;
+        //        std::cout << std::bitset<32>(shifted_rhs) << std::endl;
+        //        std::cout << std::bitset<32>(lhs) << std::endl;
+        // XOR with polynomial to reduce
+        lhs = (lhs ^= shifted_rhs);
+        //        std::cout << std::bitset<32>(lhs) << std::endl << std::endl;
 
-    return Polynom(0);
+        // Recalculate degree diff
+        diff = Polynom(lhs).get_degree() - Polynom(rhs).get_degree();
+    }
+    return Polynom(lhs);
 }
 
 void EGF::print_multiplication_table(Polynom::Format output_format, std::string file_name) const {
