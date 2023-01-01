@@ -10,6 +10,12 @@
 #endif // CODIERUNGSTHEORIE_MODULARPOLYNOMARITHMETIC_H
 namespace MPA {
 
+struct exgcd_result {
+    Polynom gcd;       // The gcd of a and b
+    Polynom inverse_a; // The inverse of a mod b
+    Polynom inverse_b; // The inverse of b mod a
+};
+
 /**
  * @param mod The polynomial to reduce with
  * @param a The polynomial to reduce
@@ -67,15 +73,18 @@ Polynom gcd(const Polynom &a, const Polynom &b, const int p = 2) {
     return gcd(b, r, p);
 }
 
-Polynom exgcd(const Polynom &a, const Polynom &b, const int p = 2) {
+exgcd_result exgcd(const Polynom &a, const Polynom &b, const int p = 2) {
     auto x_1 = Polynom::ONE;
     auto x_2 = Polynom::ZERO;
     auto y_1 = Polynom::ZERO;
     auto y_2 = Polynom::ONE;
 
+    auto temp_a = a;
+    auto temp_b = b;
+
     Polynom div = Polynom::ZERO, mod = Polynom::ZERO;
     do {
-        m_mod(a, b, mod, div, p);
+        m_mod(temp_a, temp_b, mod, div, p);
         //   x_i = x_{i-2}  - (x_{i-1}   * q_i)
         auto x = (x_1 + ((x_2 * div) * -1)) % p;
         auto y = (y_1 + ((y_2 * div) * -1)) % p;
@@ -87,9 +96,11 @@ Polynom exgcd(const Polynom &a, const Polynom &b, const int p = 2) {
         y_2 = y;
         x_1 = x_2;
         x_2 = x;
+        temp_a = temp_b;
+        temp_b = mod;
     } while (mod != Polynom::ZERO);
 
-    return Polynom::ZERO;
+    return {temp_b, x_2, y_2};
 }
 
 } // namespace MPA

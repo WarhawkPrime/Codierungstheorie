@@ -54,4 +54,16 @@ add_executable(Task_1
                "Codierungstheorie/Source Files/Task_1.cpp"
                )
 
-target_include_directories(Codierungstheorie PUBLIC Codierungstheorie/Header Files)
+target_include_directories(Task_1 PUBLIC Codierungstheorie/Header Files)
+
+## Task 2
+
+add_executable(Task_2
+               "Codierungstheorie/Source Files/Polynom.cpp"
+               "Codierungstheorie/Header Files/Polynom.h"
+               "Codierungstheorie/Source Files/EGF.cpp"
+               "Codierungstheorie/Header Files/EGF.h"
+               "Codierungstheorie/Source Files/Task_2.cpp"
+               )
+
+target_include_directories(Task_2 PUBLIC Codierungstheorie/Header Files)

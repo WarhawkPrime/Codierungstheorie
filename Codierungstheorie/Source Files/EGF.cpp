@@ -3,6 +3,7 @@
 //
 
 #include "Header Files/EGF.h"
+#include "Header Files/ModularPolynomArithmetic.h"
 #include <cassert>
 
 /**
@@ -120,6 +121,15 @@ void EGF::print_elements(Polynom::Format output_format) const {
 
     std::cout << std::endl;
 }
+std::vector<Polynom> EGF::field_elements() const {
+    std::vector<Polynom> elements = std::vector<Polynom>();
+    for (int i = 0; i < order; ++i) {
+        auto poly = Polynom(i);
+        elements.push_back(poly);
+    }
+
+    return elements;
+}
 
 Polynom EGF::multiplication_with_polynomial_reduction(const Polynom &a, const Polynom &b) const {
     auto zero_polynom = Polynom(0);
@@ -200,4 +210,8 @@ void EGF::print_multiplication_table(Polynom::Format output_format, std::string 
     } else {
         std::cout << result;
     }
+}
+Polynom EGF::multiplicative_inverse(const Polynom &a) const {
+    auto result = MPA::exgcd(a, irreducible_polynom, p);
+    return result.inverse_a;
 }

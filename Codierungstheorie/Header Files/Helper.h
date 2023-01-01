@@ -10,6 +10,21 @@
 #include <iterator>
 #include <vector>
 
+/**
+ * Irreducible polynom per degree soo script for more infos
+ */
+const Polynom ip_by_degree[10] = {
+    Polynom(7), // Kein explizites irreduzibles Polynom für diesen Grad angegeben
+    Polynom(7), // Kein explizites irreduzibles Polynom für diesen Grad angegeben
+    Polynom(7),
+    Polynom(13),
+    Polynom(25),
+    Polynom(49),
+    Polynom(97),
+    Polynom(241),
+    Polynom(289),
+    Polynom(577)};
+
 // 1. Use std::bitset<N>, defined in the <bitset> header, where N is the number
 // of bits (not bytes).
 // 2. Compute the Hamming distance between two binary codes a and b using (a ^
@@ -44,6 +59,10 @@ std::ostream &operator<<(std::ostream &os, std::vector<T> vec) {
     std::copy(vec.begin(), vec.end(), std::ostream_iterator<T>(os, " "));
     os << "}";
     return os;
+}
+
+inline const std::string toString(bool boolean) {
+    return boolean ? "true" : "false";
 }
 
 #endif // CODIERUNGSTHEORIE_HELPER_H

@@ -4,20 +4,6 @@
 #include "Header Files/EGF.h"
 #include "Header Files/Helper.h"
 #include "Header Files/Polynom.h"
-/**
- * Irreducible polynom per degree soo script for more infos
- */
-const Polynom ip_by_degree[10] = {
-    Polynom(7), // Kein explizites irreduzibles Polynom für diesen Grad angegeben
-    Polynom(7), // Kein explizites irreduzibles Polynom für diesen Grad angegeben
-    Polynom(7),
-    Polynom(13),
-    Polynom(25),
-    Polynom(49),
-    Polynom(97),
-    Polynom(241),
-    Polynom(289),
-    Polynom(577)};
 
 void multiplicationTables() {
     for (int i = 1; i < 9; ++i) {
