@@ -7,6 +7,7 @@
 
 #include "Basis.h"
 #include <bitset>
+#include <cassert>
 #include <iostream>
 #include <math.h>
 #include <vector>
@@ -26,6 +27,9 @@ class Polynom {
         vector,
         polynom
     };
+
+    static const Polynom ZERO;
+    static const Polynom ONE;
 
     explicit Polynom(std::vector<int> coefficients);
 
@@ -131,6 +135,7 @@ class Polynom {
      * @param rhs_polynom
      */
     Polynom operator%(Polynom const &rhs_polynom) const {
+        assert(rhs_polynom != Polynom(0));
         int lhs = this->as_int();
         int rhs = rhs_polynom.as_int();
 
@@ -153,7 +158,26 @@ class Polynom {
         return Polynom(lhs);
     }
 
+    /**
+     *
+     * @param rhs_polynom
+     * @return Polynom
+     *
+     */
+    Polynom operator/(Polynom const &rhs_polynom) const {
+        assert(rhs_polynom != Polynom(0));
+        auto q = 0;
+        auto r = *this;
+
+        while (r != Polynom(0) && r.get_degree() >= rhs_polynom.get_degree()) {
+            auto t = 0;
+        }
+
+        return Polynom(0);
+    }
+
     Polynom operator%(int const &rhs_integer) const {
+        assert(rhs_integer != 0);
         std::vector<int> result;
         for (const auto &item : this->get_coefficients()) {
             result.push_back(Basis::modulo_group_mod(item, rhs_integer));

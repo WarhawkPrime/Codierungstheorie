@@ -4,6 +4,7 @@
 #define CUSTOM_RC 0
 
 #define DOCTEST_CONFIG_IMPLEMENT
+
 #include <Header Files/doctest.h>
 
 #include "Header Files/EGFTests.h"

@@ -194,6 +194,7 @@ TEST_SUITE("Polynom Tests" * doctest::description("optional")) {
             }
         }
     }
+
     TEST_CASE("Polynom modolo polynom") {
         // Setup
         auto i_p = Polynom({1, 0, 1, 1});
