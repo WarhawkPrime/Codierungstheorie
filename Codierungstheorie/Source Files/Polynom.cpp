@@ -4,6 +4,9 @@
 
 #include "Header Files/Polynom.h"
 
+const Polynom Polynom::ZERO = Polynom({0});
+const Polynom Polynom::ONE = Polynom(1);
+
 Polynom::Polynom(std::vector<int> coefficients) {
     this->coefficients = std::move(coefficients);
     trim();
@@ -13,11 +16,11 @@ Polynom::Polynom(std::vector<int> coefficients) {
 Polynom::Polynom(int coefficients_as_number) {
     auto size = ((sizeof coefficients_as_number) * 8);
 
-    auto temp_coefficients = std::vector<int>(size);
+    auto temp_coefficients = std::vector<int>(0);
 
     auto bs = std::bitset<32>(coefficients_as_number);
 
-    for (int i = size; i >= 0; --i) {
+    for (int i = size - 1; i >= 0; --i) {
         temp_coefficients.push_back(bs[i]);
     }
     std::reverse(temp_coefficients.begin(), temp_coefficients.end());
@@ -33,6 +36,7 @@ int Polynom::get_degree() const {
 std::string Polynom::to_vector_str() const {
     return to_vector_str(0);
 }
+
 std::string Polynom::to_vector_str(const int _size) const {
 
     std::string result = "(";
@@ -80,6 +84,7 @@ std::string Polynom::to_print_string(Polynom::Format format) const {
         __builtin_unreachable();
     }
 }
+
 /**
  * ! This assumes p=2 !
  * ! This means all coefficients will be interpreted as 0 or 1 !
@@ -94,6 +99,7 @@ int Polynom::as_int() const {
 
     return result;
 }
+
 std::string Polynom::to_print_string(Polynom::Format format, int _size) const {
     if (format == vector) {
         return to_vector_str(_size);

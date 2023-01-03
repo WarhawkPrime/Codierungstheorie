@@ -24,3 +24,5 @@ done
 echo "----------------------------"
 IFS="$OIFS"
 ```
+
+For Win10 you should use ``clang-format.exe``

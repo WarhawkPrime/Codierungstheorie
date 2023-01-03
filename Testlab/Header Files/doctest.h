@@ -354,7 +354,7 @@ DOCTEST_MSVC_SUPPRESS_WARNING(
     !defined(DOCTEST_CONFIG_NO_TRY_CATCH_IN_ASSERTS)
 #define DOCTEST_CONFIG_NO_TRY_CATCH_IN_ASSERTS
 #endif // DOCTEST_CONFIG_NO_EXCEPTIONS &&
-       // !DOCTEST_CONFIG_NO_TRY_CATCH_IN_ASSERTS
+// !DOCTEST_CONFIG_NO_TRY_CATCH_IN_ASSERTS
 
 #ifdef __wasi__
 #define DOCTEST_CONFIG_NO_MULTITHREADING
@@ -581,6 +581,7 @@ template <class charT>
 struct char_traits;
 template <>
 struct char_traits<char>;
+
 template <class charT, class traits>
 class basic_ostream; // NOLINT(fuchsia-virtual-inheritance)
 typedef basic_ostream<char, char_traits<char>>
@@ -589,12 +590,15 @@ template <class traits>
 // NOLINTNEXTLINE
 basic_ostream<char, traits> &operator<<(basic_ostream<char, traits> &,
                                         const char *);
+
 template <class charT, class traits>
 class basic_istream;
+
 typedef basic_istream<char, char_traits<char>>
     istream; // NOLINT(modernize-use-using)
 template <class... Types>
 class tuple;
+
 #if DOCTEST_MSVC >= DOCTEST_COMPILER(19, 20, 0)
 // see this issue on why this is needed:
 // https://github.com/doctest/doctest/issues/183
@@ -675,8 +679,11 @@ class DOCTEST_INTERFACE String {
     char *allocate(size_type sz);
 
     bool isOnStack() const noexcept { return (buf[last] & 128) == 0; }
+
     void setOnHeap() noexcept;
+
     void setLast(size_type in = last) noexcept;
+
     void setSize(size_type sz) noexcept;
 
     void copy(const String &other);
@@ -685,23 +692,28 @@ class DOCTEST_INTERFACE String {
     static DOCTEST_CONSTEXPR size_type npos = static_cast<size_type>(-1);
 
     String() noexcept;
+
     ~String();
 
     // cppcheck-suppress noExplicitConstructor
     String(const char *in);
+
     String(const char *in, size_type in_size);
 
     String(std::istream &in, size_type in_size);
 
     String(const String &other);
+
     String &operator=(const String &other);
 
     String &operator+=(const String &other);
 
     String(String &&other) noexcept;
+
     String &operator=(String &&other) noexcept;
 
     char operator[](size_type i) const;
+
     char &operator[](size_type i);
 
     // the only functions I'm willing to leave in the interface - available for
@@ -717,15 +729,19 @@ class DOCTEST_INTERFACE String {
     }
 
     size_type size() const;
+
     size_type capacity() const;
 
     String substr(size_type pos, size_type cnt = npos) &&;
+
     String substr(size_type pos, size_type cnt = npos) const &;
 
     size_type find(char ch, size_type pos = 0) const;
+
     size_type rfind(char ch, size_type pos = npos) const;
 
     int compare(const char *other, bool no_case = false) const;
+
     int compare(const String &other, bool no_case = false) const;
 
     friend DOCTEST_INTERFACE std::ostream &operator<<(std::ostream &s,
@@ -735,10 +751,15 @@ class DOCTEST_INTERFACE String {
 DOCTEST_INTERFACE String operator+(const String &lhs, const String &rhs);
 
 DOCTEST_INTERFACE bool operator==(const String &lhs, const String &rhs);
+
 DOCTEST_INTERFACE bool operator!=(const String &lhs, const String &rhs);
+
 DOCTEST_INTERFACE bool operator<(const String &lhs, const String &rhs);
+
 DOCTEST_INTERFACE bool operator>(const String &lhs, const String &rhs);
+
 DOCTEST_INTERFACE bool operator<=(const String &lhs, const String &rhs);
+
 DOCTEST_INTERFACE bool operator>=(const String &lhs, const String &rhs);
 
 class DOCTEST_INTERFACE Contains {
@@ -753,8 +774,11 @@ class DOCTEST_INTERFACE Contains {
 DOCTEST_INTERFACE String toString(const Contains &in);
 
 DOCTEST_INTERFACE bool operator==(const String &lhs, const Contains &rhs);
+
 DOCTEST_INTERFACE bool operator==(const Contains &lhs, const String &rhs);
+
 DOCTEST_INTERFACE bool operator!=(const String &lhs, const Contains &rhs);
+
 DOCTEST_INTERFACE bool operator!=(const Contains &lhs, const String &rhs);
 
 namespace Color {
@@ -872,12 +896,14 @@ enum Enum {
 } // namespace assertType
 
 DOCTEST_INTERFACE const char *assertString(assertType::Enum at);
+
 DOCTEST_INTERFACE const char *failureString(assertType::Enum at);
+
 DOCTEST_INTERFACE const char *skipPathFromFilename(const char *file);
 
 struct DOCTEST_INTERFACE TestCaseData {
-    String m_file;            // the file in which the test was registered (using String -
-                              // see #350)
+    String m_file; // the file in which the test was registered (using String -
+    // see #350)
     unsigned m_line;          // the line where the test was registered
     const char *m_name;       // name of the test case
     const char *m_test_suite; // the test suite in which the test was added
@@ -918,6 +944,7 @@ struct DOCTEST_INTERFACE AssertData {
 
       public:
         StringContains(const String &str) : content(str), isContains(false) {}
+
         StringContains(Contains cntn)
             : content(static_cast<Contains &&>(cntn)), isContains(true) {}
 
@@ -948,11 +975,13 @@ struct DOCTEST_INTERFACE SubcaseSignature {
     int m_line;
 
     bool operator==(const SubcaseSignature &other) const;
+
     bool operator<(const SubcaseSignature &other) const;
 };
 
 struct DOCTEST_INTERFACE IContextScope {
     DOCTEST_DECLARE_INTERFACE(IContextScope)
+
     virtual void stringify(std::ostream *) const = 0;
 };
 
@@ -977,38 +1006,38 @@ struct ContextOptions //! OCLINT too many fields
 
     int abort_after;           // stop tests after this many failed assertions
     int subcase_filter_levels; // apply the subcase filters for the first N
-                               // levels
+    // levels
 
     bool success;        // include successful assertions in output
     bool case_sensitive; // if filtering should be case sensitive
     bool exit;           // if the program should be exited after the tests are
-                         // ran/whatever
-    bool duration;       // print the time duration of each test case
-    bool minimal;        // minimal console output (only test failures)
-    bool quiet;          // no console output
-    bool no_throw;       // to skip exceptions-related assertion macros
-    bool no_exitcode;    // if the framework should return 0 as the exitcode
+    // ran/whatever
+    bool duration;    // print the time duration of each test case
+    bool minimal;     // minimal console output (only test failures)
+    bool quiet;       // no console output
+    bool no_throw;    // to skip exceptions-related assertion macros
+    bool no_exitcode; // if the framework should return 0 as the exitcode
     bool
-        no_run;                // to not run the tests at all (can be done with an "*" exclude)
-    bool no_intro;             // to not print the intro of the framework
-    bool no_version;           // to not print the version of the framework
-    bool no_colors;            // if output to the console should be colorized
-    bool force_colors;         // forces the use of colors even when a tty cannot be
-                               // detected
-    bool no_breaks;            // to not break into the debugger
-    bool no_skip;              // don't skip test cases which are marked to be skipped
-    bool gnu_file_line;        // if line numbers should be surrounded with :x: and not
-                               // (x):
+        no_run;        // to not run the tests at all (can be done with an "*" exclude)
+    bool no_intro;     // to not print the intro of the framework
+    bool no_version;   // to not print the version of the framework
+    bool no_colors;    // if output to the console should be colorized
+    bool force_colors; // forces the use of colors even when a tty cannot be
+    // detected
+    bool no_breaks;     // to not break into the debugger
+    bool no_skip;       // don't skip test cases which are marked to be skipped
+    bool gnu_file_line; // if line numbers should be surrounded with :x: and not
+    // (x):
     bool no_path_in_filenames; // if the path to files should be removed from
-                               // the output
-    bool no_line_numbers;      // if source code line numbers should be omitted from
-                               // the output
-    bool no_debug_output;      // no output in the debug console when a debugger is
-                               // attached
-    bool no_skipped_summary;   // don't print "skipped" in the summary !!!
-                               // UNDOCUMENTED !!!
-    bool no_time_in_output;    // omit any time/timestamps from output !!!
-                               // UNDOCUMENTED !!!
+    // the output
+    bool no_line_numbers; // if source code line numbers should be omitted from
+    // the output
+    bool no_debug_output; // no output in the debug console when a debugger is
+    // attached
+    bool no_skipped_summary; // don't print "skipped" in the summary !!!
+    // UNDOCUMENTED !!!
+    bool no_time_in_output; // omit any time/timestamps from output !!!
+    // UNDOCUMENTED !!!
 
     bool help;             // to print the help
     bool version;          // to print the version
@@ -1024,7 +1053,8 @@ namespace types {
 using namespace std;
 #else
 template <bool COND, typename T = void>
-struct enable_if {};
+struct enable_if {
+};
 
 template <typename T>
 struct enable_if<true, T> {
@@ -1052,9 +1082,11 @@ struct remove_reference<T &&> {
 };
 
 template <typename T>
-struct is_rvalue_reference : false_type {};
+struct is_rvalue_reference : false_type {
+};
 template <typename T>
-struct is_rvalue_reference<T &&> : true_type {};
+struct is_rvalue_reference<T &&> : true_type {
+};
 
 template <typename T>
 struct remove_const {
@@ -1076,15 +1108,19 @@ struct underlying_type {
 };
 
 template <typename T>
-struct is_pointer : false_type {};
+struct is_pointer : false_type {
+};
 template <typename T>
-struct is_pointer<T *> : true_type {};
+struct is_pointer<T *> : true_type {
+};
 
 template <typename T>
-struct is_array : false_type {};
+struct is_array : false_type {
+};
 // NOLINTNEXTLINE(*-avoid-c-arrays)
 template <typename T, size_t SIZE>
-struct is_array<T[SIZE]> : true_type {};
+struct is_array<T[SIZE]> : true_type {
+};
 #endif
 } // namespace types
 
@@ -1105,7 +1141,8 @@ forward(typename types::remove_reference<T>::type &&t) DOCTEST_NOEXCEPT {
 }
 
 template <typename T>
-struct deferred_false : types::false_type {};
+struct deferred_false : types::false_type {
+};
 
 // MSVS 2015 :(
 #if defined(_MSC_VER) && _MSC_VER <= 1900
@@ -1140,15 +1177,18 @@ template <typename T>
 using insert_hack_t = insert_hack<T, has_global_insertion_operator<T>::value>;
 #else
 template <typename T, typename = void>
-struct has_insertion_operator : types::false_type {};
+struct has_insertion_operator : types::false_type {
+};
 #endif
 
 template <typename T>
 struct has_insertion_operator<T, decltype(operator<<(declval<std::ostream &>(),
                                                      declval<const T &>()),
-                                          void())> : types::true_type {};
+                                          void())> : types::true_type {
+};
 
 DOCTEST_INTERFACE std::ostream *tlssPush();
+
 DOCTEST_INTERFACE String tlssPop();
 
 template <bool C>
@@ -1200,7 +1240,8 @@ template <typename T>
 struct StringMaker
     : public detail::StringMakerBase<detail::has_insertion_operator<T>::value ||
                                      detail::types::is_pointer<T>::value ||
-                                     detail::types::is_array<T>::value> {};
+                                     detail::types::is_array<T>::value> {
+};
 
 #ifndef DOCTEST_STRINGIFY
 #ifdef DOCTEST_CONFIG_DOUBLE_STRINGIFY
@@ -1250,19 +1291,31 @@ DOCTEST_INTERFACE String toString(std::nullptr_t);
 DOCTEST_INTERFACE String toString(bool in);
 
 DOCTEST_INTERFACE String toString(float in);
+
 DOCTEST_INTERFACE String toString(double in);
+
 DOCTEST_INTERFACE String toString(double long in);
 
 DOCTEST_INTERFACE String toString(char in);
+
 DOCTEST_INTERFACE String toString(char signed in);
+
 DOCTEST_INTERFACE String toString(char unsigned in);
+
 DOCTEST_INTERFACE String toString(short in);
+
 DOCTEST_INTERFACE String toString(short unsigned in);
+
 DOCTEST_INTERFACE String toString(signed in);
+
 DOCTEST_INTERFACE String toString(unsigned in);
+
 DOCTEST_INTERFACE String toString(long in);
+
 DOCTEST_INTERFACE String toString(long unsigned in);
+
 DOCTEST_INTERFACE String toString(long long in);
+
 DOCTEST_INTERFACE String toString(long long unsigned in);
 
 template <typename T, typename detail::types::enable_if<
@@ -1285,6 +1338,7 @@ struct filldata {
 };
 
 DOCTEST_MSVC_SUPPRESS_WARNING_WITH_PUSH(4866)
+
 // NOLINTBEGIN(*-avoid-c-arrays)
 template <typename T, size_t N>
 struct filldata<T[N]> {
@@ -1365,21 +1419,32 @@ struct DOCTEST_INTERFACE Approx {
 #endif // DOCTEST_CONFIG_INCLUDE_TYPE_TRAITS
 
     // clang-format off
-        DOCTEST_INTERFACE friend bool operator==(double lhs, const Approx & rhs);
-        DOCTEST_INTERFACE friend bool operator==(const Approx & lhs, double rhs);
-        DOCTEST_INTERFACE friend bool operator!=(double lhs, const Approx & rhs);
-        DOCTEST_INTERFACE friend bool operator!=(const Approx & lhs, double rhs);
-        DOCTEST_INTERFACE friend bool operator<=(double lhs, const Approx & rhs);
-        DOCTEST_INTERFACE friend bool operator<=(const Approx & lhs, double rhs);
-        DOCTEST_INTERFACE friend bool operator>=(double lhs, const Approx & rhs);
-        DOCTEST_INTERFACE friend bool operator>=(const Approx & lhs, double rhs);
-        DOCTEST_INTERFACE friend bool operator< (double lhs, const Approx & rhs);
-        DOCTEST_INTERFACE friend bool operator< (const Approx & lhs, double rhs);
-        DOCTEST_INTERFACE friend bool operator> (double lhs, const Approx & rhs);
-        DOCTEST_INTERFACE friend bool operator> (const Approx & lhs, double rhs);
+        DOCTEST_INTERFACE friend bool operator==(double lhs, const Approx &rhs);
+
+        DOCTEST_INTERFACE friend bool operator==(const Approx &lhs, double rhs);
+
+        DOCTEST_INTERFACE friend bool operator!=(double lhs, const Approx &rhs);
+
+        DOCTEST_INTERFACE friend bool operator!=(const Approx &lhs, double rhs);
+
+        DOCTEST_INTERFACE friend bool operator<=(double lhs, const Approx &rhs);
+
+        DOCTEST_INTERFACE friend bool operator<=(const Approx &lhs, double rhs);
+
+        DOCTEST_INTERFACE friend bool operator>=(double lhs, const Approx &rhs);
+
+        DOCTEST_INTERFACE friend bool operator>=(const Approx &lhs, double rhs);
+
+        DOCTEST_INTERFACE friend bool operator<(double lhs, const Approx &rhs);
+
+        DOCTEST_INTERFACE friend bool operator<(const Approx &lhs, double rhs);
+
+        DOCTEST_INTERFACE friend bool operator>(double lhs, const Approx &rhs);
+
+        DOCTEST_INTERFACE friend bool operator>(const Approx &lhs, double rhs);
 
 #ifdef DOCTEST_CONFIG_INCLUDE_TYPE_TRAITS
-        #define DOCTEST_APPROX_PREFIX \
+                                                                                                                                #define DOCTEST_APPROX_PREFIX \
     template <typename T> friend typename std::enable_if<std::is_constructible<double, T>::value, bool>::type
 
     DOCTEST_APPROX_PREFIX operator==(const T& lhs, const Approx& rhs) { return operator==(static_cast<double>(lhs), rhs); }
@@ -1412,17 +1477,23 @@ template <typename F>
 struct DOCTEST_INTERFACE_DECL IsNaN {
     F value;
     bool flipped;
+
     IsNaN(F f, bool flip = false) : value(f), flipped(flip) {}
+
     IsNaN<F> operator!() const { return {value, !flipped}; }
+
     operator bool() const;
 };
+
 #ifndef __MINGW32__
 extern template struct DOCTEST_INTERFACE_DECL IsNaN<float>;
 extern template struct DOCTEST_INTERFACE_DECL IsNaN<double>;
 extern template struct DOCTEST_INTERFACE_DECL IsNaN<long double>;
 #endif
 DOCTEST_INTERFACE String toString(IsNaN<float> in);
+
 DOCTEST_INTERFACE String toString(IsNaN<double> in);
+
 DOCTEST_INTERFACE String toString(IsNaN<double long> in);
 
 #ifndef DOCTEST_CONFIG_DISABLE
@@ -1430,7 +1501,7 @@ DOCTEST_INTERFACE String toString(IsNaN<double long> in);
 namespace detail {
 // clang-format off
 #ifdef DOCTEST_CONFIG_TREAT_CHAR_STAR_AS_STRING
-        template<class T>               struct decay_array       { using type = T; };
+                                                                                                                                template<class T>               struct decay_array       { using type = T; };
     template<class T, unsigned N>   struct decay_array<T[N]> { using type = T*; };
     template<class T>               struct decay_array<T[]>  { using type = T*; };
 
@@ -1442,11 +1513,13 @@ namespace detail {
 #endif // DOCTEST_CONFIG_TREAT_CHAR_STAR_AS_STRING
        // clang-format on
 
-struct DOCTEST_INTERFACE TestFailureException {};
+struct DOCTEST_INTERFACE TestFailureException {
+};
 
 DOCTEST_INTERFACE bool checkIfShouldThrow(assertType::Enum at);
 
 #ifndef DOCTEST_CONFIG_NO_EXCEPTIONS
+
 DOCTEST_NORETURN
 #endif // DOCTEST_CONFIG_NO_EXCEPTIONS
 DOCTEST_INTERFACE void throwException();
@@ -1456,10 +1529,15 @@ struct DOCTEST_INTERFACE Subcase {
     bool m_entered = false;
 
     Subcase(const String &name, const char *file, int line);
+
     Subcase(const Subcase &) = delete;
+
     Subcase(Subcase &&) = delete;
+
     Subcase &operator=(const Subcase &) = delete;
+
     Subcase &operator=(Subcase &&) = delete;
+
     ~Subcase();
 
     operator bool() const;
@@ -1523,26 +1601,47 @@ struct DOCTEST_INTERFACE Result // NOLINT(*-member-init)
     // forbidding some expressions based on this table:
     // https://en.cppreference.com/w/cpp/language/operator_precedence
     DOCTEST_FORBIT_EXPRESSION(Result, &)
+
     DOCTEST_FORBIT_EXPRESSION(Result, ^)
+
     DOCTEST_FORBIT_EXPRESSION(Result, |)
+
     DOCTEST_FORBIT_EXPRESSION(Result, &&)
+
     DOCTEST_FORBIT_EXPRESSION(Result, ||)
+
     DOCTEST_FORBIT_EXPRESSION(Result, ==)
+
     DOCTEST_FORBIT_EXPRESSION(Result, !=)
+
     DOCTEST_FORBIT_EXPRESSION(Result, <)
+
     DOCTEST_FORBIT_EXPRESSION(Result, >)
+
     DOCTEST_FORBIT_EXPRESSION(Result, <=)
+
     DOCTEST_FORBIT_EXPRESSION(Result, >=)
+
     DOCTEST_FORBIT_EXPRESSION(Result, =)
+
     DOCTEST_FORBIT_EXPRESSION(Result, +=)
+
     DOCTEST_FORBIT_EXPRESSION(Result, -=)
+
     DOCTEST_FORBIT_EXPRESSION(Result, *=)
+
     DOCTEST_FORBIT_EXPRESSION(Result, /=)
+
     DOCTEST_FORBIT_EXPRESSION(Result, %=)
+
     DOCTEST_FORBIT_EXPRESSION(Result, <<=)
+
     DOCTEST_FORBIT_EXPRESSION(Result, >>=)
+
     DOCTEST_FORBIT_EXPRESSION(Result, &=)
+
     DOCTEST_FORBIT_EXPRESSION(Result, ^=)
+
     DOCTEST_FORBIT_EXPRESSION(Result, |=)
 };
 
@@ -1577,7 +1676,7 @@ DOCTEST_MSVC_SUPPRESS_WARNING(4018) // 'expression' : signed/unsigned mismatch
 #ifndef DOCTEST_CONFIG_TREAT_CHAR_STAR_AS_STRING
 #define DOCTEST_COMPARISON_RETURN_TYPE bool
 #else // DOCTEST_CONFIG_TREAT_CHAR_STAR_AS_STRING
-        #define DOCTEST_COMPARISON_RETURN_TYPE typename types::enable_if<can_use_op<L>::value || can_use_op<R>::value, bool>::type
+                                                                                                                                #define DOCTEST_COMPARISON_RETURN_TYPE typename types::enable_if<can_use_op<L>::value || can_use_op<R>::value, bool>::type
     inline bool eq(const char* lhs, const char* rhs) { return String(lhs) == String(rhs); }
     inline bool ne(const char* lhs, const char* rhs) { return String(lhs) != String(rhs); }
     inline bool lt(const char* lhs, const char* rhs) { return String(lhs) <  String(rhs); }
@@ -1595,10 +1694,15 @@ DOCTEST_MSVC_SUPPRESS_WARNING(4018) // 'expression' : signed/unsigned mismatch
     }
 
 DOCTEST_RELATIONAL_OP(eq, ==)
+
 DOCTEST_RELATIONAL_OP(ne, !=)
+
 DOCTEST_RELATIONAL_OP(lt, <)
+
 DOCTEST_RELATIONAL_OP(gt, >)
+
 DOCTEST_RELATIONAL_OP(le, <=)
+
 DOCTEST_RELATIONAL_OP(ge, >=)
 
 #ifndef DOCTEST_CONFIG_TREAT_CHAR_STAR_AS_STRING
@@ -1647,37 +1751,57 @@ struct Expression_lhs {
     operator L() const { return lhs; }
 
     // clang-format off
-            DOCTEST_DO_BINARY_EXPRESSION_COMPARISON(==, " == ", DOCTEST_CMP_EQ) //!OCLINT bitwise operator in conditional
-            DOCTEST_DO_BINARY_EXPRESSION_COMPARISON(!=, " != ", DOCTEST_CMP_NE) //!OCLINT bitwise operator in conditional
-            DOCTEST_DO_BINARY_EXPRESSION_COMPARISON(>,  " >  ", DOCTEST_CMP_GT) //!OCLINT bitwise operator in conditional
-            DOCTEST_DO_BINARY_EXPRESSION_COMPARISON(<,  " <  ", DOCTEST_CMP_LT) //!OCLINT bitwise operator in conditional
-            DOCTEST_DO_BINARY_EXPRESSION_COMPARISON(>=, " >= ", DOCTEST_CMP_GE) //!OCLINT bitwise operator in conditional
-            DOCTEST_DO_BINARY_EXPRESSION_COMPARISON(<=, " <= ", DOCTEST_CMP_LE) //!OCLINT bitwise operator in conditional
+            DOCTEST_DO_BINARY_EXPRESSION_COMPARISON(==, " == ",
+                                                    DOCTEST_CMP_EQ) //!OCLINT bitwise operator in conditional
+            DOCTEST_DO_BINARY_EXPRESSION_COMPARISON(!=, " != ",
+                                                    DOCTEST_CMP_NE) //!OCLINT bitwise operator in conditional
+            DOCTEST_DO_BINARY_EXPRESSION_COMPARISON(>, " >  ", DOCTEST_CMP_GT) //!OCLINT bitwise operator in conditional
+            DOCTEST_DO_BINARY_EXPRESSION_COMPARISON(<, " <  ", DOCTEST_CMP_LT) //!OCLINT bitwise operator in conditional
+            DOCTEST_DO_BINARY_EXPRESSION_COMPARISON(>=, " >= ",
+                                                    DOCTEST_CMP_GE) //!OCLINT bitwise operator in conditional
+            DOCTEST_DO_BINARY_EXPRESSION_COMPARISON(<=, " <= ",
+                                                    DOCTEST_CMP_LE) //!OCLINT bitwise operator in conditional
     // clang-format on
 
     // forbidding some expressions based on this table:
     // https://en.cppreference.com/w/cpp/language/operator_precedence
     DOCTEST_FORBIT_EXPRESSION(Expression_lhs, &)
+
     DOCTEST_FORBIT_EXPRESSION(Expression_lhs, ^)
+
     DOCTEST_FORBIT_EXPRESSION(Expression_lhs, |)
+
     DOCTEST_FORBIT_EXPRESSION(Expression_lhs, &&)
+
     DOCTEST_FORBIT_EXPRESSION(Expression_lhs, ||)
+
     DOCTEST_FORBIT_EXPRESSION(Expression_lhs, =)
+
     DOCTEST_FORBIT_EXPRESSION(Expression_lhs, +=)
+
     DOCTEST_FORBIT_EXPRESSION(Expression_lhs, -=)
+
     DOCTEST_FORBIT_EXPRESSION(Expression_lhs, *=)
+
     DOCTEST_FORBIT_EXPRESSION(Expression_lhs, /=)
+
     DOCTEST_FORBIT_EXPRESSION(Expression_lhs, %=)
+
     DOCTEST_FORBIT_EXPRESSION(Expression_lhs, <<=)
+
     DOCTEST_FORBIT_EXPRESSION(Expression_lhs, >>=)
+
     DOCTEST_FORBIT_EXPRESSION(Expression_lhs, &=)
+
     DOCTEST_FORBIT_EXPRESSION(Expression_lhs, ^=)
+
     DOCTEST_FORBIT_EXPRESSION(Expression_lhs, |=)
     // these 2 are unfortunate because they should be allowed - they have higher
     // precedence over the comparisons, but the ExpressionDecomposer class uses
     // the left shift operator to capture the left operand of the binary
     // expression...
     DOCTEST_FORBIT_EXPRESSION(Expression_lhs, <<)
+
     DOCTEST_FORBIT_EXPRESSION(Expression_lhs, >>)
 };
 
@@ -1742,22 +1866,24 @@ using funcType = void (*)();
 struct DOCTEST_INTERFACE TestCase : public TestCaseData {
     funcType m_test; // a function pointer to the test case
 
-    String m_type;      // for templated test cases - gets appended to the real name
-    int m_template_id;  // an ID used to distinguish between the different
-                        // versions of a templated test case
+    String m_type;     // for templated test cases - gets appended to the real name
+    int m_template_id; // an ID used to distinguish between the different
+    // versions of a templated test case
     String m_full_name; // contains the name (only for templated test cases!) +
-                        // the template type
+    // the template type
 
     TestCase(funcType test, const char *file, unsigned line,
              const TestSuite &test_suite, const String &type = String(),
              int template_id = -1);
 
     TestCase(const TestCase &other);
+
     TestCase(TestCase &&) = delete;
 
     DOCTEST_MSVC_SUPPRESS_WARNING_WITH_PUSH(
         26434) // hides a non-virtual function
     TestCase &operator=(const TestCase &other);
+
     DOCTEST_MSVC_SUPPRESS_WARNING_POP
 
     TestCase &operator=(TestCase &&) = delete;
@@ -1777,33 +1903,45 @@ struct DOCTEST_INTERFACE TestCase : public TestCaseData {
 
 // forward declarations of functions used by the macros
 DOCTEST_INTERFACE int regTest(const TestCase &tc);
+
 DOCTEST_INTERFACE int setTestSuite(const TestSuite &ts);
+
 DOCTEST_INTERFACE bool isDebuggerActive();
 
 template <typename T>
 int instantiationHelper(const T &) { return 0; }
 
 namespace binaryAssertComparison {
-enum Enum { eq = 0,
-            ne,
-            gt,
-            lt,
-            ge,
-            le };
+enum Enum {
+    eq = 0,
+    ne,
+    gt,
+    lt,
+    ge,
+    le
+};
 } // namespace binaryAssertComparison
 
 // clang-format off
-        template <int, class L, class R> struct RelationalComparator     { bool operator()(const DOCTEST_REF_WRAP(L),     const DOCTEST_REF_WRAP(R)    ) const { return false;        } };
+        template<int, class L, class R>
+        struct RelationalComparator {
+            bool operator()(const DOCTEST_REF_WRAP(L), const DOCTEST_REF_WRAP(R)) const { return false; }
+        };
 
 #define DOCTEST_BINARY_RELATIONAL_OP(n, op) \
     template <class L, class R> struct RelationalComparator<n, L, R> { bool operator()(const DOCTEST_REF_WRAP(L) lhs, const DOCTEST_REF_WRAP(R) rhs) const { return op(lhs, rhs); } };
 // clang-format on
 
 DOCTEST_BINARY_RELATIONAL_OP(0, doctest::detail::eq)
+
 DOCTEST_BINARY_RELATIONAL_OP(1, doctest::detail::ne)
+
 DOCTEST_BINARY_RELATIONAL_OP(2, doctest::detail::gt)
+
 DOCTEST_BINARY_RELATIONAL_OP(3, doctest::detail::lt)
+
 DOCTEST_BINARY_RELATIONAL_OP(4, doctest::detail::ge)
+
 DOCTEST_BINARY_RELATIONAL_OP(5, doctest::detail::le)
 
 struct DOCTEST_INTERFACE ResultBuilder : public AssertData {
@@ -1846,13 +1984,16 @@ struct DOCTEST_INTERFACE ResultBuilder : public AssertData {
     void translateException();
 
     bool log();
+
     void react() const;
 };
 
 namespace assertAction {
-enum Enum { nothing = 0,
-            dbgbreak = 1,
-            shouldthrow = 2 };
+enum Enum {
+    nothing = 0,
+    dbgbreak = 1,
+    shouldthrow = 2
+};
 } // namespace assertAction
 
 DOCTEST_INTERFACE void failed_out_of_a_testing_context(const AssertData &ad);
@@ -1925,6 +2066,7 @@ DOCTEST_NOINLINE bool unary_assert(assertType::Enum at, const char *file,
 
 struct DOCTEST_INTERFACE IExceptionTranslator {
     DOCTEST_DECLARE_INTERFACE(IExceptionTranslator)
+
     virtual bool translate(String &) const = 0;
 };
 
@@ -1964,15 +2106,18 @@ struct DOCTEST_INTERFACE ContextScopeBase : public IContextScope {
     ContextScopeBase(const ContextScopeBase &) = delete;
 
     ContextScopeBase &operator=(const ContextScopeBase &) = delete;
+
     ContextScopeBase &operator=(ContextScopeBase &&) = delete;
 
     ~ContextScopeBase() override = default;
 
   protected:
     ContextScopeBase();
+
     ContextScopeBase(ContextScopeBase &&other) noexcept;
 
     void destroy();
+
     bool need_to_destroy{true};
 };
 
@@ -1982,12 +2127,15 @@ class ContextScope : public ContextScopeBase {
 
   public:
     explicit ContextScope(const L &lambda) : lambda_(lambda) {}
+
     explicit ContextScope(L &&lambda) : lambda_(static_cast<L &&>(lambda)) {}
 
     ContextScope(const ContextScope &) = delete;
+
     ContextScope(ContextScope &&) noexcept = default;
 
     ContextScope &operator=(const ContextScope &) = delete;
+
     ContextScope &operator=(ContextScope &&) = delete;
 
     void stringify(std::ostream *s) const override { lambda_(s); }
@@ -2006,20 +2154,24 @@ struct DOCTEST_INTERFACE MessageBuilder : public MessageData {
     MessageBuilder(const char *file, int line, assertType::Enum severity);
 
     MessageBuilder(const MessageBuilder &) = delete;
+
     MessageBuilder(MessageBuilder &&) = delete;
 
     MessageBuilder &operator=(const MessageBuilder &) = delete;
+
     MessageBuilder &operator=(MessageBuilder &&) = delete;
 
     ~MessageBuilder();
 
     // the preferred way of chaining parameters for stringification
     DOCTEST_MSVC_SUPPRESS_WARNING_WITH_PUSH(4866)
+
     template <typename T>
     MessageBuilder &operator,(const T &in) {
         *m_stream << (DOCTEST_STRINGIFY(in));
         return *this;
     }
+
     DOCTEST_MSVC_SUPPRESS_WARNING_POP
 
     // kept here just for backwards-compatibility - the comma operator should be
@@ -2040,6 +2192,7 @@ struct DOCTEST_INTERFACE MessageBuilder : public MessageData {
     }
 
     bool log();
+
     void react();
 };
 
@@ -2062,13 +2215,21 @@ ContextScope<L> MakeContextScope(const L &lambda) {
     }
 
 DOCTEST_DEFINE_DECORATOR(test_suite, const char *, "");
+
 DOCTEST_DEFINE_DECORATOR(description, const char *, "");
+
 DOCTEST_DEFINE_DECORATOR(skip, bool, true);
+
 DOCTEST_DEFINE_DECORATOR(no_breaks, bool, true);
+
 DOCTEST_DEFINE_DECORATOR(no_output, bool, true);
+
 DOCTEST_DEFINE_DECORATOR(timeout, double, 0);
+
 DOCTEST_DEFINE_DECORATOR(may_fail, bool, true);
+
 DOCTEST_DEFINE_DECORATOR(should_fail, bool, true);
+
 DOCTEST_DEFINE_DECORATOR(expected_failures, int, 0);
 
 template <typename T>
@@ -2113,9 +2274,11 @@ class DOCTEST_INTERFACE Context {
     explicit Context(int argc = 0, const char *const *argv = nullptr);
 
     Context(const Context &) = delete;
+
     Context(Context &&) = delete;
 
     Context &operator=(const Context &) = delete;
+
     Context &operator=(Context &&) = delete;
 
     ~Context(); // NOLINT(performance-trivially-destructible)
@@ -2123,9 +2286,13 @@ class DOCTEST_INTERFACE Context {
     void applyCommandLine(int argc, const char *const *argv);
 
     void addFilter(const char *filter, const char *value);
+
     void clearFilters();
+
     void setOption(const char *option, bool value);
+
     void setOption(const char *option, int value);
+
     void setOption(const char *option, const char *value);
 
     bool shouldExit();
@@ -2194,15 +2361,18 @@ struct DOCTEST_INTERFACE IReporter {
 
     // called when the whole test run starts
     virtual void test_run_start() = 0;
+
     // called when the whole test run ends (caching a pointer to the input
     // doesn't make sense here)
     virtual void test_run_end(const TestRunStats &) = 0;
 
     // called when a test case is started (safe to cache a pointer to the input)
     virtual void test_case_start(const TestCaseData &) = 0;
+
     // called when a test case is reentered because of unfinished subcases (safe
     // to cache a pointer to the input)
     virtual void test_case_reenter(const TestCaseData &) = 0;
+
     // called when a test case has ended
     virtual void test_case_end(const CurrentTestCaseStats &) = 0;
 
@@ -2211,11 +2381,13 @@ struct DOCTEST_INTERFACE IReporter {
 
     // called whenever a subcase is entered (don't cache pointers to the input)
     virtual void subcase_start(const SubcaseSignature &) = 0;
+
     // called whenever a subcase is exited (don't cache pointers to the input)
     virtual void subcase_end() = 0;
 
     // called for each assert (don't cache pointers to the input)
     virtual void log_assert(const AssertData &) = 0;
+
     // called for each message (don't cache pointers to the input)
     virtual void log_message(const MessageData &) = 0;
 
@@ -2229,11 +2401,13 @@ struct DOCTEST_INTERFACE IReporter {
     // can obtain all currently active contexts and stringify them if one wishes
     // to do so
     static int get_num_active_contexts();
+
     static const IContextScope *const *get_active_contexts();
 
     // can iterate through contexts which have been stringified automatically in
     // their destructors when an exception has been thrown
     static int get_num_stringified_contexts();
+
     static const String *get_stringified_contexts();
 };
 
@@ -3623,6 +3797,7 @@ DOCTEST_MAKE_STD_HEADERS_CLEAN_FROM_WARNINGS_ON_WALL_BEGIN
 #ifdef __BORLANDC__
 #include <math.h>
 #endif // __BORLANDC__
+
 #include <algorithm>
 #include <cstdio>
 #include <cstdlib>
@@ -3635,9 +3810,12 @@ DOCTEST_MAKE_STD_HEADERS_CLEAN_FROM_WARNINGS_ON_WALL_BEGIN
 #include <sstream>
 #include <utility>
 #include <vector>
+
 #ifndef DOCTEST_CONFIG_NO_MULTITHREADING
+
 #include <atomic>
 #include <mutex>
+
 #define DOCTEST_DECLARE_MUTEX(name) std::mutex name;
 #define DOCTEST_DECLARE_STATIC_MUTEX(name) static DOCTEST_DECLARE_MUTEX(name)
 #define DOCTEST_LOCK_MUTEX(name) \
@@ -3647,6 +3825,7 @@ DOCTEST_MAKE_STD_HEADERS_CLEAN_FROM_WARNINGS_ON_WALL_BEGIN
 #define DOCTEST_DECLARE_STATIC_MUTEX(name)
 #define DOCTEST_LOCK_MUTEX(name)
 #endif // DOCTEST_CONFIG_NO_MULTITHREADING
+
 #include <cctype>
 #include <cfloat>
 #include <csignal>
@@ -3678,8 +3857,11 @@ DOCTEST_MAKE_STD_HEADERS_CLEAN_FROM_WARNINGS_ON_WALL_BEGIN
 #ifdef __AFXDLL
 #include <AfxWin.h>
 #else
+
 #include <windows.h>
+
 #endif
+
 #include <io.h>
 
 #else // DOCTEST_PLATFORM_WINDOWS
@@ -3776,8 +3958,10 @@ int stricmp(const char *a, const char *b) {
 }
 
 struct Endianness {
-    enum Arch { Big,
-                Little };
+    enum Arch {
+        Big,
+        Little
+    };
 
     static Arch which() {
         int x = 1;
@@ -3833,6 +4017,7 @@ using ticks_t = timer_large_integer::type;
 #ifdef DOCTEST_CONFIG_GETCURRENTTICKS
 ticks_t getCurrentTicks() { return DOCTEST_CONFIG_GETCURRENTTICKS(); }
 #elif defined(DOCTEST_PLATFORM_WINDOWS)
+
 ticks_t getCurrentTicks() {
     static LARGE_INTEGER hz = {{0}}, hzo = {{0}};
     if (!hz.QuadPart) {
@@ -3843,6 +4028,7 @@ ticks_t getCurrentTicks() {
     QueryPerformanceCounter(&t);
     return ((t.QuadPart - hzo.QuadPart) * LONGLONG(1000000)) / hz.QuadPart;
 }
+
 #else  // DOCTEST_PLATFORM_WINDOWS
 ticks_t getCurrentTicks() {
     timeval t;
@@ -3854,9 +4040,11 @@ ticks_t getCurrentTicks() {
 
 struct Timer {
     void start() { m_ticks = getCurrentTicks(); }
+
     unsigned int getElapsedMicroseconds() const {
         return static_cast<unsigned int>(getCurrentTicks() - m_ticks);
     }
+
     // unsigned int getElapsedMilliseconds() const {
     //     return static_cast<unsigned int>(getElapsedMicroseconds() / 1000);
     // }
@@ -3880,7 +4068,8 @@ using Atomic = std::atomic<T>;
     defined(DOCTEST_CONFIG_NO_MULTITHREADING)
 template <typename T>
 using MultiLaneAtomic = Atomic<T>;
-#else  // DOCTEST_CONFIG_NO_MULTI_LANE_ATOMICS
+#else // DOCTEST_CONFIG_NO_MULTI_LANE_ATOMICS
+
 // Provides a multilane implementation of an atomic variable that supports add,
 // sub, load, store. Instead of using a single atomic variable, this splits up
 // into multiple ones, each sitting on a separate cache line. The goal is to
@@ -3971,6 +4160,7 @@ class MultiLaneAtomic {
         return m_atomics[tlsLaneIdx].atomic;
     }
 };
+
 #endif // DOCTEST_CONFIG_NO_MULTI_LANE_ATOMICS
 
 // this holds both parameters from the command line and runtime data for tests
@@ -4085,7 +4275,9 @@ char *String::allocate(size_type sz) {
 void String::setOnHeap() noexcept {
     *reinterpret_cast<unsigned char *>(&buf[last]) = 128;
 }
+
 void String::setLast(size_type in) noexcept { buf[last] = char(in); }
+
 void String::setSize(size_type sz) noexcept {
     if (isOnStack()) {
         buf[sz] = '\0';
@@ -4215,12 +4407,14 @@ char &String::operator[](size_type i) {
 }
 
 DOCTEST_GCC_SUPPRESS_WARNING_WITH_PUSH("-Wmaybe-uninitialized")
+
 String::size_type String::size() const {
     if (isOnStack())
         return last - (size_type(buf[last]) &
                        31); // using "last" would work only if "len" is 32
     return data.size;
 }
+
 DOCTEST_GCC_SUPPRESS_WARNING_POP
 
 String::size_type String::capacity() const {
@@ -4284,18 +4478,23 @@ String operator+(const String &lhs, const String &rhs) {
 bool operator==(const String &lhs, const String &rhs) {
     return lhs.compare(rhs) == 0;
 }
+
 bool operator!=(const String &lhs, const String &rhs) {
     return lhs.compare(rhs) != 0;
 }
+
 bool operator<(const String &lhs, const String &rhs) {
     return lhs.compare(rhs) < 0;
 }
+
 bool operator>(const String &lhs, const String &rhs) {
     return lhs.compare(rhs) > 0;
 }
+
 bool operator<=(const String &lhs, const String &rhs) {
     return (lhs != rhs) ? lhs.compare(rhs) < 0 : true;
 }
+
 bool operator>=(const String &lhs, const String &rhs) {
     return (lhs != rhs) ? lhs.compare(rhs) > 0 : true;
 }
@@ -4315,19 +4514,21 @@ String toString(const Contains &in) { return "Contains( " + in.string + " )"; }
 bool operator==(const String &lhs, const Contains &rhs) {
     return rhs.checkWith(lhs);
 }
+
 bool operator==(const Contains &lhs, const String &rhs) {
     return lhs.checkWith(rhs);
 }
+
 bool operator!=(const String &lhs, const Contains &rhs) {
     return !rhs.checkWith(lhs);
 }
+
 bool operator!=(const Contains &lhs, const String &rhs) {
     return !lhs.checkWith(rhs);
 }
 
 namespace {
-void color_to_stream(std::ostream &, Color::Enum)
-    DOCTEST_BRANCH_ON_DISABLED({}, ;)
+void color_to_stream(std::ostream &, Color::Enum) DOCTEST_BRANCH_ON_DISABLED({}, ;)
 } // namespace
 
 namespace Color {
@@ -4338,44 +4539,45 @@ std::ostream &operator<<(std::ostream &s, Color::Enum code) {
 } // namespace Color
 
 // clang-format off
-const char* assertString(assertType::Enum at) {
-    DOCTEST_MSVC_SUPPRESS_WARNING_WITH_PUSH(4061) // enum 'x' in switch of enum 'y' is not explicitely handled
-    #define DOCTEST_GENERATE_ASSERT_TYPE_CASE(assert_type) case assertType::DT_ ## assert_type: return #assert_type
-    #define DOCTEST_GENERATE_ASSERT_TYPE_CASES(assert_type) \
+    const char *assertString(assertType::Enum at) {
+        DOCTEST_MSVC_SUPPRESS_WARNING_WITH_PUSH(4061) // enum 'x' in switch of enum 'y' is not explicitely handled
+#define DOCTEST_GENERATE_ASSERT_TYPE_CASE(assert_type) case assertType::DT_ ## assert_type: return #assert_type
+#define DOCTEST_GENERATE_ASSERT_TYPE_CASES(assert_type) \
         DOCTEST_GENERATE_ASSERT_TYPE_CASE(WARN_ ## assert_type); \
         DOCTEST_GENERATE_ASSERT_TYPE_CASE(CHECK_ ## assert_type); \
         DOCTEST_GENERATE_ASSERT_TYPE_CASE(REQUIRE_ ## assert_type)
-    switch(at) {
-        DOCTEST_GENERATE_ASSERT_TYPE_CASE(WARN);
-        DOCTEST_GENERATE_ASSERT_TYPE_CASE(CHECK);
-        DOCTEST_GENERATE_ASSERT_TYPE_CASE(REQUIRE);
+        switch (at) {
+            DOCTEST_GENERATE_ASSERT_TYPE_CASE(WARN);
+            DOCTEST_GENERATE_ASSERT_TYPE_CASE(CHECK);
+            DOCTEST_GENERATE_ASSERT_TYPE_CASE(REQUIRE);
 
-        DOCTEST_GENERATE_ASSERT_TYPE_CASES(FALSE);
+            DOCTEST_GENERATE_ASSERT_TYPE_CASES(FALSE);
 
-        DOCTEST_GENERATE_ASSERT_TYPE_CASES(THROWS);
+            DOCTEST_GENERATE_ASSERT_TYPE_CASES(THROWS);
 
-        DOCTEST_GENERATE_ASSERT_TYPE_CASES(THROWS_AS);
+            DOCTEST_GENERATE_ASSERT_TYPE_CASES(THROWS_AS);
 
-        DOCTEST_GENERATE_ASSERT_TYPE_CASES(THROWS_WITH);
+            DOCTEST_GENERATE_ASSERT_TYPE_CASES(THROWS_WITH);
 
-        DOCTEST_GENERATE_ASSERT_TYPE_CASES(THROWS_WITH_AS);
+            DOCTEST_GENERATE_ASSERT_TYPE_CASES(THROWS_WITH_AS);
 
-        DOCTEST_GENERATE_ASSERT_TYPE_CASES(NOTHROW);
+            DOCTEST_GENERATE_ASSERT_TYPE_CASES(NOTHROW);
 
-        DOCTEST_GENERATE_ASSERT_TYPE_CASES(EQ);
-        DOCTEST_GENERATE_ASSERT_TYPE_CASES(NE);
-        DOCTEST_GENERATE_ASSERT_TYPE_CASES(GT);
-        DOCTEST_GENERATE_ASSERT_TYPE_CASES(LT);
-        DOCTEST_GENERATE_ASSERT_TYPE_CASES(GE);
-        DOCTEST_GENERATE_ASSERT_TYPE_CASES(LE);
+            DOCTEST_GENERATE_ASSERT_TYPE_CASES(EQ);
+            DOCTEST_GENERATE_ASSERT_TYPE_CASES(NE);
+            DOCTEST_GENERATE_ASSERT_TYPE_CASES(GT);
+            DOCTEST_GENERATE_ASSERT_TYPE_CASES(LT);
+            DOCTEST_GENERATE_ASSERT_TYPE_CASES(GE);
+            DOCTEST_GENERATE_ASSERT_TYPE_CASES(LE);
 
-        DOCTEST_GENERATE_ASSERT_TYPE_CASES(UNARY);
-        DOCTEST_GENERATE_ASSERT_TYPE_CASES(UNARY_FALSE);
+            DOCTEST_GENERATE_ASSERT_TYPE_CASES(UNARY);
+            DOCTEST_GENERATE_ASSERT_TYPE_CASES(UNARY_FALSE);
 
-        default: DOCTEST_INTERNAL_ERROR("Tried stringifying invalid assert type!");
+            default:
+                DOCTEST_INTERNAL_ERROR("Tried stringifying invalid assert type!");
+        }
+        DOCTEST_MSVC_SUPPRESS_WARNING_POP
     }
-    DOCTEST_MSVC_SUPPRESS_WARNING_POP
-}
 // clang-format on
 
 const char *failureString(assertType::Enum at) {
@@ -4390,6 +4592,7 @@ const char *failureString(assertType::Enum at) {
 
 DOCTEST_CLANG_SUPPRESS_WARNING_WITH_PUSH("-Wnull-dereference")
 DOCTEST_GCC_SUPPRESS_WARNING_WITH_PUSH("-Wnull-dereference")
+
 // depending on the current options this will remove the path of filenames
 const char *skipPathFromFilename(const char *file) {
 #ifndef DOCTEST_CONFIG_DISABLE
@@ -4405,6 +4608,7 @@ const char *skipPathFromFilename(const char *file) {
 #endif // DOCTEST_CONFIG_DISABLE
     return file;
 }
+
 DOCTEST_CLANG_SUPPRESS_WARNING_POP
 DOCTEST_GCC_SUPPRESS_WARNING_POP
 
@@ -4459,21 +4663,33 @@ String toString(std::nullptr_t) { return "nullptr"; }
 String toString(bool in) { return in ? "true" : "false"; }
 
 String toString(float in) { return toStreamLit(in); }
+
 String toString(double in) { return toStreamLit(in); }
+
 String toString(double long in) { return toStreamLit(in); }
 
 String toString(char in) { return toStreamLit(static_cast<signed>(in)); }
+
 String toString(char signed in) { return toStreamLit(static_cast<signed>(in)); }
+
 String toString(char unsigned in) {
     return toStreamLit(static_cast<unsigned>(in));
 }
+
 String toString(short in) { return toStreamLit(in); }
+
 String toString(short unsigned in) { return toStreamLit(in); }
+
 String toString(signed in) { return toStreamLit(in); }
+
 String toString(unsigned in) { return toStreamLit(in); }
+
 String toString(long in) { return toStreamLit(in); }
+
 String toString(long unsigned in) { return toStreamLit(in); }
+
 String toString(long long in) { return toStreamLit(in); }
+
 String toString(long long unsigned in) { return toStreamLit(in); }
 
 Approx::Approx(double value)
@@ -4492,6 +4708,7 @@ Approx &Approx::epsilon(double newEpsilon) {
     m_epsilon = newEpsilon;
     return *this;
 }
+
 Approx &Approx::scale(double newScale) {
     m_scale = newScale;
     return *this;
@@ -4504,30 +4721,41 @@ bool operator==(double lhs, const Approx &rhs) {
                (rhs.m_scale +
                 std::max<double>(std::fabs(lhs), std::fabs(rhs.m_value)));
 }
+
 bool operator==(const Approx &lhs, double rhs) { return operator==(rhs, lhs); }
+
 bool operator!=(double lhs, const Approx &rhs) { return !operator==(lhs, rhs); }
+
 bool operator!=(const Approx &lhs, double rhs) { return !operator==(rhs, lhs); }
+
 bool operator<=(double lhs, const Approx &rhs) {
     return lhs < rhs.m_value || lhs == rhs;
 }
+
 bool operator<=(const Approx &lhs, double rhs) {
     return lhs.m_value < rhs || lhs == rhs;
 }
+
 bool operator>=(double lhs, const Approx &rhs) {
     return lhs > rhs.m_value || lhs == rhs;
 }
+
 bool operator>=(const Approx &lhs, double rhs) {
     return lhs.m_value > rhs || lhs == rhs;
 }
+
 bool operator<(double lhs, const Approx &rhs) {
     return lhs < rhs.m_value && lhs != rhs;
 }
+
 bool operator<(const Approx &lhs, double rhs) {
     return lhs.m_value < rhs && lhs != rhs;
 }
+
 bool operator>(double lhs, const Approx &rhs) {
     return lhs > rhs.m_value && lhs != rhs;
 }
+
 bool operator>(const Approx &lhs, double rhs) {
     return lhs.m_value > rhs && lhs != rhs;
 }
@@ -4535,26 +4763,33 @@ bool operator>(const Approx &lhs, double rhs) {
 String toString(const Approx &in) {
     return "Approx( " + doctest::toString(in.m_value) + " )";
 }
+
 const ContextOptions *getContextOptions() {
     return DOCTEST_BRANCH_ON_DISABLED(nullptr, g_cs);
 }
 
 DOCTEST_MSVC_SUPPRESS_WARNING_WITH_PUSH(4738)
+
 template <typename F>
 IsNaN<F>::operator bool() const {
     return std::isnan(value) ^ flipped;
 }
+
 DOCTEST_MSVC_SUPPRESS_WARNING_POP
 template struct DOCTEST_INTERFACE_DEF IsNaN<float>;
 template struct DOCTEST_INTERFACE_DEF IsNaN<double>;
 template struct DOCTEST_INTERFACE_DEF IsNaN<long double>;
+
 template <typename F>
 String toString(IsNaN<F> in) {
     return String(in.flipped ? "! " : "") + "IsNaN( " +
            doctest::toString(in.value) + " )";
 }
+
 String toString(IsNaN<float> in) { return toString<float>(in); }
+
 String toString(IsNaN<double> in) { return toString<double>(in); }
+
 String toString(IsNaN<double long> in) { return toString<double long>(in); }
 
 } // namespace doctest
@@ -4615,6 +4850,7 @@ reporterMap &getReporters() {
     static reporterMap data;
     return data;
 }
+
 reporterMap &getListeners() {
     static reporterMap data;
     return data;
@@ -4639,10 +4875,12 @@ bool checkIfShouldThrow(assertType::Enum at) {
 }
 
 #ifndef DOCTEST_CONFIG_NO_EXCEPTIONS
+
 DOCTEST_NORETURN void throwException() {
     g_cs->shouldLogCurrentException = false;
     throw TestFailureException(); // NOLINT(hicpp-exception-baseclass)
 }
+
 #else  // DOCTEST_CONFIG_NO_EXCEPTIONS
 void throwException() {}
 #endif // DOCTEST_CONFIG_NO_EXCEPTIONS
@@ -4650,6 +4888,7 @@ void throwException() {}
 
 namespace {
 using namespace detail;
+
 // matching of a string against a wildcard mask (case sensitivity configurable)
 // taken from
 // https://www.codeproject.com/Articles/1088/Wildcard-string-compare-globbing
@@ -4883,6 +5122,7 @@ TestCase &TestCase::operator=(const TestCase &other) {
         m_name = m_full_name.c_str();
     return *this;
 }
+
 DOCTEST_MSVC_SUPPRESS_WARNING_POP
 
 TestCase &TestCase::operator*(const char *in) {
@@ -4918,6 +5158,7 @@ std::set<TestCase> &getRegisteredTests() {
 } // namespace detail
 namespace {
 using namespace detail;
+
 // for sorting tests by file/line
 bool fileOrderComparator(const TestCase *lhs, const TestCase *rhs) {
     // this is needed because MSVC gives different case for drive letters
@@ -4947,6 +5188,7 @@ bool nameOrderComparator(const TestCase *lhs, const TestCase *rhs) {
 }
 
 DOCTEST_CLANG_SUPPRESS_WARNING_WITH_PUSH("-Wdeprecated-declarations")
+
 void color_to_stream(std::ostream &s, Color::Enum code) {
     static_cast<void>(
         s);                  // for DOCTEST_CONFIG_COLORS_NONE or DOCTEST_CONFIG_COLORS_WINDOWS
@@ -5005,25 +5247,49 @@ void color_to_stream(std::ostream &s, Color::Enum code) {
     SetConsoleTextAttribute(ch.stdoutHandle, x | ch.origBgAttrs)
 
     // clang-format off
-        switch (code) {
-            case Color::White:       DOCTEST_SET_ATTR(FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE); break;
-            case Color::Red:         DOCTEST_SET_ATTR(FOREGROUND_RED);                                      break;
-            case Color::Green:       DOCTEST_SET_ATTR(FOREGROUND_GREEN);                                    break;
-            case Color::Blue:        DOCTEST_SET_ATTR(FOREGROUND_BLUE);                                     break;
-            case Color::Cyan:        DOCTEST_SET_ATTR(FOREGROUND_BLUE | FOREGROUND_GREEN);                  break;
-            case Color::Yellow:      DOCTEST_SET_ATTR(FOREGROUND_RED | FOREGROUND_GREEN);                   break;
-            case Color::Grey:        DOCTEST_SET_ATTR(0);                                                   break;
-            case Color::LightGrey:   DOCTEST_SET_ATTR(FOREGROUND_INTENSITY);                                break;
-            case Color::BrightRed:   DOCTEST_SET_ATTR(FOREGROUND_INTENSITY | FOREGROUND_RED);               break;
-            case Color::BrightGreen: DOCTEST_SET_ATTR(FOREGROUND_INTENSITY | FOREGROUND_GREEN);             break;
-            case Color::BrightWhite: DOCTEST_SET_ATTR(FOREGROUND_INTENSITY | FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE); break;
-            case Color::None:
-            case Color::Bright: // invalid
-            default:                 DOCTEST_SET_ATTR(ch.origFgAttrs);
-        }
+            switch (code) {
+                case Color::White:
+                    DOCTEST_SET_ATTR(FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE);
+                    break;
+                case Color::Red:
+                    DOCTEST_SET_ATTR(FOREGROUND_RED);
+                    break;
+                case Color::Green:
+                    DOCTEST_SET_ATTR(FOREGROUND_GREEN);
+                    break;
+                case Color::Blue:
+                    DOCTEST_SET_ATTR(FOREGROUND_BLUE);
+                    break;
+                case Color::Cyan:
+                    DOCTEST_SET_ATTR(FOREGROUND_BLUE | FOREGROUND_GREEN);
+                    break;
+                case Color::Yellow:
+                    DOCTEST_SET_ATTR(FOREGROUND_RED | FOREGROUND_GREEN);
+                    break;
+                case Color::Grey:
+                    DOCTEST_SET_ATTR(0);
+                    break;
+                case Color::LightGrey:
+                    DOCTEST_SET_ATTR(FOREGROUND_INTENSITY);
+                    break;
+                case Color::BrightRed:
+                    DOCTEST_SET_ATTR(FOREGROUND_INTENSITY | FOREGROUND_RED);
+                    break;
+                case Color::BrightGreen:
+                    DOCTEST_SET_ATTR(FOREGROUND_INTENSITY | FOREGROUND_GREEN);
+                    break;
+                case Color::BrightWhite:
+                    DOCTEST_SET_ATTR(FOREGROUND_INTENSITY | FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE);
+                    break;
+                case Color::None:
+                case Color::Bright: // invalid
+                default:
+                    DOCTEST_SET_ATTR(ch.origFgAttrs);
+            }
     // clang-format on
 #endif // DOCTEST_CONFIG_COLORS_WINDOWS
 }
+
 DOCTEST_CLANG_SUPPRESS_WARNING_POP
 
 std::vector<const IExceptionTranslator *> &getExceptionTranslators() {
@@ -5039,19 +5305,19 @@ String translateActiveException() {
         if (curr->translate(res))
             return res;
     // clang-format off
-        DOCTEST_GCC_SUPPRESS_WARNING_WITH_PUSH("-Wcatch-value")
-        try {
-            throw;
-        } catch(std::exception& ex) {
-            return ex.what();
-        } catch(std::string& msg) {
-            return msg.c_str();
-        } catch(const char* msg) {
-            return msg;
-        } catch(...) {
-            return "unknown exception";
-        }
-        DOCTEST_GCC_SUPPRESS_WARNING_POP
+                        DOCTEST_GCC_SUPPRESS_WARNING_WITH_PUSH("-Wcatch-value")
+            try {
+                throw;
+            } catch (std::exception &ex) {
+                return ex.what();
+            } catch (std::string &msg) {
+                return msg.c_str();
+            } catch (const char *msg) {
+                return msg;
+            } catch (...) {
+                return "unknown exception";
+            }
+                    DOCTEST_GCC_SUPPRESS_WARNING_POP
 // clang-format on
 #else  // DOCTEST_CONFIG_NO_EXCEPTIONS
     return "";
@@ -5126,7 +5392,9 @@ bool isDebuggerActive() {
     return ((info.kp_proc.p_flag & P_TRACED) != 0);
 }
 #elif DOCTEST_MSVC || defined(__MINGW32__) || defined(__MINGW64__)
+
 bool isDebuggerActive() { return ::IsDebuggerPresent() != 0; }
+
 #else
 bool isDebuggerActive() { return false; }
 #endif // Platform
@@ -5186,11 +5454,15 @@ using namespace detail;
 
 #if !defined(DOCTEST_CONFIG_POSIX_SIGNALS) && \
     !defined(DOCTEST_CONFIG_WINDOWS_SEH)
+
 struct FatalConditionHandler {
     static void reset() {}
+
     static void allocateAltStackMem() {}
+
     static void freeAltStackMem() {}
 };
+
 #else // DOCTEST_CONFIG_POSIX_SIGNALS || DOCTEST_CONFIG_WINDOWS_SEH
 
 void reportFatal(const std::string &);
@@ -5520,13 +5792,13 @@ bool ResultBuilder::log() {
                (m_at & assertType::is_throws_with)) { //! OCLINT
         m_failed = !m_threw_as || !m_exception_string.check(m_exception);
     } else if (m_at & assertType::is_throws_as) { //! OCLINT bitwise operator in
-                                                  //! conditional
+        //! conditional
         m_failed = !m_threw_as;
     } else if (m_at & assertType::is_throws_with) { //! OCLINT bitwise operator
-                                                    //! in conditional
+        //! in conditional
         m_failed = !m_exception_string.check(m_exception);
     } else if (m_at & assertType::is_nothrow) { //! OCLINT bitwise operator in
-                                                //! conditional
+        //! conditional
         m_failed = m_threw;
     }
 
@@ -5626,374 +5898,380 @@ using namespace detail;
 // This is done so cherry-picking bug fixes is trivial - even the style/formatting is untouched.
 // =================================================================================================
 
-    class XmlEncode {
-    public:
-        enum ForWhat { ForTextNodes, ForAttributes };
-
-        XmlEncode( std::string const& str, ForWhat forWhat = ForTextNodes );
-
-        void encodeTo( std::ostream& os ) const;
-
-        friend std::ostream& operator << ( std::ostream& os, XmlEncode const& xmlEncode );
-
-    private:
-        std::string m_str;
-        ForWhat m_forWhat;
-    };
-
-    class XmlWriter {
-    public:
-
-        class ScopedElement {
+        class XmlEncode {
         public:
-            ScopedElement( XmlWriter* writer );
+            enum ForWhat {
+                ForTextNodes, ForAttributes
+            };
 
-            ScopedElement( ScopedElement&& other ) DOCTEST_NOEXCEPT;
-            ScopedElement& operator=( ScopedElement&& other ) DOCTEST_NOEXCEPT;
+            XmlEncode(std::string const &str, ForWhat forWhat = ForTextNodes);
 
-            ~ScopedElement();
+            void encodeTo(std::ostream &os) const;
 
-            ScopedElement& writeText( std::string const& text, bool indent = true );
-
-            template<typename T>
-            ScopedElement& writeAttribute( std::string const& name, T const& attribute ) {
-                m_writer->writeAttribute( name, attribute );
-                return *this;
-            }
+            friend std::ostream &operator<<(std::ostream &os, XmlEncode const &xmlEncode);
 
         private:
-            mutable XmlWriter* m_writer = nullptr;
+            std::string m_str;
+            ForWhat m_forWhat;
         };
 
-        XmlWriter( std::ostream& os = std::cout );
-        ~XmlWriter();
+        class XmlWriter {
+        public:
 
-        XmlWriter( XmlWriter const& ) = delete;
-        XmlWriter& operator=( XmlWriter const& ) = delete;
+            class ScopedElement {
+            public:
+                ScopedElement(XmlWriter *writer);
 
-        XmlWriter& startElement( std::string const& name );
+                ScopedElement(ScopedElement &&other) DOCTEST_NOEXCEPT;
 
-        ScopedElement scopedElement( std::string const& name );
+                ScopedElement &operator=(ScopedElement &&other) DOCTEST_NOEXCEPT;
 
-        XmlWriter& endElement();
+                ~ScopedElement();
 
-        XmlWriter& writeAttribute( std::string const& name, std::string const& attribute );
+                ScopedElement &writeText(std::string const &text, bool indent = true);
 
-        XmlWriter& writeAttribute( std::string const& name, const char* attribute );
+                template<typename T>
+                ScopedElement &writeAttribute(std::string const &name, T const &attribute) {
+                    m_writer->writeAttribute(name, attribute);
+                    return *this;
+                }
 
-        XmlWriter& writeAttribute( std::string const& name, bool attribute );
+            private:
+                mutable XmlWriter *m_writer = nullptr;
+            };
 
-        template<typename T>
-        XmlWriter& writeAttribute( std::string const& name, T const& attribute ) {
-        std::stringstream rss;
-            rss << attribute;
-            return writeAttribute( name, rss.str() );
-        }
+            XmlWriter(std::ostream &os = std::cout);
 
-        XmlWriter& writeText( std::string const& text, bool indent = true );
+            ~XmlWriter();
 
-        //XmlWriter& writeComment( std::string const& text );
+            XmlWriter(XmlWriter const &) = delete;
 
-        //void writeStylesheetRef( std::string const& url );
+            XmlWriter &operator=(XmlWriter const &) = delete;
 
-        //XmlWriter& writeBlankLine();
+            XmlWriter &startElement(std::string const &name);
 
-        void ensureTagClosed();
+            ScopedElement scopedElement(std::string const &name);
 
-        void writeDeclaration();
+            XmlWriter &endElement();
 
-    private:
+            XmlWriter &writeAttribute(std::string const &name, std::string const &attribute);
 
-        void newlineIfNecessary();
+            XmlWriter &writeAttribute(std::string const &name, const char *attribute);
 
-        bool m_tagIsOpen = false;
-        bool m_needsNewline = false;
-        std::vector<std::string> m_tags;
-        std::string m_indent;
-        std::ostream& m_os;
-    };
+            XmlWriter &writeAttribute(std::string const &name, bool attribute);
+
+            template<typename T>
+            XmlWriter &writeAttribute(std::string const &name, T const &attribute) {
+                std::stringstream rss;
+                rss << attribute;
+                return writeAttribute(name, rss.str());
+            }
+
+            XmlWriter &writeText(std::string const &text, bool indent = true);
+
+            //XmlWriter& writeComment( std::string const& text );
+
+            //void writeStylesheetRef( std::string const& url );
+
+            //XmlWriter& writeBlankLine();
+
+            void ensureTagClosed();
+
+            void writeDeclaration();
+
+        private:
+
+            void newlineIfNecessary();
+
+            bool m_tagIsOpen = false;
+            bool m_needsNewline = false;
+            std::vector<std::string> m_tags;
+            std::string m_indent;
+            std::ostream &m_os;
+        };
 
 // =================================================================================================
 // The following code has been taken verbatim from Catch2/include/internal/catch_xmlwriter.h/cpp
 // This is done so cherry-picking bug fixes is trivial - even the style/formatting is untouched.
 // =================================================================================================
 
-using uchar = unsigned char;
+        using uchar = unsigned char;
 
-namespace {
+        namespace {
 
-    size_t trailingBytes(unsigned char c) {
-        if ((c & 0xE0) == 0xC0) {
-            return 2;
-        }
-        if ((c & 0xF0) == 0xE0) {
-            return 3;
-        }
-        if ((c & 0xF8) == 0xF0) {
-            return 4;
-        }
-        DOCTEST_INTERNAL_ERROR("Invalid multibyte utf-8 start byte encountered");
-    }
-
-    uint32_t headerValue(unsigned char c) {
-        if ((c & 0xE0) == 0xC0) {
-            return c & 0x1F;
-        }
-        if ((c & 0xF0) == 0xE0) {
-            return c & 0x0F;
-        }
-        if ((c & 0xF8) == 0xF0) {
-            return c & 0x07;
-        }
-        DOCTEST_INTERNAL_ERROR("Invalid multibyte utf-8 start byte encountered");
-    }
-
-    void hexEscapeChar(std::ostream& os, unsigned char c) {
-        std::ios_base::fmtflags f(os.flags());
-        os << "\\x"
-            << std::uppercase << std::hex << std::setfill('0') << std::setw(2)
-            << static_cast<int>(c);
-        os.flags(f);
-    }
-
-} // anonymous namespace
-
-    XmlEncode::XmlEncode( std::string const& str, ForWhat forWhat )
-    :   m_str( str ),
-        m_forWhat( forWhat )
-    {}
-
-    void XmlEncode::encodeTo( std::ostream& os ) const {
-        // Apostrophe escaping not necessary if we always use " to write attributes
-        // (see: https://www.w3.org/TR/xml/#syntax)
-
-        for( std::size_t idx = 0; idx < m_str.size(); ++ idx ) {
-            uchar c = m_str[idx];
-            switch (c) {
-            case '<':   os << "&lt;"; break;
-            case '&':   os << "&amp;"; break;
-
-            case '>':
-                // See: https://www.w3.org/TR/xml/#syntax
-                if (idx > 2 && m_str[idx - 1] == ']' && m_str[idx - 2] == ']')
-                    os << "&gt;";
-                else
-                    os << c;
-                break;
-
-            case '\"':
-                if (m_forWhat == ForAttributes)
-                    os << "&quot;";
-                else
-                    os << c;
-                break;
-
-            default:
-                // Check for control characters and invalid utf-8
-
-                // Escape control characters in standard ascii
-                // see https://stackoverflow.com/questions/404107/why-are-control-characters-illegal-in-xml-1-0
-                if (c < 0x09 || (c > 0x0D && c < 0x20) || c == 0x7F) {
-                    hexEscapeChar(os, c);
-                    break;
+            size_t trailingBytes(unsigned char c) {
+                if ((c & 0xE0) == 0xC0) {
+                    return 2;
                 }
+                if ((c & 0xF0) == 0xE0) {
+                    return 3;
+                }
+                if ((c & 0xF8) == 0xF0) {
+                    return 4;
+                }
+                DOCTEST_INTERNAL_ERROR("Invalid multibyte utf-8 start byte encountered");
+            }
 
-                // Plain ASCII: Write it to stream
-                if (c < 0x7F) {
-                    os << c;
-                    break;
+            uint32_t headerValue(unsigned char c) {
+                if ((c & 0xE0) == 0xC0) {
+                    return c & 0x1F;
                 }
+                if ((c & 0xF0) == 0xE0) {
+                    return c & 0x0F;
+                }
+                if ((c & 0xF8) == 0xF0) {
+                    return c & 0x07;
+                }
+                DOCTEST_INTERNAL_ERROR("Invalid multibyte utf-8 start byte encountered");
+            }
 
-                // UTF-8 territory
-                // Check if the encoding is valid and if it is not, hex escape bytes.
-                // Important: We do not check the exact decoded values for validity, only the encoding format
-                // First check that this bytes is a valid lead byte:
-                // This means that it is not encoded as 1111 1XXX
-                // Or as 10XX XXXX
-                if (c <  0xC0 ||
-                    c >= 0xF8) {
-                    hexEscapeChar(os, c);
-                    break;
-                }
+            void hexEscapeChar(std::ostream &os, unsigned char c) {
+                std::ios_base::fmtflags f(os.flags());
+                os << "\\x"
+                   << std::uppercase << std::hex << std::setfill('0') << std::setw(2)
+                   << static_cast<int>(c);
+                os.flags(f);
+            }
 
-                auto encBytes = trailingBytes(c);
-                // Are there enough bytes left to avoid accessing out-of-bounds memory?
-                if (idx + encBytes - 1 >= m_str.size()) {
-                    hexEscapeChar(os, c);
-                    break;
-                }
-                // The header is valid, check data
-                // The next encBytes bytes must together be a valid utf-8
-                // This means: bitpattern 10XX XXXX and the extracted value is sane (ish)
-                bool valid = true;
-                uint32_t value = headerValue(c);
-                for (std::size_t n = 1; n < encBytes; ++n) {
-                    uchar nc = m_str[idx + n];
-                    valid &= ((nc & 0xC0) == 0x80);
-                    value = (value << 6) | (nc & 0x3F);
-                }
+        } // anonymous namespace
 
-                if (
-                    // Wrong bit pattern of following bytes
-                    (!valid) ||
-                    // Overlong encodings
-                    (value < 0x80) ||
-                    (                 value < 0x800   && encBytes > 2) || // removed "0x80 <= value &&" because redundant
-                    (0x800 < value && value < 0x10000 && encBytes > 3) ||
-                    // Encoded value out of range
-                    (value >= 0x110000)
-                    ) {
-                    hexEscapeChar(os, c);
-                    break;
-                }
+        XmlEncode::XmlEncode(std::string const &str, ForWhat forWhat)
+                : m_str(str),
+                  m_forWhat(forWhat) {}
 
-                // If we got here, this is in fact a valid(ish) utf-8 sequence
-                for (std::size_t n = 0; n < encBytes; ++n) {
-                    os << m_str[idx + n];
+        void XmlEncode::encodeTo(std::ostream &os) const {
+            // Apostrophe escaping not necessary if we always use " to write attributes
+            // (see: https://www.w3.org/TR/xml/#syntax)
+
+            for (std::size_t idx = 0; idx < m_str.size(); ++idx) {
+                uchar c = m_str[idx];
+                switch (c) {
+                    case '<':
+                        os << "&lt;";
+                        break;
+                    case '&':
+                        os << "&amp;";
+                        break;
+
+                    case '>':
+                        // See: https://www.w3.org/TR/xml/#syntax
+                        if (idx > 2 && m_str[idx - 1] == ']' && m_str[idx - 2] == ']')
+                            os << "&gt;";
+                        else
+                            os << c;
+                        break;
+
+                    case '\"':
+                        if (m_forWhat == ForAttributes)
+                            os << "&quot;";
+                        else
+                            os << c;
+                        break;
+
+                    default:
+                        // Check for control characters and invalid utf-8
+
+                        // Escape control characters in standard ascii
+                        // see https://stackoverflow.com/questions/404107/why-are-control-characters-illegal-in-xml-1-0
+                        if (c < 0x09 || (c > 0x0D && c < 0x20) || c == 0x7F) {
+                            hexEscapeChar(os, c);
+                            break;
+                        }
+
+                        // Plain ASCII: Write it to stream
+                        if (c < 0x7F) {
+                            os << c;
+                            break;
+                        }
+
+                        // UTF-8 territory
+                        // Check if the encoding is valid and if it is not, hex escape bytes.
+                        // Important: We do not check the exact decoded values for validity, only the encoding format
+                        // First check that this bytes is a valid lead byte:
+                        // This means that it is not encoded as 1111 1XXX
+                        // Or as 10XX XXXX
+                        if (c < 0xC0 ||
+                            c >= 0xF8) {
+                            hexEscapeChar(os, c);
+                            break;
+                        }
+
+                        auto encBytes = trailingBytes(c);
+                        // Are there enough bytes left to avoid accessing out-of-bounds memory?
+                        if (idx + encBytes - 1 >= m_str.size()) {
+                            hexEscapeChar(os, c);
+                            break;
+                        }
+                        // The header is valid, check data
+                        // The next encBytes bytes must together be a valid utf-8
+                        // This means: bitpattern 10XX XXXX and the extracted value is sane (ish)
+                        bool valid = true;
+                        uint32_t value = headerValue(c);
+                        for (std::size_t n = 1; n < encBytes; ++n) {
+                            uchar nc = m_str[idx + n];
+                            valid &= ((nc & 0xC0) == 0x80);
+                            value = (value << 6) | (nc & 0x3F);
+                        }
+
+                        if (
+                            // Wrong bit pattern of following bytes
+                                (!valid) ||
+                                // Overlong encodings
+                                (value < 0x80) ||
+                                (value < 0x800 && encBytes > 2) || // removed "0x80 <= value &&" because redundant
+                                (0x800 < value && value < 0x10000 && encBytes > 3) ||
+                                // Encoded value out of range
+                                (value >= 0x110000)
+                                ) {
+                            hexEscapeChar(os, c);
+                            break;
+                        }
+
+                        // If we got here, this is in fact a valid(ish) utf-8 sequence
+                        for (std::size_t n = 0; n < encBytes; ++n) {
+                            os << m_str[idx + n];
+                        }
+                        idx += encBytes - 1;
+                        break;
                 }
-                idx += encBytes - 1;
-                break;
             }
         }
-    }
 
-    std::ostream& operator << ( std::ostream& os, XmlEncode const& xmlEncode ) {
-        xmlEncode.encodeTo( os );
-        return os;
-    }
-
-    XmlWriter::ScopedElement::ScopedElement( XmlWriter* writer )
-    :   m_writer( writer )
-    {}
-
-    XmlWriter::ScopedElement::ScopedElement( ScopedElement&& other ) DOCTEST_NOEXCEPT
-    :   m_writer( other.m_writer ){
-        other.m_writer = nullptr;
-    }
-    XmlWriter::ScopedElement& XmlWriter::ScopedElement::operator=( ScopedElement&& other ) DOCTEST_NOEXCEPT {
-        if ( m_writer ) {
-            m_writer->endElement();
+        std::ostream &operator<<(std::ostream &os, XmlEncode const &xmlEncode) {
+            xmlEncode.encodeTo(os);
+            return os;
         }
-        m_writer = other.m_writer;
-        other.m_writer = nullptr;
-        return *this;
-    }
 
+        XmlWriter::ScopedElement::ScopedElement(XmlWriter *writer)
+                : m_writer(writer) {}
 
-    XmlWriter::ScopedElement::~ScopedElement() {
-        if( m_writer )
-            m_writer->endElement();
-    }
-
-    XmlWriter::ScopedElement& XmlWriter::ScopedElement::writeText( std::string const& text, bool indent ) {
-        m_writer->writeText( text, indent );
-        return *this;
-    }
-
-    XmlWriter::XmlWriter( std::ostream& os ) : m_os( os )
-    {
-        // writeDeclaration(); // called explicitly by the reporters that use the writer class - see issue #627
-    }
-
-    XmlWriter::~XmlWriter() {
-        while( !m_tags.empty() )
-            endElement();
-    }
-
-    XmlWriter& XmlWriter::startElement( std::string const& name ) {
-        ensureTagClosed();
-        newlineIfNecessary();
-        m_os << m_indent << '<' << name;
-        m_tags.push_back( name );
-        m_indent += "  ";
-        m_tagIsOpen = true;
-        return *this;
-    }
-
-    XmlWriter::ScopedElement XmlWriter::scopedElement( std::string const& name ) {
-        ScopedElement scoped( this );
-        startElement( name );
-        return scoped;
-    }
-
-    XmlWriter& XmlWriter::endElement() {
-        newlineIfNecessary();
-        m_indent = m_indent.substr( 0, m_indent.size()-2 );
-        if( m_tagIsOpen ) {
-            m_os << "/>";
-            m_tagIsOpen = false;
+        XmlWriter::ScopedElement::ScopedElement(ScopedElement &&other) DOCTEST_NOEXCEPT
+                : m_writer(other.m_writer) {
+            other.m_writer = nullptr;
         }
-        else {
-            m_os << m_indent << "</" << m_tags.back() << ">";
+
+        XmlWriter::ScopedElement &XmlWriter::ScopedElement::operator=(ScopedElement &&other) DOCTEST_NOEXCEPT {
+            if (m_writer) {
+                m_writer->endElement();
+            }
+            m_writer = other.m_writer;
+            other.m_writer = nullptr;
+            return *this;
         }
-        m_os << std::endl;
-        m_tags.pop_back();
-        return *this;
-    }
 
-    XmlWriter& XmlWriter::writeAttribute( std::string const& name, std::string const& attribute ) {
-        if( !name.empty() && !attribute.empty() )
-            m_os << ' ' << name << "=\"" << XmlEncode( attribute, XmlEncode::ForAttributes ) << '"';
-        return *this;
-    }
 
-    XmlWriter& XmlWriter::writeAttribute( std::string const& name, const char* attribute ) {
-        if( !name.empty() && attribute && attribute[0] != '\0' )
-            m_os << ' ' << name << "=\"" << XmlEncode( attribute, XmlEncode::ForAttributes ) << '"';
-        return *this;
-    }
+        XmlWriter::ScopedElement::~ScopedElement() {
+            if (m_writer)
+                m_writer->endElement();
+        }
 
-    XmlWriter& XmlWriter::writeAttribute( std::string const& name, bool attribute ) {
-        m_os << ' ' << name << "=\"" << ( attribute ? "true" : "false" ) << '"';
-        return *this;
-    }
+        XmlWriter::ScopedElement &XmlWriter::ScopedElement::writeText(std::string const &text, bool indent) {
+            m_writer->writeText(text, indent);
+            return *this;
+        }
 
-    XmlWriter& XmlWriter::writeText( std::string const& text, bool indent ) {
-        if( !text.empty() ){
-            bool tagWasOpen = m_tagIsOpen;
+        XmlWriter::XmlWriter(std::ostream &os) : m_os(os) {
+            // writeDeclaration(); // called explicitly by the reporters that use the writer class - see issue #627
+        }
+
+        XmlWriter::~XmlWriter() {
+            while (!m_tags.empty())
+                endElement();
+        }
+
+        XmlWriter &XmlWriter::startElement(std::string const &name) {
             ensureTagClosed();
-            if( tagWasOpen && indent )
-                m_os << m_indent;
-            m_os << XmlEncode( text );
-            m_needsNewline = true;
+            newlineIfNecessary();
+            m_os << m_indent << '<' << name;
+            m_tags.push_back(name);
+            m_indent += "  ";
+            m_tagIsOpen = true;
+            return *this;
         }
-        return *this;
-    }
 
-    //XmlWriter& XmlWriter::writeComment( std::string const& text ) {
-    //    ensureTagClosed();
-    //    m_os << m_indent << "<!--" << text << "-->";
-    //    m_needsNewline = true;
-    //    return *this;
-    //}
-
-    //void XmlWriter::writeStylesheetRef( std::string const& url ) {
-    //    m_os << "<?xml-stylesheet type=\"text/xsl\" href=\"" << url << "\"?>\n";
-    //}
-
-    //XmlWriter& XmlWriter::writeBlankLine() {
-    //    ensureTagClosed();
-    //    m_os << '\n';
-    //    return *this;
-    //}
-
-    void XmlWriter::ensureTagClosed() {
-        if( m_tagIsOpen ) {
-            m_os << ">" << std::endl;
-            m_tagIsOpen = false;
+        XmlWriter::ScopedElement XmlWriter::scopedElement(std::string const &name) {
+            ScopedElement scoped(this);
+            startElement(name);
+            return scoped;
         }
-    }
 
-    void XmlWriter::writeDeclaration() {
-        m_os << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-    }
-
-    void XmlWriter::newlineIfNecessary() {
-        if( m_needsNewline ) {
+        XmlWriter &XmlWriter::endElement() {
+            newlineIfNecessary();
+            m_indent = m_indent.substr(0, m_indent.size() - 2);
+            if (m_tagIsOpen) {
+                m_os << "/>";
+                m_tagIsOpen = false;
+            } else {
+                m_os << m_indent << "</" << m_tags.back() << ">";
+            }
             m_os << std::endl;
-            m_needsNewline = false;
+            m_tags.pop_back();
+            return *this;
         }
-    }
+
+        XmlWriter &XmlWriter::writeAttribute(std::string const &name, std::string const &attribute) {
+            if (!name.empty() && !attribute.empty())
+                m_os << ' ' << name << "=\"" << XmlEncode(attribute, XmlEncode::ForAttributes) << '"';
+            return *this;
+        }
+
+        XmlWriter &XmlWriter::writeAttribute(std::string const &name, const char *attribute) {
+            if (!name.empty() && attribute && attribute[0] != '\0')
+                m_os << ' ' << name << "=\"" << XmlEncode(attribute, XmlEncode::ForAttributes) << '"';
+            return *this;
+        }
+
+        XmlWriter &XmlWriter::writeAttribute(std::string const &name, bool attribute) {
+            m_os << ' ' << name << "=\"" << (attribute ? "true" : "false") << '"';
+            return *this;
+        }
+
+        XmlWriter &XmlWriter::writeText(std::string const &text, bool indent) {
+            if (!text.empty()) {
+                bool tagWasOpen = m_tagIsOpen;
+                ensureTagClosed();
+                if (tagWasOpen && indent)
+                    m_os << m_indent;
+                m_os << XmlEncode(text);
+                m_needsNewline = true;
+            }
+            return *this;
+        }
+
+        //XmlWriter& XmlWriter::writeComment( std::string const& text ) {
+        //    ensureTagClosed();
+        //    m_os << m_indent << "<!--" << text << "-->";
+        //    m_needsNewline = true;
+        //    return *this;
+        //}
+
+        //void XmlWriter::writeStylesheetRef( std::string const& url ) {
+        //    m_os << "<?xml-stylesheet type=\"text/xsl\" href=\"" << url << "\"?>\n";
+        //}
+
+        //XmlWriter& XmlWriter::writeBlankLine() {
+        //    ensureTagClosed();
+        //    m_os << '\n';
+        //    return *this;
+        //}
+
+        void XmlWriter::ensureTagClosed() {
+            if (m_tagIsOpen) {
+                m_os << ">" << std::endl;
+                m_tagIsOpen = false;
+            }
+        }
+
+        void XmlWriter::writeDeclaration() {
+            m_os << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+        }
+
+        void XmlWriter::newlineIfNecessary() {
+            if (m_needsNewline) {
+                m_os << std::endl;
+                m_needsNewline = false;
+            }
+        }
 
 // =================================================================================================
 // End of copy-pasted code from Catch
@@ -6130,7 +6408,7 @@ struct XmlReporter : public IReporter {
 
     void test_run_end(const TestRunStats &p) override {
         if (tc) // the TestSuite tag - only if there has been at least 1 test
-                // case
+            // case
             xml.endElement();
 
         xml.scopedElement("OverallResultsAsserts")
@@ -6272,7 +6550,7 @@ void fulltext_log_assert_to_stream(std::ostream &s, const AssertData &rb) {
             s << "did NOT throw at all!\n";
         }
     } else if (rb.m_at & assertType::is_throws_as) { //! OCLINT bitwise operator
-                                                     //! in conditional
+        //! in conditional
         s << Color::Cyan << assertString(rb.m_at) << "( " << rb.m_expr << ", "
           << rb.m_exception_type << " ) " << Color::None
           << (rb.m_threw ? (rb.m_threw_as ? "threw as expected!"
@@ -6281,7 +6559,7 @@ void fulltext_log_assert_to_stream(std::ostream &s, const AssertData &rb) {
           << Color::Cyan << rb.m_exception << "\n";
     } else if (rb.m_at &
                assertType::is_throws_with) { //! OCLINT bitwise operator in
-                                             //! conditional
+        //! conditional
         s << Color::Cyan << assertString(rb.m_at) << "( " << rb.m_expr << ", \""
           << rb.m_exception_string.c_str() << "\" ) " << Color::None
           << (rb.m_threw ? (!rb.m_failed ? "threw as expected!"
@@ -6289,7 +6567,7 @@ void fulltext_log_assert_to_stream(std::ostream &s, const AssertData &rb) {
                          : "did NOT throw at all!")
           << Color::Cyan << rb.m_exception << "\n";
     } else if (rb.m_at & assertType::is_nothrow) { //! OCLINT bitwise operator
-                                                   //! in conditional
+        //! in conditional
         s << (rb.m_threw ? "THREW exception: " : "didn't throw!") << Color::Cyan
           << rb.m_exception << "\n";
     } else {
@@ -6534,6 +6812,7 @@ DOCTEST_REGISTER_REPORTER("junit", 0, JUnitReporter);
 
 struct Whitespace {
     int nrSpaces;
+
     explicit Whitespace(int nr) : nrSpaces(nr) {}
 };
 
@@ -6675,113 +6954,157 @@ struct ConsoleReporter : public IReporter {
             static_cast<int>(strlen(DOCTEST_OPTIONS_PREFIX_DISPLAY));
         printVersion();
         // clang-format off
-            s << Color::Cyan << "[doctest]\n" << Color::None;
-            s << Color::Cyan << "[doctest] " << Color::None;
-            s << "boolean values: \"1/on/yes/true\" or \"0/off/no/false\"\n";
-            s << Color::Cyan << "[doctest] " << Color::None;
-            s << "filter  values: \"str1,str2,str3\" (comma separated strings)\n";
-            s << Color::Cyan << "[doctest]\n" << Color::None;
-            s << Color::Cyan << "[doctest] " << Color::None;
-            s << "filters use wildcards for matching strings\n";
-            s << Color::Cyan << "[doctest] " << Color::None;
-            s << "something passes a filter if any of the strings in a filter matches\n";
+                s << Color::Cyan << "[doctest]\n" << Color::None;
+                s << Color::Cyan << "[doctest] " << Color::None;
+                s << "boolean values: \"1/on/yes/true\" or \"0/off/no/false\"\n";
+                s << Color::Cyan << "[doctest] " << Color::None;
+                s << "filter  values: \"str1,str2,str3\" (comma separated strings)\n";
+                s << Color::Cyan << "[doctest]\n" << Color::None;
+                s << Color::Cyan << "[doctest] " << Color::None;
+                s << "filters use wildcards for matching strings\n";
+                s << Color::Cyan << "[doctest] " << Color::None;
+                s << "something passes a filter if any of the strings in a filter matches\n";
 #ifndef DOCTEST_CONFIG_NO_UNPREFIXED_OPTIONS
-            s << Color::Cyan << "[doctest]\n" << Color::None;
-            s << Color::Cyan << "[doctest] " << Color::None;
-            s << "ALL FLAGS, OPTIONS AND FILTERS ALSO AVAILABLE WITH A \"" DOCTEST_CONFIG_OPTIONS_PREFIX "\" PREFIX!!!\n";
+                s << Color::Cyan << "[doctest]\n" << Color::None;
+                s << Color::Cyan << "[doctest] " << Color::None;
+                s
+                        << "ALL FLAGS, OPTIONS AND FILTERS ALSO AVAILABLE WITH A \"" DOCTEST_CONFIG_OPTIONS_PREFIX "\" PREFIX!!!\n";
 #endif
-            s << Color::Cyan << "[doctest]\n" << Color::None;
-            s << Color::Cyan << "[doctest] " << Color::None;
-            s << "Query flags - the program quits after them. Available:\n\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "?,   --" DOCTEST_OPTIONS_PREFIX_DISPLAY "help, -" DOCTEST_OPTIONS_PREFIX_DISPLAY "h                      "
-              << Whitespace(sizePrefixDisplay*0) <<  "prints this message\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "v,   --" DOCTEST_OPTIONS_PREFIX_DISPLAY "version                       "
-              << Whitespace(sizePrefixDisplay*1) << "prints the version\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "c,   --" DOCTEST_OPTIONS_PREFIX_DISPLAY "count                         "
-              << Whitespace(sizePrefixDisplay*1) << "prints the number of matching tests\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "ltc, --" DOCTEST_OPTIONS_PREFIX_DISPLAY "list-test-cases               "
-              << Whitespace(sizePrefixDisplay*1) << "lists all matching tests by name\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "lts, --" DOCTEST_OPTIONS_PREFIX_DISPLAY "list-test-suites              "
-              << Whitespace(sizePrefixDisplay*1) << "lists all matching test suites\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "lr,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "list-reporters                "
-              << Whitespace(sizePrefixDisplay*1) << "lists all registered reporters\n\n";
-            // ================================================================================== << 79
-            s << Color::Cyan << "[doctest] " << Color::None;
-            s << "The available <int>/<string> options/filters are:\n\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "tc,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "test-case=<filters>           "
-              << Whitespace(sizePrefixDisplay*1) << "filters     tests by their name\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "tce, --" DOCTEST_OPTIONS_PREFIX_DISPLAY "test-case-exclude=<filters>   "
-              << Whitespace(sizePrefixDisplay*1) << "filters OUT tests by their name\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "sf,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "source-file=<filters>         "
-              << Whitespace(sizePrefixDisplay*1) << "filters     tests by their file\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "sfe, --" DOCTEST_OPTIONS_PREFIX_DISPLAY "source-file-exclude=<filters> "
-              << Whitespace(sizePrefixDisplay*1) << "filters OUT tests by their file\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "ts,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "test-suite=<filters>          "
-              << Whitespace(sizePrefixDisplay*1) << "filters     tests by their test suite\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "tse, --" DOCTEST_OPTIONS_PREFIX_DISPLAY "test-suite-exclude=<filters>  "
-              << Whitespace(sizePrefixDisplay*1) << "filters OUT tests by their test suite\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "sc,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "subcase=<filters>             "
-              << Whitespace(sizePrefixDisplay*1) << "filters     subcases by their name\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "sce, --" DOCTEST_OPTIONS_PREFIX_DISPLAY "subcase-exclude=<filters>     "
-              << Whitespace(sizePrefixDisplay*1) << "filters OUT subcases by their name\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "r,   --" DOCTEST_OPTIONS_PREFIX_DISPLAY "reporters=<filters>           "
-              << Whitespace(sizePrefixDisplay*1) << "reporters to use (console is default)\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "o,   --" DOCTEST_OPTIONS_PREFIX_DISPLAY "out=<string>                  "
-              << Whitespace(sizePrefixDisplay*1) << "output filename\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "ob,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "order-by=<string>             "
-              << Whitespace(sizePrefixDisplay*1) << "how the tests should be ordered\n";
-            s << Whitespace(sizePrefixDisplay*3) << "                                       <string> - [file/suite/name/rand/none]\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "rs,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "rand-seed=<int>               "
-              << Whitespace(sizePrefixDisplay*1) << "seed for random ordering\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "f,   --" DOCTEST_OPTIONS_PREFIX_DISPLAY "first=<int>                   "
-              << Whitespace(sizePrefixDisplay*1) << "the first test passing the filters to\n";
-            s << Whitespace(sizePrefixDisplay*3) << "                                       execute - for range-based execution\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "l,   --" DOCTEST_OPTIONS_PREFIX_DISPLAY "last=<int>                    "
-              << Whitespace(sizePrefixDisplay*1) << "the last test passing the filters to\n";
-            s << Whitespace(sizePrefixDisplay*3) << "                                       execute - for range-based execution\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "aa,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "abort-after=<int>             "
-              << Whitespace(sizePrefixDisplay*1) << "stop after <int> failed assertions\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "scfl,--" DOCTEST_OPTIONS_PREFIX_DISPLAY "subcase-filter-levels=<int>   "
-              << Whitespace(sizePrefixDisplay*1) << "apply filters for the first <int> levels\n";
-            s << Color::Cyan << "\n[doctest] " << Color::None;
-            s << "Bool options - can be used like flags and true is assumed. Available:\n\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "s,   --" DOCTEST_OPTIONS_PREFIX_DISPLAY "success=<bool>                "
-              << Whitespace(sizePrefixDisplay*1) << "include successful assertions in output\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "cs,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "case-sensitive=<bool>         "
-              << Whitespace(sizePrefixDisplay*1) << "filters being treated as case sensitive\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "e,   --" DOCTEST_OPTIONS_PREFIX_DISPLAY "exit=<bool>                   "
-              << Whitespace(sizePrefixDisplay*1) << "exits after the tests finish\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "d,   --" DOCTEST_OPTIONS_PREFIX_DISPLAY "duration=<bool>               "
-              << Whitespace(sizePrefixDisplay*1) << "prints the time duration of each test\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "m,   --" DOCTEST_OPTIONS_PREFIX_DISPLAY "minimal=<bool>                "
-              << Whitespace(sizePrefixDisplay*1) << "minimal console output (only failures)\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "q,   --" DOCTEST_OPTIONS_PREFIX_DISPLAY "quiet=<bool>                  "
-              << Whitespace(sizePrefixDisplay*1) << "no console output\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "nt,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "no-throw=<bool>               "
-              << Whitespace(sizePrefixDisplay*1) << "skips exceptions-related assert checks\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "ne,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "no-exitcode=<bool>            "
-              << Whitespace(sizePrefixDisplay*1) << "returns (or exits) always with success\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "nr,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "no-run=<bool>                 "
-              << Whitespace(sizePrefixDisplay*1) << "skips all runtime doctest operations\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "ni,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "no-intro=<bool>               "
-              << Whitespace(sizePrefixDisplay*1) << "omit the framework intro in the output\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "nv,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "no-version=<bool>             "
-              << Whitespace(sizePrefixDisplay*1) << "omit the framework version in the output\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "nc,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "no-colors=<bool>              "
-              << Whitespace(sizePrefixDisplay*1) << "disables colors in output\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "fc,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "force-colors=<bool>           "
-              << Whitespace(sizePrefixDisplay*1) << "use colors even when not in a tty\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "nb,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "no-breaks=<bool>              "
-              << Whitespace(sizePrefixDisplay*1) << "disables breakpoints in debuggers\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "ns,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "no-skip=<bool>                "
-              << Whitespace(sizePrefixDisplay*1) << "don't skip test cases marked as skip\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "gfl, --" DOCTEST_OPTIONS_PREFIX_DISPLAY "gnu-file-line=<bool>          "
-              << Whitespace(sizePrefixDisplay*1) << ":n: vs (n): for line numbers in output\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "npf, --" DOCTEST_OPTIONS_PREFIX_DISPLAY "no-path-filenames=<bool>      "
-              << Whitespace(sizePrefixDisplay*1) << "only filenames and no paths in output\n";
-            s << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "nln, --" DOCTEST_OPTIONS_PREFIX_DISPLAY "no-line-numbers=<bool>        "
-              << Whitespace(sizePrefixDisplay*1) << "0 instead of real line numbers in output\n";
-            // ================================================================================== << 79
+                s << Color::Cyan << "[doctest]\n" << Color::None;
+                s << Color::Cyan << "[doctest] " << Color::None;
+                s << "Query flags - the program quits after them. Available:\n\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "?,   --" DOCTEST_OPTIONS_PREFIX_DISPLAY "help, -" DOCTEST_OPTIONS_PREFIX_DISPLAY "h                      "
+                        << Whitespace(sizePrefixDisplay * 0) << "prints this message\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "v,   --" DOCTEST_OPTIONS_PREFIX_DISPLAY "version                       "
+                        << Whitespace(sizePrefixDisplay * 1) << "prints the version\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "c,   --" DOCTEST_OPTIONS_PREFIX_DISPLAY "count                         "
+                        << Whitespace(sizePrefixDisplay * 1) << "prints the number of matching tests\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "ltc, --" DOCTEST_OPTIONS_PREFIX_DISPLAY "list-test-cases               "
+                        << Whitespace(sizePrefixDisplay * 1) << "lists all matching tests by name\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "lts, --" DOCTEST_OPTIONS_PREFIX_DISPLAY "list-test-suites              "
+                        << Whitespace(sizePrefixDisplay * 1) << "lists all matching test suites\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "lr,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "list-reporters                "
+                        << Whitespace(sizePrefixDisplay * 1) << "lists all registered reporters\n\n";
+                // ================================================================================== << 79
+                s << Color::Cyan << "[doctest] " << Color::None;
+                s << "The available <int>/<string> options/filters are:\n\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "tc,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "test-case=<filters>           "
+                        << Whitespace(sizePrefixDisplay * 1) << "filters     tests by their name\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "tce, --" DOCTEST_OPTIONS_PREFIX_DISPLAY "test-case-exclude=<filters>   "
+                        << Whitespace(sizePrefixDisplay * 1) << "filters OUT tests by their name\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "sf,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "source-file=<filters>         "
+                        << Whitespace(sizePrefixDisplay * 1) << "filters     tests by their file\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "sfe, --" DOCTEST_OPTIONS_PREFIX_DISPLAY "source-file-exclude=<filters> "
+                        << Whitespace(sizePrefixDisplay * 1) << "filters OUT tests by their file\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "ts,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "test-suite=<filters>          "
+                        << Whitespace(sizePrefixDisplay * 1) << "filters     tests by their test suite\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "tse, --" DOCTEST_OPTIONS_PREFIX_DISPLAY "test-suite-exclude=<filters>  "
+                        << Whitespace(sizePrefixDisplay * 1) << "filters OUT tests by their test suite\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "sc,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "subcase=<filters>             "
+                        << Whitespace(sizePrefixDisplay * 1) << "filters     subcases by their name\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "sce, --" DOCTEST_OPTIONS_PREFIX_DISPLAY "subcase-exclude=<filters>     "
+                        << Whitespace(sizePrefixDisplay * 1) << "filters OUT subcases by their name\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "r,   --" DOCTEST_OPTIONS_PREFIX_DISPLAY "reporters=<filters>           "
+                        << Whitespace(sizePrefixDisplay * 1) << "reporters to use (console is default)\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "o,   --" DOCTEST_OPTIONS_PREFIX_DISPLAY "out=<string>                  "
+                        << Whitespace(sizePrefixDisplay * 1) << "output filename\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "ob,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "order-by=<string>             "
+                        << Whitespace(sizePrefixDisplay * 1) << "how the tests should be ordered\n";
+                s << Whitespace(sizePrefixDisplay * 3)
+                  << "                                       <string> - [file/suite/name/rand/none]\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "rs,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "rand-seed=<int>               "
+                        << Whitespace(sizePrefixDisplay * 1) << "seed for random ordering\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "f,   --" DOCTEST_OPTIONS_PREFIX_DISPLAY "first=<int>                   "
+                        << Whitespace(sizePrefixDisplay * 1) << "the first test passing the filters to\n";
+                s << Whitespace(sizePrefixDisplay * 3)
+                  << "                                       execute - for range-based execution\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "l,   --" DOCTEST_OPTIONS_PREFIX_DISPLAY "last=<int>                    "
+                        << Whitespace(sizePrefixDisplay * 1) << "the last test passing the filters to\n";
+                s << Whitespace(sizePrefixDisplay * 3)
+                  << "                                       execute - for range-based execution\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "aa,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "abort-after=<int>             "
+                        << Whitespace(sizePrefixDisplay * 1) << "stop after <int> failed assertions\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "scfl,--" DOCTEST_OPTIONS_PREFIX_DISPLAY "subcase-filter-levels=<int>   "
+                        << Whitespace(sizePrefixDisplay * 1) << "apply filters for the first <int> levels\n";
+                s << Color::Cyan << "\n[doctest] " << Color::None;
+                s << "Bool options - can be used like flags and true is assumed. Available:\n\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "s,   --" DOCTEST_OPTIONS_PREFIX_DISPLAY "success=<bool>                "
+                        << Whitespace(sizePrefixDisplay * 1) << "include successful assertions in output\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "cs,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "case-sensitive=<bool>         "
+                        << Whitespace(sizePrefixDisplay * 1) << "filters being treated as case sensitive\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "e,   --" DOCTEST_OPTIONS_PREFIX_DISPLAY "exit=<bool>                   "
+                        << Whitespace(sizePrefixDisplay * 1) << "exits after the tests finish\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "d,   --" DOCTEST_OPTIONS_PREFIX_DISPLAY "duration=<bool>               "
+                        << Whitespace(sizePrefixDisplay * 1) << "prints the time duration of each test\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "m,   --" DOCTEST_OPTIONS_PREFIX_DISPLAY "minimal=<bool>                "
+                        << Whitespace(sizePrefixDisplay * 1) << "minimal console output (only failures)\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "q,   --" DOCTEST_OPTIONS_PREFIX_DISPLAY "quiet=<bool>                  "
+                        << Whitespace(sizePrefixDisplay * 1) << "no console output\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "nt,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "no-throw=<bool>               "
+                        << Whitespace(sizePrefixDisplay * 1) << "skips exceptions-related assert checks\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "ne,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "no-exitcode=<bool>            "
+                        << Whitespace(sizePrefixDisplay * 1) << "returns (or exits) always with success\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "nr,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "no-run=<bool>                 "
+                        << Whitespace(sizePrefixDisplay * 1) << "skips all runtime doctest operations\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "ni,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "no-intro=<bool>               "
+                        << Whitespace(sizePrefixDisplay * 1) << "omit the framework intro in the output\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "nv,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "no-version=<bool>             "
+                        << Whitespace(sizePrefixDisplay * 1) << "omit the framework version in the output\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "nc,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "no-colors=<bool>              "
+                        << Whitespace(sizePrefixDisplay * 1) << "disables colors in output\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "fc,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "force-colors=<bool>           "
+                        << Whitespace(sizePrefixDisplay * 1) << "use colors even when not in a tty\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "nb,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "no-breaks=<bool>              "
+                        << Whitespace(sizePrefixDisplay * 1) << "disables breakpoints in debuggers\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "ns,  --" DOCTEST_OPTIONS_PREFIX_DISPLAY "no-skip=<bool>                "
+                        << Whitespace(sizePrefixDisplay * 1) << "don't skip test cases marked as skip\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "gfl, --" DOCTEST_OPTIONS_PREFIX_DISPLAY "gnu-file-line=<bool>          "
+                        << Whitespace(sizePrefixDisplay * 1) << ":n: vs (n): for line numbers in output\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "npf, --" DOCTEST_OPTIONS_PREFIX_DISPLAY "no-path-filenames=<bool>      "
+                        << Whitespace(sizePrefixDisplay * 1) << "only filenames and no paths in output\n";
+                s
+                        << " -" DOCTEST_OPTIONS_PREFIX_DISPLAY "nln, --" DOCTEST_OPTIONS_PREFIX_DISPLAY "no-line-numbers=<bool>        "
+                        << Whitespace(sizePrefixDisplay * 1) << "0 instead of real line numbers in output\n";
+                // ================================================================================== << 79
         // clang-format on
 
         s << Color::Cyan << "\n[doctest] " << Color::None;
@@ -7049,6 +7372,7 @@ struct ConsoleReporter : public IReporter {
 DOCTEST_REGISTER_REPORTER("console", 0, ConsoleReporter);
 
 #ifdef DOCTEST_PLATFORM_WINDOWS
+
 struct DebugOutputWindowReporter : public ConsoleReporter {
     DOCTEST_THREAD_LOCAL static std::ostringstream oss;
 
@@ -7069,22 +7393,32 @@ struct DebugOutputWindowReporter : public ConsoleReporter {
 
     DOCTEST_DEBUG_OUTPUT_REPORTER_OVERRIDE(test_run_start, DOCTEST_EMPTY,
                                            DOCTEST_EMPTY)
+
     DOCTEST_DEBUG_OUTPUT_REPORTER_OVERRIDE(test_run_end, const TestRunStats &,
                                            in)
+
     DOCTEST_DEBUG_OUTPUT_REPORTER_OVERRIDE(test_case_start,
                                            const TestCaseData &, in)
+
     DOCTEST_DEBUG_OUTPUT_REPORTER_OVERRIDE(test_case_reenter,
                                            const TestCaseData &, in)
+
     DOCTEST_DEBUG_OUTPUT_REPORTER_OVERRIDE(test_case_end,
                                            const CurrentTestCaseStats &, in)
+
     DOCTEST_DEBUG_OUTPUT_REPORTER_OVERRIDE(test_case_exception,
                                            const TestCaseException &, in)
+
     DOCTEST_DEBUG_OUTPUT_REPORTER_OVERRIDE(subcase_start,
                                            const SubcaseSignature &, in)
+
     DOCTEST_DEBUG_OUTPUT_REPORTER_OVERRIDE(subcase_end, DOCTEST_EMPTY,
                                            DOCTEST_EMPTY)
+
     DOCTEST_DEBUG_OUTPUT_REPORTER_OVERRIDE(log_assert, const AssertData &, in)
+
     DOCTEST_DEBUG_OUTPUT_REPORTER_OVERRIDE(log_message, const MessageData &, in)
+
     DOCTEST_DEBUG_OUTPUT_REPORTER_OVERRIDE(test_case_skipped,
                                            const TestCaseData &, in)
 };
@@ -7199,8 +7533,10 @@ bool parseCommaSepArgs(int argc, const char *const *argv, const char *pattern,
     return false;
 }
 
-enum optionType { option_bool,
-                  option_int };
+enum optionType {
+    option_bool,
+    option_int
+};
 
 // parses an int/bool option from the command line
 bool parseIntOption(int argc, const char *const *argv, const char *pattern,
@@ -7265,24 +7601,24 @@ void Context::parseArgs(int argc, const char *const *argv, bool withDefaults) {
     using namespace detail;
 
     // clang-format off
-    parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "source-file=",        p->filters[0]);
-    parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "sf=",                 p->filters[0]);
-    parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "source-file-exclude=",p->filters[1]);
-    parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "sfe=",                p->filters[1]);
-    parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "test-suite=",         p->filters[2]);
-    parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "ts=",                 p->filters[2]);
-    parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "test-suite-exclude=", p->filters[3]);
-    parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "tse=",                p->filters[3]);
-    parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "test-case=",          p->filters[4]);
-    parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "tc=",                 p->filters[4]);
-    parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "test-case-exclude=",  p->filters[5]);
-    parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "tce=",                p->filters[5]);
-    parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "subcase=",            p->filters[6]);
-    parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "sc=",                 p->filters[6]);
-    parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "subcase-exclude=",    p->filters[7]);
-    parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "sce=",                p->filters[7]);
-    parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "reporters=",          p->filters[8]);
-    parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "r=",                  p->filters[8]);
+        parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "source-file=", p->filters[0]);
+        parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "sf=", p->filters[0]);
+        parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "source-file-exclude=", p->filters[1]);
+        parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "sfe=", p->filters[1]);
+        parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "test-suite=", p->filters[2]);
+        parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "ts=", p->filters[2]);
+        parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "test-suite-exclude=", p->filters[3]);
+        parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "tse=", p->filters[3]);
+        parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "test-case=", p->filters[4]);
+        parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "tc=", p->filters[4]);
+        parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "test-case-exclude=", p->filters[5]);
+        parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "tce=", p->filters[5]);
+        parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "subcase=", p->filters[6]);
+        parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "sc=", p->filters[6]);
+        parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "subcase-exclude=", p->filters[7]);
+        parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "sce=", p->filters[7]);
+        parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "reporters=", p->filters[8]);
+        parseCommaSepArgs(argc, argv, DOCTEST_CONFIG_OPTIONS_PREFIX "r=", p->filters[8]);
     // clang-format on
 
     int intRes = 0;
@@ -7318,37 +7654,37 @@ void Context::parseArgs(int argc, const char *const *argv, bool withDefaults) {
     p->var = strRes
 
     // clang-format off
-    DOCTEST_PARSE_STR_OPTION("out", "o", out, "");
-    DOCTEST_PARSE_STR_OPTION("order-by", "ob", order_by, "file");
-    DOCTEST_PARSE_INT_OPTION("rand-seed", "rs", rand_seed, 0);
+        DOCTEST_PARSE_STR_OPTION("out", "o", out, "");
+        DOCTEST_PARSE_STR_OPTION("order-by", "ob", order_by, "file");
+        DOCTEST_PARSE_INT_OPTION("rand-seed", "rs", rand_seed, 0);
 
-    DOCTEST_PARSE_INT_OPTION("first", "f", first, 0);
-    DOCTEST_PARSE_INT_OPTION("last", "l", last, UINT_MAX);
+        DOCTEST_PARSE_INT_OPTION("first", "f", first, 0);
+        DOCTEST_PARSE_INT_OPTION("last", "l", last, UINT_MAX);
 
-    DOCTEST_PARSE_INT_OPTION("abort-after", "aa", abort_after, 0);
-    DOCTEST_PARSE_INT_OPTION("subcase-filter-levels", "scfl", subcase_filter_levels, INT_MAX);
+        DOCTEST_PARSE_INT_OPTION("abort-after", "aa", abort_after, 0);
+        DOCTEST_PARSE_INT_OPTION("subcase-filter-levels", "scfl", subcase_filter_levels, INT_MAX);
 
-    DOCTEST_PARSE_AS_BOOL_OR_FLAG("success", "s", success, false);
-    DOCTEST_PARSE_AS_BOOL_OR_FLAG("case-sensitive", "cs", case_sensitive, false);
-    DOCTEST_PARSE_AS_BOOL_OR_FLAG("exit", "e", exit, false);
-    DOCTEST_PARSE_AS_BOOL_OR_FLAG("duration", "d", duration, false);
-    DOCTEST_PARSE_AS_BOOL_OR_FLAG("minimal", "m", minimal, false);
-    DOCTEST_PARSE_AS_BOOL_OR_FLAG("quiet", "q", quiet, false);
-    DOCTEST_PARSE_AS_BOOL_OR_FLAG("no-throw", "nt", no_throw, false);
-    DOCTEST_PARSE_AS_BOOL_OR_FLAG("no-exitcode", "ne", no_exitcode, false);
-    DOCTEST_PARSE_AS_BOOL_OR_FLAG("no-run", "nr", no_run, false);
-    DOCTEST_PARSE_AS_BOOL_OR_FLAG("no-intro", "ni", no_intro, false);
-    DOCTEST_PARSE_AS_BOOL_OR_FLAG("no-version", "nv", no_version, false);
-    DOCTEST_PARSE_AS_BOOL_OR_FLAG("no-colors", "nc", no_colors, false);
-    DOCTEST_PARSE_AS_BOOL_OR_FLAG("force-colors", "fc", force_colors, false);
-    DOCTEST_PARSE_AS_BOOL_OR_FLAG("no-breaks", "nb", no_breaks, false);
-    DOCTEST_PARSE_AS_BOOL_OR_FLAG("no-skip", "ns", no_skip, false);
-    DOCTEST_PARSE_AS_BOOL_OR_FLAG("gnu-file-line", "gfl", gnu_file_line, !bool(DOCTEST_MSVC));
-    DOCTEST_PARSE_AS_BOOL_OR_FLAG("no-path-filenames", "npf", no_path_in_filenames, false);
-    DOCTEST_PARSE_AS_BOOL_OR_FLAG("no-line-numbers", "nln", no_line_numbers, false);
-    DOCTEST_PARSE_AS_BOOL_OR_FLAG("no-debug-output", "ndo", no_debug_output, false);
-    DOCTEST_PARSE_AS_BOOL_OR_FLAG("no-skipped-summary", "nss", no_skipped_summary, false);
-    DOCTEST_PARSE_AS_BOOL_OR_FLAG("no-time-in-output", "ntio", no_time_in_output, false);
+        DOCTEST_PARSE_AS_BOOL_OR_FLAG("success", "s", success, false);
+        DOCTEST_PARSE_AS_BOOL_OR_FLAG("case-sensitive", "cs", case_sensitive, false);
+        DOCTEST_PARSE_AS_BOOL_OR_FLAG("exit", "e", exit, false);
+        DOCTEST_PARSE_AS_BOOL_OR_FLAG("duration", "d", duration, false);
+        DOCTEST_PARSE_AS_BOOL_OR_FLAG("minimal", "m", minimal, false);
+        DOCTEST_PARSE_AS_BOOL_OR_FLAG("quiet", "q", quiet, false);
+        DOCTEST_PARSE_AS_BOOL_OR_FLAG("no-throw", "nt", no_throw, false);
+        DOCTEST_PARSE_AS_BOOL_OR_FLAG("no-exitcode", "ne", no_exitcode, false);
+        DOCTEST_PARSE_AS_BOOL_OR_FLAG("no-run", "nr", no_run, false);
+        DOCTEST_PARSE_AS_BOOL_OR_FLAG("no-intro", "ni", no_intro, false);
+        DOCTEST_PARSE_AS_BOOL_OR_FLAG("no-version", "nv", no_version, false);
+        DOCTEST_PARSE_AS_BOOL_OR_FLAG("no-colors", "nc", no_colors, false);
+        DOCTEST_PARSE_AS_BOOL_OR_FLAG("force-colors", "fc", force_colors, false);
+        DOCTEST_PARSE_AS_BOOL_OR_FLAG("no-breaks", "nb", no_breaks, false);
+        DOCTEST_PARSE_AS_BOOL_OR_FLAG("no-skip", "ns", no_skip, false);
+        DOCTEST_PARSE_AS_BOOL_OR_FLAG("gnu-file-line", "gfl", gnu_file_line, !bool(DOCTEST_MSVC));
+        DOCTEST_PARSE_AS_BOOL_OR_FLAG("no-path-filenames", "npf", no_path_in_filenames, false);
+        DOCTEST_PARSE_AS_BOOL_OR_FLAG("no-line-numbers", "nln", no_line_numbers, false);
+        DOCTEST_PARSE_AS_BOOL_OR_FLAG("no-debug-output", "ndo", no_debug_output, false);
+        DOCTEST_PARSE_AS_BOOL_OR_FLAG("no-skipped-summary", "nss", no_skipped_summary, false);
+        DOCTEST_PARSE_AS_BOOL_OR_FLAG("no-time-in-output", "ntio", no_time_in_output, false);
     // clang-format on
 
     if (withDefaults) {
@@ -7746,6 +8082,7 @@ DOCTEST_DEFINE_INTERFACE(IReporter)
 int IReporter::get_num_active_contexts() {
     return detail::g_infoContexts.size();
 }
+
 const IContextScope *const *IReporter::get_active_contexts() {
     return get_num_active_contexts() ? &detail::g_infoContexts[0] : nullptr;
 }
@@ -7753,6 +8090,7 @@ const IContextScope *const *IReporter::get_active_contexts() {
 int IReporter::get_num_stringified_contexts() {
     return detail::g_cs->stringifiedContexts.size();
 }
+
 const String *IReporter::get_stringified_contexts() {
     return get_num_stringified_contexts()
                ? &detail::g_cs->stringifiedContexts[0]

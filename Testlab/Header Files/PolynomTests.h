@@ -23,6 +23,10 @@ TEST_SUITE("Polynom Tests" * doctest::description("optional")) {
 
         CHECK_EQ(classToTest.get_degree(), 0);
 
+        classToTest = Polynom({0, 0, 1, 0, 1});
+
+        CHECK_EQ(classToTest.get_degree(), 4);
+
         classToTest = Polynom(8);
 
         CHECK_EQ(classToTest.get_degree(), 3);
@@ -47,7 +51,7 @@ TEST_SUITE("Polynom Tests" * doctest::description("optional")) {
         auto vector_str = classToTest.to_vector_str();
         auto asInt = classToTest.as_int();
 
-        CHECK(polynom_str == "0+1x^1+1x^2");
+        CHECK(polynom_str == "0 + 1x^1 + 1x^2");
         CHECK(vector_str == "(0, 1, 1)");
         CHECK_EQ(asInt, 6);
 
@@ -58,7 +62,7 @@ TEST_SUITE("Polynom Tests" * doctest::description("optional")) {
         vector_str = classToTest.to_vector_str();
         asInt = classToTest.as_int();
 
-        CHECK(polynom_str == "1+1x^1");
+        CHECK(polynom_str == "1 + 1x^1");
         CHECK(vector_str == "(1, 1)");
         CHECK_EQ(asInt, 3);
 
@@ -68,7 +72,7 @@ TEST_SUITE("Polynom Tests" * doctest::description("optional")) {
         polynom_str = classToTest.to_polynom_str();
         vector_str = classToTest.to_vector_str();
 
-        CHECK(polynom_str == "2+2x^1+1x^2");
+        CHECK(polynom_str == "2 + 2x^1 + 1x^2");
         CHECK(vector_str == "(2, 2, 1)");
     }
 
@@ -80,7 +84,7 @@ TEST_SUITE("Polynom Tests" * doctest::description("optional")) {
         auto vector_str = classToTest.to_vector_str();
         auto asInt = classToTest.as_int();
 
-        CHECK(polynom_str == "0+1x^1+1x^2");
+        CHECK(polynom_str == "0 + 1x^1 + 1x^2");
         CHECK(vector_str == "(0, 1, 1)");
         CHECK_EQ(asInt, 6);
 
@@ -162,6 +166,7 @@ TEST_SUITE("Polynom Tests" * doctest::description("optional")) {
 
         CHECK(p3.to_vector_str() == "(0)");
     }
+
     TEST_CASE("Polynom modolo integer") {
         Polynom a = Polynom({3, 1, 2});
         Polynom b = Polynom({9, 4, 11});
@@ -188,5 +193,20 @@ TEST_SUITE("Polynom Tests" * doctest::description("optional")) {
                 CHECK_LT(item, 2);
             }
         }
+    }
+
+    TEST_CASE("Polynom modolo polynom") {
+        // Setup
+        auto i_p = Polynom({1, 0, 1, 1});
+        auto s = Polynom(0);
+        auto r = Polynom(0);
+
+        auto egf = EGF(2, 3, i_p);
+
+        auto a = Polynom({0, 0, 1, 0, 1});
+        egf.modular_reduction(a, r, s);
+
+        auto result_bin = egf.polynomial_reduction_bin(a, i_p);
+        std::cout << std::endl;
     }
 }
