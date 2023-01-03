@@ -1,5 +1,4 @@
 
-#include "Header Files/EGF.h"
 #include "Header Files/Helper.h"
 #include "Header Files/ModularPolynomArithmetic.h"
 #include "Header Files/Polynom.h"
@@ -55,12 +54,15 @@ void lax() {
 
     std::cout << std::endl;
 }
-
 int main(int argc, char **argv) {
 
-    lax();
+    //   lax();
+    //   task1();
+    auto i_p = ip_by_degree[8];
+    auto a = Polynom(13);
 
-    //    task1();
-
+    std::cout << MPA::gcd(a, i_p).to_print_string(Polynom::vector) << std::endl;
+    auto r = MPA::exgcd(a, i_p, 2);
+    std::cout << "GCD: " << r.gcd.as_int() << " Result: " << r.inverse_a.to_print_string(Polynom::polynom) << std::endl;
     return 0;
 }

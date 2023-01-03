@@ -4,7 +4,7 @@
 
 #include "Header Files/Polynom.h"
 
-const Polynom Polynom::ZERO = Polynom(0);
+const Polynom Polynom::ZERO = Polynom({0});
 const Polynom Polynom::ONE = Polynom(1);
 
 Polynom::Polynom(std::vector<int> coefficients) {

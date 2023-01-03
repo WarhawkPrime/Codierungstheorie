@@ -28,44 +28,7 @@ Polynom EGF::modulo_multiplication(const Polynom &a, const Polynom &b) const {
  * @return a(x) mod f(x)
  */
 void EGF::modular_reduction(const Polynom &a, Polynom &r, Polynom &s) const {
-    // r(x) := a(x)
-    // s(x) := 0
-    const Polynom f = this->irreducible_polynom;
-
-    // Copy polynom to later trim it!
-    r = Polynom(a.get_coefficients());
-
-    s = Polynom(0);
-
-    // while deg(r) >= deg(f) do
-
-    while (r.get_degree() >= f.get_degree()) {
-        // t(x) := f_deg(f)^-1 * r_deg(r)* x^{deg(r) - deg(f)}
-
-        // ta = f_deg(f)^-1
-        int const ta = pow(this->irreducible_polynom.get_coefficient(
-                               this->irreducible_polynom.get_degree()),
-                           -1);
-
-        // tb = r_deg(r)
-        int const tb = r.get_coefficient(r.get_degree());
-
-        // tc = deg(r) - deg(f)
-        int const t_index = r.get_degree() - this->irreducible_polynom.get_degree();
-
-        std::vector<int> temp_vec(t_index + 1, 0);
-        temp_vec.at(t_index) = ta * tb;
-
-        auto t = Polynom(temp_vec);
-
-        // r(x) := r(x) + (-t(x)) * f(x)
-        r = modulo_addition(r, modulo_multiplication(t * (-1), f));
-
-        s = modulo_addition(s, t);
-
-        r.trim();
-        s.trim();
-    }
+    MPA::m_mod(a, irreducible_polynom, r, s, p);
 }
 
 void EGF::print_addition_table(Polynom::Format output_format, std::string file_name) const {
@@ -132,12 +95,13 @@ std::vector<Polynom> EGF::field_elements() const {
 }
 
 Polynom EGF::multiplication_with_polynomial_reduction(const Polynom &a, const Polynom &b) const {
-    auto zero_polynom = Polynom(0);
-    if (a == zero_polynom || b == zero_polynom)
-        return zero_polynom;
+    if (a == Polynom::ZERO || b == Polynom::ZERO)
+        return Polynom::ZERO;
 
-    auto r = zero_polynom;
-    auto s = zero_polynom;
+    auto r = Polynom::ZERO;
+    ;
+    auto s = Polynom::ZERO;
+    ;
 
     auto temp = modulo_multiplication(a, b);
     modular_reduction(temp, r, s);
@@ -214,4 +178,12 @@ void EGF::print_multiplication_table(Polynom::Format output_format, std::string 
 Polynom EGF::multiplicative_inverse(const Polynom &a) const {
     auto result = MPA::exgcd(a, irreducible_polynom, p);
     return result.inverse_a;
+}
+
+Polynom EGF::multiplication(const Polynom &a, const Polynom &b) const {
+    return multiplication_with_polynomial_reduction(a, b);
+}
+
+Polynom EGF::addition(const Polynom &a, const Polynom &b) const {
+    return modulo_addition(a, b);
 }

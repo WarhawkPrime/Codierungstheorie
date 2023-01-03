@@ -22,3 +22,7 @@ sion in Erweiterungskörpern.
 > so war die Inversion korrekt.
 
 # HOT LIST (todo)
+
+
+# Usefull websites
+https://mathsci2.appstate.edu/~cookwj/sage/algebra/Euclidean_algorithm-poly.html

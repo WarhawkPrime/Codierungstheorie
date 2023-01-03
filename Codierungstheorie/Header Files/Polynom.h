@@ -90,8 +90,7 @@ class Polynom {
 
     // can be optimized with a divide and conquer approach
     Polynom operator*(Polynom const &rhs_polynom) const {
-        unsigned int result_size = this->get_coefficients().size() +
-                                   rhs_polynom.get_coefficients().size() - 1;
+        unsigned int result_size = get_coefficients().size() + rhs_polynom.get_coefficients().size() - 1;
 
         std::vector<int> result_coefficients(result_size, 0);
 
@@ -197,9 +196,11 @@ class Polynom {
      * removes 0 from the back (highest exponents) until non-zero number is met
      */
     inline void trim() {
+        if (coefficients.size() == 1 && coefficients[0] == 0)
+            return;
         for (auto rit = coefficients.rbegin();
              rit != coefficients.rend();) {
-            if (*rit == 0) {
+            if (*rit == 0 && coefficients.size() != 1) {
                 std::advance(rit, 1);
                 coefficients.erase(rit.base());
             } else

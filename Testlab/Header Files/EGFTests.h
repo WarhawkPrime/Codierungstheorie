@@ -2,6 +2,8 @@
 // Created by Noah Ruben on 06.12.22.
 //
 #include "Header Files/EGF.h"
+#include "Header Files/HelperTests.h"
+
 #include "doctest.h"
 
 TEST_SUITE("Control Tests of polynom operations in a EGF" *
@@ -20,19 +22,55 @@ TEST_SUITE("Control Tests of polynom operations in a EGF" *
 
         Polynom c =
             aEGF.modulo_multiplication(Polynom({0, 0, -2}), Polynom({2, 1, 1}));
+        // TODO
+    }
+
+    TEST_CASE("Multiplicative inverse calculation Fuzzy test in EGF p = 2") {
+        auto const p = 2;
+
+        for (int i = 1; i < 9; ++i) {
+            const Polynom irreduciblePolynom = ip_by_degree[i];
+            const EGF gf = EGF(p, i, irreduciblePolynom);
+            sep("GF(2^" + std::to_string(i) + "): " + irreduciblePolynom.to_polynom_str());
+            for (int j = 1; j < gf.order; ++j) {
+                auto polynom = Polynom(j);
+                auto inverse = gf.multiplicative_inverse(polynom);
+                auto result = gf.multiplication(polynom, inverse);
+
+                std::cout << j << " Correct: " << toString(result == Polynom::ONE) << "   " << polynom.to_print_string(Polynom::polynom) << " * " << inverse.to_print_string(Polynom::polynom) << " = " << result.to_print_string(Polynom::polynom);
+                std::cout << "  " << polynom.as_int() << " * " << inverse.as_int() << " = " << result.as_int() << std::endl;
+                CHECK(result == Polynom::ONE);
+            }
+        }
+    }
+
+    TEST_CASE("Division with remainder: EGF(3^2) : 2 + x + x^2") {
+        EGF aEGF(3, 2, Polynom({2, 1, 1})); // EGF(3^2) : 2 + x + x^2
+
+        Polynom mod = Polynom(0);
+        Polynom div = Polynom(0);
+        aEGF.modular_reduction(Polynom({1, 2, 0, 1, 2}), mod, div);
+
+        Polynom mod_exp = Polynom({1, 1});
+        Polynom div_exp = Polynom({0, 2, 2});
+
+        CHECK(mod == mod_exp);
+        CHECK(div == div_exp);
     }
 
     TEST_CASE("Division with remainder") {
-        EGF aEGF(3, 2, Polynom({2, 1, 1})); // EGF(3^2) : 2 + x + x^2
+        // TEST (1,1,1) / 1
+        EGF bEGF(2, 3, Polynom({1, 1, 1})); // EGF(2^3) : 1 + x + x^2
 
-        Polynom r = Polynom(0);
-        Polynom s = Polynom(0);
-        aEGF.modular_reduction(Polynom({1, 2, 0, 1, 2}), r, s);
+        Polynom mod_b = Polynom::ZERO;
+        Polynom div_b = Polynom::ZERO;
 
-        Polynom r_exp = Polynom({1, 1});
-        Polynom s_exp = Polynom({0, 2, 2});
+        bEGF.modular_reduction(Polynom::ONE, mod_b, div_b);
 
-        CHECK(r == r_exp);
-        CHECK(s == s_exp);
+        Polynom mod_exp_b = Polynom::ONE;
+        Polynom div_exp_b = Polynom::ZERO;
+
+        CHECK(mod_b == mod_exp_b);
+        CHECK(div_b == div_exp_b);
     }
 }

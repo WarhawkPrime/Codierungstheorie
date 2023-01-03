@@ -42,6 +42,8 @@ class EGF {
 
     [[nodiscard]] Polynom modulo_multiplication(const Polynom &a, const Polynom &b) const;
 
+    Polynom multiplication(const Polynom &a, const Polynom &b) const;
+    Polynom addition(const Polynom &a, const Polynom &b) const;
     /**
      *
      * @param a The polynomial to reduce
