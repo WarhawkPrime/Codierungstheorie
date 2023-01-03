@@ -7,6 +7,7 @@
 
 #include "Basis.h"
 #include <bitset>
+#include <cassert>
 #include <iostream>
 #include <math.h>
 #include <vector>
@@ -21,9 +22,14 @@ class Polynom {
     std::vector<int> coefficients;
 
   public:
-    enum Format { number,
-                  vector,
-                  polynom };
+    enum Format {
+        number,
+        vector,
+        polynom
+    };
+
+    static const Polynom ZERO;
+    static const Polynom ONE;
 
     explicit Polynom(std::vector<int> coefficients);
 
@@ -40,11 +46,13 @@ class Polynom {
     int get_degree() const;
 
     std::string to_vector_str() const;
+
     std::string to_vector_str(int _size) const;
 
     std::string to_polynom_str() const;
 
     std::string to_print_string(Polynom::Format depiction) const;
+
     std::string to_print_string(Polynom::Format depiction, int _size) const;
 
     int as_int() const;
@@ -82,8 +90,7 @@ class Polynom {
 
     // can be optimized with a divide and conquer approach
     Polynom operator*(Polynom const &rhs_polynom) const {
-        unsigned int result_size = this->get_coefficients().size() +
-                                   rhs_polynom.get_coefficients().size() - 1;
+        unsigned int result_size = get_coefficients().size() + rhs_polynom.get_coefficients().size() - 1;
 
         std::vector<int> result_coefficients(result_size, 0);
 
@@ -122,13 +129,54 @@ class Polynom {
                    : true;
     }
 
-    // TODO @NOAH mit bit shift ? eher nicht
-    // TODO @NOAH fast mod mit bit schift als funktion.
+    /**
+     * This only works for GF(2)
+     * @param rhs_polynom
+     */
     Polynom operator%(Polynom const &rhs_polynom) const {
+        assert(rhs_polynom != Polynom(0));
+        int lhs = this->as_int();
+        int rhs = rhs_polynom.as_int();
+
+        auto diff = this->get_degree() - rhs_polynom.get_degree();
+        auto shifted_rhs = rhs;
+        while (diff >= 0) {
+            //        std::cout << "Diff: " << diff << std::endl;
+            // Shift till same degree
+            shifted_rhs = (rhs << (diff));
+            //        std::cout << std::bitset<32>(rhs) << std::endl;
+            //        std::cout << std::bitset<32>(shifted_rhs) << std::endl;
+            //        std::cout << std::bitset<32>(lhs) << std::endl;
+            // XOR with polynomial to reduce
+            lhs = (lhs ^= shifted_rhs);
+            //        std::cout << std::bitset<32>(lhs) << std::endl << std::endl;
+
+            // Recalculate degree diff
+            diff = Polynom(lhs).get_degree() - Polynom(rhs).get_degree();
+        }
+        return Polynom(lhs);
+    }
+
+    /**
+     *
+     * @param rhs_polynom
+     * @return Polynom
+     *
+     */
+    Polynom operator/(Polynom const &rhs_polynom) const {
+        assert(rhs_polynom != Polynom(0));
+        auto q = 0;
+        auto r = *this;
+
+        while (r != Polynom(0) && r.get_degree() >= rhs_polynom.get_degree()) {
+            auto t = 0;
+        }
+
         return Polynom(0);
     }
 
     Polynom operator%(int const &rhs_integer) const {
+        assert(rhs_integer != 0);
         std::vector<int> result;
         for (const auto &item : this->get_coefficients()) {
             result.push_back(Basis::modulo_group_mod(item, rhs_integer));
@@ -148,9 +196,11 @@ class Polynom {
      * removes 0 from the back (highest exponents) until non-zero number is met
      */
     inline void trim() {
+        if (coefficients.size() == 1 && coefficients[0] == 0)
+            return;
         for (auto rit = coefficients.rbegin();
              rit != coefficients.rend();) {
-            if (*rit == 0) {
+            if (*rit == 0 && coefficients.size() != 1) {
                 std::advance(rit, 1);
                 coefficients.erase(rit.base());
             } else
