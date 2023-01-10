@@ -18,7 +18,7 @@ add_executable(Codierungstheorie
                "Codierungstheorie/Header Files/Polynom.h"
                "Codierungstheorie/Source Files/EGF.cpp"
                "Codierungstheorie/Header Files/EGF.h"
-               "Codierungstheorie/Header Files/ModularPolynomArithmetic.h" "Codierungstheorie/Source Files/ModularPolynomArithmetic.cpp")
+               "Codierungstheorie/Header Files/ModularPolynomArithmetic.h" "Codierungstheorie/Source Files/ModularPolynomArithmetic.cpp" "Codierungstheorie/Source Files/Matrix.cpp" "Codierungstheorie/Header Files/Matrix.h" "Codierungstheorie/Source Files/Code.cpp" "Codierungstheorie/Header Files/Code.h")
 
 target_include_directories(Codierungstheorie PUBLIC Codierungstheorie/Header Files)
 
@@ -28,13 +28,19 @@ add_executable(Testlab
                "Testlab/Header Files/doctest.h"
                "Codierungstheorie/Source Files/ModularArithmetic.cpp"
                "Codierungstheorie/Header Files/ModularArithmetic.h"
-        "Codierungstheorie/Header Files/Basis.h"
+               "Codierungstheorie/Header Files/Basis.h"
                "Codierungstheorie/Source Files/Polynom.cpp"
                "Codierungstheorie/Header Files/Polynom.h"
                "Codierungstheorie/Source Files/EGF.cpp"
                "Codierungstheorie/Header Files/EGF.h"
                "Codierungstheorie/Header Files/ModularPolynomArithmetic.h"
-               "Codierungstheorie/Source Files/ModularPolynomArithmetic.cpp")
+               "Codierungstheorie/Source Files/ModularPolynomArithmetic.cpp"
+               "Codierungstheorie/Source Files/Matrix.cpp"
+               "Codierungstheorie/Header Files/Matrix.h"
+               "Codierungstheorie/Source Files/Code.cpp"
+               "Codierungstheorie/Header Files/Code.h"
+                "Testlab/Header Files/MatrixTests.h")
+
 
 
 target_include_directories(Testlab PUBLIC Testlab/Header Files)
@@ -65,3 +71,21 @@ add_executable(Task_2
                "Codierungstheorie/Source Files/ModularPolynomArithmetic.cpp")
 
 target_include_directories(Task_2 PUBLIC Codierungstheorie/Header Files)
+
+
+## Task 3
+
+add_executable(Task_3
+        "Codierungstheorie/Source Files/Polynom.cpp"
+        "Codierungstheorie/Header Files/Polynom.h"
+        "Codierungstheorie/Source Files/EGF.cpp"
+        "Codierungstheorie/Header Files/EGF.h"
+        "Codierungstheorie/Source Files/Task_2.cpp"
+        "Codierungstheorie/Source Files/ModularPolynomArithmetic.cpp"
+        "Codierungstheorie/Source Files/Matrix.cpp"
+        "Codierungstheorie/Header Files/Matrix.h"
+        "Codierungstheorie/Source Files/Code.cpp"
+        "Codierungstheorie/Header Files/Code.h"
+        "Testlab/Header Files/MatrixTests.h")
+
+target_include_directories(Task_3 PUBLIC Codierungstheorie/Header Files)

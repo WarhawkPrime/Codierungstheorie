@@ -82,8 +82,6 @@ class Basis {
     inline void additive_inverse(const int i, const int mod, int &inverse) {
         inverse = mod - i;
     }
-
-    inline void polynom_mod_addition() {}
 };
 
 #endif // CODIERUNGSTHEORIE_BASIS_H

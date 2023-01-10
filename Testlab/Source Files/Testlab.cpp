@@ -9,6 +9,7 @@
 
 #include "Header Files/EGFTests.h"
 #include "Header Files/HelperTests.h"
+#include "Header Files/MatrixTests.h"
 #include "Header Files/ModularPolynomArithmeticTests.h"
 #include "Header Files/PolynomTests.h"
 
