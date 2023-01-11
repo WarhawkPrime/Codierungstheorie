@@ -60,9 +60,8 @@ int main(int argc, char **argv) {
     //   task1();
     auto i_p = ip_by_degree[8];
     auto a = Polynom(13);
-
-    std::cout << MPA::gcd(a, i_p).to_print_string(Polynom::vector) << std::endl;
-    auto r = MPA::exgcd(a, i_p, 2);
-    std::cout << "GCD: " << r.gcd.as_int() << " Result: " << r.inverse_a.to_print_string(Polynom::polynom) << std::endl;
+    for (const auto &item : ip_by_degree) {
+        std::cout << item.to_vector_str(8) << std::endl;
+    }
     return 0;
 }

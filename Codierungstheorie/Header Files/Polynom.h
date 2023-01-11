@@ -164,6 +164,7 @@ class Polynom {
      *
      */
     Polynom operator/(Polynom const &rhs_polynom) const {
+        assert(false); // This is not implemented
         assert(rhs_polynom != Polynom(0));
         auto q = 0;
         auto r = *this;
