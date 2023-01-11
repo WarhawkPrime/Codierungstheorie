@@ -16,6 +16,7 @@ class Matrix {
     Matrix(const int rows, const int cols, const std::vector<Polynom> &values) : rows(rows), cols(cols), values(values){};
 
     void to_canonical_form();
+    void GausJordan_elimination();
 
     std::string to_vector_str() const;
 

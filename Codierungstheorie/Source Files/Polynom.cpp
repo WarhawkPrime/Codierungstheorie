@@ -48,7 +48,11 @@ std::string Polynom::to_vector_str(const int _size) const {
     }
 
     for (int i = 0; i < size; ++i) {
-        result += std::to_string(coefficients[i]);
+        if (i >= coefficients.size()) {
+            result += "0";
+        } else {
+            result += std::to_string(coefficients[i]);
+        }
         result += ", ";
     }
     result = result.substr(0, result.length() - 2);
