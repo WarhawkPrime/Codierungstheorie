@@ -21,7 +21,7 @@ TEST_SUITE("Matrix tests" * doctest::description("egf")) {
         CHECK(mat.to_vector_str() == expected.to_vector_str());
     }
 
-    TEST_CASE("Transform Matrix(3x3) to canonical form") {
+    TEST_CASE("Transform Matrix(4x3) to canonical form") {
         const std::vector<Polynom> values = {
             Polynom(4),
             Polynom(1),

@@ -7,9 +7,11 @@
 const Polynom Polynom::ZERO = Polynom({0});
 const Polynom Polynom::ONE = Polynom(1);
 
-Polynom::Polynom(std::vector<int> coefficients) {
+Polynom::Polynom(std::vector<int> coefficients, bool _trim) {
     this->coefficients = std::move(coefficients);
-    trim();
+    if (_trim) {
+        trim();
+    }
 }
 
 // TODO mit Bit operations ....
@@ -48,7 +50,11 @@ std::string Polynom::to_vector_str(const int _size) const {
     }
 
     for (int i = 0; i < size; ++i) {
-        result += std::to_string(coefficients[i]);
+        if (i >= coefficients.size()) {
+            result += "0";
+        } else {
+            result += std::to_string(coefficients[i]);
+        }
         result += ", ";
     }
     result = result.substr(0, result.length() - 2);

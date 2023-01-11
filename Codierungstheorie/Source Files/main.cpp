@@ -1,68 +1,97 @@
 
-#include "Header Files/Helper.h"
-#include "Header Files/ModularPolynomArithmetic.h"
-#include "Header Files/Polynom.h"
+
+#include "Header Files/Basis.h"
 #include <iostream>
 
-void lax() {
-    //    auto i_p = Polynom({1, 0, 0, 0, 0, 0, 1, 1});
-    //
-    //    auto a = Polynom(7) * Polynom(1);
-    //    std::cout << "a " << a.to_print_string(Polynom::polynom) << std::endl;
-    //
-    //    auto s = Polynom(0);
-    //    auto r = Polynom(0);
-    //
-    //    auto egf = EGF(3, 4, i_p);
-    //
-    //    egf.modular_reduction(a, r, s);
-    //
-    //    std::cout << "r " << r.to_print_string(Polynom::polynom) << std::endl;
-    //    std::cout << "s " << s.to_print_string(Polynom::polynom) << std::endl;
+void sep(std::string str = "");
 
-    //    for (const Polynom &item : ip_by_degree) {
-    //        std::cout << item.as_int() << ": " << item.to_polynom_str() << std::endl;
-    //    }
-    //
-    //    std::cout << std::endl;
-
-    //    auto i_p = Polynom({1, 1, 1});
-    //
-    //    auto a = Polynom(3) * Polynom(3);
-    //    a = a % 2;
-    //    std::cout << "a " << a.to_print_string(Polynom::polynom) << std::endl;
-    //    sep("");
-    //
-    //    auto s = Polynom(0);
-    //    auto r = Polynom(0);
-    //
-    //    auto egf = EGF(2, 3, Polynom({1, 0, 1, 1}));
-    //
-    //    auto x = Polynom({0, 0, 1, 0, 1});
-    //    std::cout << x.to_polynom_str() << std::endl;
-    //    egf.modular_reduction(x, r, s);
-    //    std::cout << "r " << r.to_print_string(Polynom::polynom) << std::endl;
-    //    std::cout << "s " << s.to_print_string(Polynom::polynom) << std::endl;
-    //    sep("BIN");
-    //
-    //    s = egf.polynomial_reduction_bin(x, Polynom({1, 0, 1, 1}));
-    auto i_p = Polynom({1, 1, 1});
-    Polynom s = Polynom::ZERO, r = Polynom::ZERO;
-
-    auto result = MPA::gcd(i_p, Polynom(3));
-    std::cout << "Result: " << result.to_print_string(Polynom::polynom) << std::endl;
-
-    std::cout << std::endl;
+template <size_t rows, size_t cols>
+void print_2D_array(int (&A)[rows][cols]) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            std::cout << A[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
 }
+template <size_t rows, size_t cols>
+int argmax(int row_to_begin_with, int coll_to_search, int (&A)[rows][cols]) {
+    int max_row_index = 0;
+    double max_value = 0;
+
+    for (int i = row_to_begin_with; i < rows; i++) {
+        auto value = abs(A[i][coll_to_search]);
+        if (value > max_value) {
+            max_row_index = i;
+            max_value = value;
+        }
+    }
+
+    return max_row_index;
+}
+
 int main(int argc, char **argv) {
+    const int n = 4, m = 8;
+    // clang-format off
+    int A[m][n] = {
+{0, 1, 1, 0},
+{1, 0, 0, 0},
+{0, 1, 0, 0},
+{1, 0, 0, 0},
+{0, 1, 0, 0},
+{1, 0, 0, 0},
+{0, 1, 0, 0},
+{0, 1, 0, 1}};
+    // clang-format on
+    int h_r = 0; /* Initialization of the pivot row */
+    int k_c = 0; /* Initialization of the pivot column */
+    while (h_r < m && k_c < n) {
+        sep(std::to_string(h_r) + "," + std::to_string(k_c));
+        print_2D_array(A);
+        /* Find the k_c-th pivot: */
+        int i_max = argmax(k_c, h_r, A);
+        std::cout << "imax: " << i_max << "," << k_c << " Value: " << A[i_max][k_c] << std::endl;
+        if (A[i_max][k_c] == 0) {
+            /* No pivot in this column, pass to next column */
+            k_c++;
+            std::cout << "No pivot in this column, pass to next column" << std::endl;
+        } else {
+            /* swap rows(h_r, i_max) */
+            std::swap(A[h_r], A[i_max]);
 
-    //   lax();
-    //   task1();
-    auto i_p = ip_by_degree[8];
-    auto a = Polynom(13);
+            /* Do for all rows below pivot: */
+            for (int row_below = h_r + 1; row_below < m; row_below++) {
+                /* Fill with zeros the lower part of pivot column: */
+                A[row_below][k_c] = 0;
+                /* Do for all remaining elements in current row: */
+                for (int j = k_c + 1; j < n; j++) {
+                    A[row_below][j] = Basis::modulo_group_mod(A[row_below][j] - A[h_r][j], 2);
+                }
+            }
+            auto row_above = A[h_r - 1];
+            auto row = A[h_r];
+            if (h_r > 0 && row_above[k_c] != 0) {
+                for (int i = 0; i < n; ++i) {
+                    row_above[i] = Basis::modulo_group_mod((row_above[i] - row[i]), 2);
+                }
+            }
 
-    std::cout << MPA::gcd(a, i_p).to_print_string(Polynom::vector) << std::endl;
-    auto r = MPA::exgcd(a, i_p, 2);
-    std::cout << "GCD: " << r.gcd.as_int() << " Result: " << r.inverse_a.to_print_string(Polynom::polynom) << std::endl;
+            sep("After");
+            print_2D_array(A);
+            /* Increase pivot row and column */
+            h_r++;
+            k_c++;
+        }
+    }
+    /*    for (int row = 3; row >= 0; --row) {
+            for (int col = 0; col <= 3; col++) {
+                A[row][col] = A[row][col] - A[row][col];
+            }
+        }*/
+
+    sep("");
+    sep("");
+    sep("Finish");
+    print_2D_array(A);
     return 0;
 }

@@ -8,8 +8,8 @@
 #include "Basis.h"
 #include <bitset>
 #include <cassert>
+#include <cmath>
 #include <iostream>
-#include <math.h>
 #include <vector>
 
 // Polynom 2nd degree: ax^2 + bx + c
@@ -31,7 +31,7 @@ class Polynom {
     static const Polynom ZERO;
     static const Polynom ONE;
 
-    explicit Polynom(std::vector<int> coefficients);
+    Polynom(std::vector<int> coefficients, bool _trim = true);
 
     /**
      * This uses the binary representation of the number as coefficients
@@ -59,6 +59,11 @@ class Polynom {
 
     inline int get_coefficient(int index) const {
         return coefficients.size() > index ? coefficients.at(index) : 0;
+    }
+    void set_coefficient(int index, int value) {
+        if (coefficients.size() > index) {
+            coefficients.at(index) = value;
+        }
     }
 
     // vector addition:
@@ -188,10 +193,9 @@ class Polynom {
         return result_polynom;
     }
 
-    inline std::vector<int> get_coefficients() const {
+    [[nodiscard]] inline std::vector<int> get_coefficients() const {
         return coefficients;
     }
-
     /**
      * Trims unnecessary zeros from Polynom
      * removes 0 from the back (highest exponents) until non-zero number is met

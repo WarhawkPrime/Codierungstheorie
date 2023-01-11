@@ -27,11 +27,6 @@ const Polynom ip_by_degree[10] = {
     Polynom(285),
     Polynom(577)};
 
-// 1. Use std::bitset<N>, defined in the <bitset> header, where N is the number
-// of bits (not bytes).
-// 2. Compute the Hamming distance between two binary codes a and b using (a ^
-// b).count(). Use xOR to get the diff then count it
-
 /**
  * Calculates the hamming distance between two integer values
  * @param a
@@ -39,10 +34,13 @@ const Polynom ip_by_degree[10] = {
  * @return
  */
 int calc_hamming_distance(int a, int b) {
+    // 1. Use std::bitset<N>, defined in the <bitset> header, where N is the number of bits (not bytes).
     constexpr int s = sizeof(int) * 8;
 
     int aXORb = a ^ b;
 
+    // 2. Compute the Hamming distance between two binary codes a and b using (a ^ b).count().
+    // Use xOR to get the diff then count it
     int hamming_distance = std::bitset<s>(aXORb).count();
 
     return hamming_distance;
