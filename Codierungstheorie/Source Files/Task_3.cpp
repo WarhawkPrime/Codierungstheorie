@@ -2,19 +2,23 @@
 // Created by Noah Ruben on 10.01.23.
 //
 
+#include "Header Files/Helper.h"
 #include "Header Files/Matrix.h"
 #include "Header Files/Polynom.h"
 
 // 1. Implementieren Sie ein Routine, welche bei Eingabe einer Generatormatrix die kanonische Generatormatrix erzeugt.
 void sub_task_1() {
-    const std::vector<Polynom> values = {Polynom(4), Polynom(1), Polynom(2)};
+    const std::vector<Polynom> values = {
+        Polynom(4),  // 1 0 0
+        Polynom(1),  // 0 0 1
+        Polynom(2)}; // 0 1 0
 
     auto mat = Matrix(3, 3, values);
 
     std::cout << mat.to_vector_str() << std::endl;
 
     mat.GausJordan_elimination();
-
+    sep();
     std::cout << mat.to_vector_str() << std::endl;
 }
 // 2. Implementieren Sie eine Routine, welche aus einer kanonischen Generatormatrix eine Kontrollmatrix generiert.

@@ -82,6 +82,6 @@ add_executable(Task_3
                "Codierungstheorie/Source Files/Matrix.cpp"
                "Codierungstheorie/Source Files/Code.cpp"
                "Codierungstheorie/Header Files/Code.h"
-               )
+               "Codierungstheorie/Header Files/Helper.h")
 
 target_include_directories(Task_3 PUBLIC Codierungstheorie/Header Files)
