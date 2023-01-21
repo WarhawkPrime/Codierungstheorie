@@ -13,6 +13,8 @@
 class EGF;
 class Polynom;
 
+void sep(std::string);
+
 class Matrix {
 
   public:

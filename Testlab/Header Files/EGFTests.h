@@ -2,15 +2,15 @@
 // Created by Noah Ruben on 06.12.22.
 //
 #include "Header Files/EGF.h"
-#include "Header Files/HelperTests.h"
-
+#include "Header Files/Helper.h"
+#include "Header Files/Polynom.h"
 #include "doctest.h"
 
 TEST_SUITE("Control Tests of polynom operations in a EGF" * doctest::description("egf")) {
     TEST_CASE("Polynom Addition in an EGF") {
         EGF aEGF(3, 2, Polynom({2, 1, 1})); // EGF(3^2) : 2 + x + x^2
 
-        Polynom c = aEGF.addition(Polynom({2, 2}), Polynom({2, 1}));
+        Polynom c = aEGF.addition(Polynom({2, 2}, true), Polynom({2, 1}, true));
 
         CHECK(c.get_coefficient(0) == 1);
         CHECK(c.get_coefficient(1) == 0);
@@ -50,7 +50,7 @@ TEST_SUITE("Control Tests of polynom operations in a EGF" * doctest::description
         Polynom div = Polynom(0);
         aEGF.modular_reduction(Polynom({1, 2, 0, 1, 2}), mod, div);
 
-        Polynom mod_exp = Polynom({1, 1});
+        Polynom mod_exp = Polynom({1, 1}, true);
         Polynom div_exp = Polynom({0, 2, 2});
 
         CHECK(mod == mod_exp);

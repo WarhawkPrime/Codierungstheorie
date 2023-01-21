@@ -3,7 +3,6 @@
 //
 
 #include "Header Files/Matrix.h"
-#include "Header Files/Helper.h"
 
 void Matrix::to_canonical_form() {
     /*
@@ -29,14 +28,14 @@ void Matrix::to_canonical_form() {
     // Hier iterieren wir "diagonal" durch die Matrix. ggf auch horizontal je nach Matrix
     while (pivot_row < rows && pivot_col < cols) {
         // Debug information
-        sep(std::to_string(pivot_row) + "," + std::to_string(pivot_col));
-        std::cout << this->to_vector_str() << std::endl;
+        //        sep(std::to_string(pivot_row) + "," + std::to_string(pivot_col));
+        //        std::cout << this->to_vector_str() << std::endl;
 
         /* Find the pivot element in the current column: */
         int max_index = idx_of_max_value_in_col(pivot_row, pivot_col);
 
         // Debug information
-        std::cout << "Max index: " << max_index << "," << pivot_col << " Value: " << values[max_index].get_coefficients().at(pivot_col) << std::endl;
+        //        std::cout << "Max index: " << max_index << "," << pivot_col << " Value: " << values[max_index].get_coefficients().at(pivot_col) << std::endl;
 
         // checks if the maximum value in the current pivot column is equal to zero. If it is, it means that there is no pivot element in this column and the algorithm should move to the next column.
         if (values[max_index].get_coefficient(pivot_col) == 0) {
@@ -60,7 +59,20 @@ void Matrix::to_canonical_form() {
                     values[current_row].set_coefficient(current_col, Basis::modulo_group_mod(current_coefficient - pivot_coefficient, p));
                 }
             }
-            sep("After");
+
+            // redo this so it correctlty cleans up the matrix
+            // Man zieht danach von den darüberliegenden Zeilen entsprechende Vielfache ab, sodass über einer führenden 1 nur Nullen stehen.
+            auto row = values[pivot_row];
+            for (int i = pivot_row - 1; i >= 0; i--) {
+                std::cout << i << std::endl;
+                auto row_above = values[i];
+                if (row_above.get_coefficient(pivot_col) != 0) {
+                    for (int i = 0; i < cols; ++i) {
+                        auto result = Basis::modulo_group_mod((row_above.get_coefficient(i) - row.get_coefficient(i)), 2);
+                        row_above.set_coefficient(i, result);
+                    }
+                }
+            }
 
             /* Increase pivot row and column */
             pivot_row++;

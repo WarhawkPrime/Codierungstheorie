@@ -1,9 +1,8 @@
 
 
 #include "Header Files/Basis.h"
+#include "Header Files/Helper.h"
 #include <iostream>
-
-void sep(std::string str = "");
 
 template <size_t rows, size_t cols>
 void print_2D_array(int (&A)[rows][cols]) {
@@ -31,17 +30,13 @@ int argmax(int row_to_begin_with, int coll_to_search, int (&A)[rows][cols]) {
 }
 
 int main(int argc, char **argv) {
-    const int n = 4, m = 8;
+    const int n = 3, m = 4;
     // clang-format off
     int A[m][n] = {
-{0, 1, 1, 0},
-{1, 0, 0, 0},
-{0, 1, 0, 0},
-{1, 0, 0, 0},
-{0, 1, 0, 0},
-{1, 0, 0, 0},
-{0, 1, 0, 0},
-{0, 1, 0, 1}};
+{ 0, 1, 1},
+{ 1, 0, 0},
+{ 0, 0, 0},
+{ 0, 0, 0}};
     // clang-format on
     int h_r = 0; /* Initialization of the pivot row */
     int k_c = 0; /* Initialization of the pivot column */

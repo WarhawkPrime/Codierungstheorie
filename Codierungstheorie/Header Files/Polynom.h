@@ -31,13 +31,13 @@ class Polynom {
     static const Polynom ZERO;
     static const Polynom ONE;
 
-    Polynom(std::vector<int> coefficients, bool _trim = true);
+    explicit Polynom(std::vector<int> coefficients, bool _trim = true);
 
     /**
      * This uses the binary representation of the number as coefficients
      * @param coefficients_as_number
      */
-    explicit Polynom(int coefficients_as_number);
+    explicit Polynom(int coefficients_as_number, bool trim = true);
 
     /**
      *
