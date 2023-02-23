@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://rg5cckkxqppt"]
+[gd_scene load_steps=5 format=3 uid="uid://rg5cckkxqppt"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_l4553"]
 [ext_resource type="Texture2D" uid="uid://paax8paj02n1" path="res://icon.svg" id="2_x05n1"]
+[ext_resource type="Script" path="res://TEST.gd" id="3_gu113"]
 
 [sub_resource type="SystemFont" id="SystemFont_8dkal"]
 
@@ -10,6 +11,7 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_bottom = -26.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
@@ -17,7 +19,7 @@ size_flags_vertical = 3
 
 [node name="FileDialog" type="FileDialog" parent="."]
 title = "Open a File"
-size = Vector2i(325, 162)
+size = Vector2i(335, 162)
 popup_window = true
 ok_button_text = "Open"
 file_mode = 0
@@ -27,11 +29,10 @@ show_hidden_files = true
 
 [node name="Main" type="VBoxContainer" parent="." node_paths=PackedStringArray("fileDialog")]
 layout_mode = 1
-anchors_preset = 15
+anchors_preset = 10
 anchor_right = 1.0
-anchor_bottom = 1.0
+offset_bottom = 1107.0
 grow_horizontal = 2
-grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_l4553")
@@ -96,13 +97,19 @@ text = "TO PNG"
 [node name="HSeparator2" type="HSeparator" parent="Main"]
 layout_mode = 2
 
-[node name="HSeparator3" type="HSeparator" parent="Main"]
+[node name="SubViewportContainer" type="SubViewportContainer" parent="Main"]
+visible = false
 layout_mode = 2
+size_flags_horizontal = 4
 
-[node name="MatrixContainer" type="TextureRect" parent="Main"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
+[node name="MatrixContainer" type="SubViewport" parent="Main/SubViewportContainer"]
+unique_name_in_owner = true
+disable_3d = true
+handle_input_locally = false
+size = Vector2i(928, 928)
+size_2d_override_stretch = true
+render_target_update_mode = 0
+script = ExtResource("3_gu113")
 
 [connection signal="file_selected" from="FileDialog" to="Main" method="_on_file_dialog_file_selected"]
 [connection signal="pressed" from="Main/Toolbar/OpenFile" to="Main" method="_on_open_file_pressed"]
@@ -111,3 +118,4 @@ size_flags_vertical = 3
 [connection signal="value_changed" from="Main/Toolbar/HSlider" to="Main" method="_on_h_slider_value_changed"]
 [connection signal="text_submitted" from="Main/Toolbar/Value" to="Main" method="_on_value_text_submitted"]
 [connection signal="pressed" from="Main/Toolbar/Button" to="Main" method="_on_button_pressed"]
+[connection signal="pressed" from="Main/Toolbar/Button" to="Main/SubViewportContainer/MatrixContainer" method="_on_button_pressed"]

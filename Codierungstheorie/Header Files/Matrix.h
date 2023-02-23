@@ -78,6 +78,7 @@ class Matrix {
      */
     void to_canonical_form();
 
+    Matrix to_control_matrix() const;
     /**
      * This is basically a argmax() function for a column in the matrix! <br>
      * See https://en.wikipedia.org/wiki/Arg_max for more info.
@@ -94,6 +95,8 @@ class Matrix {
      * @return string representation of the matrix
      */
     std::string to_vector_str() const;
+
+    Matrix transpose() const;
 
   private:
     std::vector<Polynom> values;

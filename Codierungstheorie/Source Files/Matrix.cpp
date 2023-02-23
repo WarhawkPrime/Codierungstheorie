@@ -60,7 +60,7 @@ void Matrix::to_canonical_form() {
                 }
             }
 
-            // redo this so it correctlty cleans up the matrix
+            // redo this so it correctly cleans up the matrix
             // Man zieht danach von den darüberliegenden Zeilen entsprechende Vielfache ab, sodass über einer führenden 1 nur Nullen stehen.
             auto row = values[pivot_row];
             for (int i = pivot_row - 1; i >= 0; i--) {
@@ -105,4 +105,41 @@ int Matrix::idx_of_max_value_in_col(int starting_row, int col_to_search) {
     }
 
     return max_row_index;
+}
+
+Matrix Matrix::to_control_matrix() const {
+    // Transpose the original matrix
+    Matrix transposed = transpose();
+
+    // Create a new matrix object to store the control matrix
+    int n = cols;
+    int k = rows;
+    Matrix control_matrix = Matrix(n + n - k, n - k);
+
+    // Copy the transposed matrix to the control matrix
+    control_matrix.values = transposed.values;
+
+    // Append rows of zeroes to the control matrix
+    for (int i = transposed.rows; i < control_matrix.rows; i++) {
+        control_matrix.values.push_back(Polynom(0));
+    }
+
+    // Return the control matrix
+    return control_matrix;
+}
+
+Matrix Matrix::transpose() const {
+    Matrix transposed = Matrix(cols, rows);
+    auto transposed_values = std::vector<Polynom>();
+
+    for (int j = 0; j < cols; j++) {
+        auto tem_values = std::vector<int>();
+        for (int i = 0; i < rows; i++) {
+            auto cell_value = values[i].get_coefficients()[j];
+            tem_values.push_back(cell_value);
+        }
+        transposed_values.emplace_back(tem_values, false);
+    }
+    transposed.values = transposed_values;
+    return transposed;
 }
