@@ -4,6 +4,7 @@ extends Control
 
 ## Use pretty or fast rendering
 @export var fast: bool = false
+@export var inverse_matrix: bool = true
 @export var font: Font
 
 @export var cell_color: Color = "#0c1b49"
@@ -120,7 +121,11 @@ func create_matrix():
 				rect.custom_minimum_size = Vector2(cell_size, cell_size)
 				rect.size = Vector2(cell_size, cell_size)
 				rects.append(rect)
-
+				if(inverse_matrix):
+					if(element == "1"):
+						rect.get_child(0).text = str(row_count) + "*" + str(cell_count) 
+					else:
+						rect.get_child(0).text = ""
 				cell_count += 1
 			row_count += 1
 
