@@ -15,8 +15,15 @@ class Matrix {
     Matrix(const int rows, const int cols) : rows(rows), cols(cols), values(std::move(std::vector<Polynom>())){};
     Matrix(const int rows, const int cols, const std::vector<Polynom> &values) : rows(rows), cols(cols), values(values){};
 
+    void swap_rows(int row_a, int row_b);
+
+
     void to_canonical_form();
-    void GausJordan_elimination();
+
+
+    void to_control_form();
+
+    Matrix to_canonical_via_GJE();
 
     std::string to_vector_str() const;
 
