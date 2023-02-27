@@ -41,9 +41,9 @@ int Matrix::idx_of_max_value_in_col(int starting_row, int col_to_search) {
     return max_row_index;
 }
 
-
+/*
 // returns transpose matrix
-Matrix Matrix::transpose()
+Matrix Matrix::transpose() const
 {
     Matrix transpose = Matrix(cols, rows);
 
@@ -60,7 +60,7 @@ Matrix Matrix::transpose()
 
     return transpose;
 }
-
+*/
 
 // Not just sort but use the Gauss-Jordan-elimination
 void Matrix::to_canonical_form() {
@@ -290,9 +290,9 @@ Matrix Matrix::to_canonical_via_GJE(const int p) {
     */
 }
 
-
+/*
 // G => H= -P^t
-Matrix Matrix::to_control_matrix()
+Matrix Matrix::to_control_matrix() const
 {
     // 4x3
     Matrix generatormatrix = Matrix(rows, cols, values);
@@ -364,7 +364,7 @@ Matrix Matrix::to_control_matrix()
     std::cout << "return" << std::endl;
     return controlmatrix;
 }
-
+*/
 
 
 std::string Matrix::to_vector_str() const {
