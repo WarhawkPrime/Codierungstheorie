@@ -4,6 +4,7 @@ extends Control
 
 ## Use pretty or fast rendering
 @export var fast: bool = false
+@export var inverse_matrix: bool = true
 @export var font: Font
 
 @export var cell_color: Color = "#0c1b49"
@@ -12,7 +13,7 @@ extends Control
 
 @onready var target_viewport = get_tree().root.get_viewport()
 @onready var rect_scene = preload("res://MatrixCell.tscn")
-@onready var rect_container = $MatrixContainer
+@onready var rect_container: SubViewport = $SubViewportContainer/MatrixContainer
 
 @onready var default_cell_size = cell_size
 
@@ -56,9 +57,11 @@ func _open_file(path):
 			break;
 		matrix.push_back(values)
 
-	print_debug(max_matrix_value)
-	print_debug(matrix_size)
-
+	#print_debug(max_matrix_value)
+	#print_debug(matrix_size)
+	cell_size = 928/matrix_size
+	#print(cell_size)
+	##cell_size = (cell_size *2) -1
 	if(fast):
 		queue_redraw()
 	else:
@@ -66,7 +69,7 @@ func _open_file(path):
 
 
 func _draw():
-	var gap: int = cell_size / 10
+	var gap: int = 0
 
 	var start: int = Time.get_ticks_usec()
 	if(matrix.size() != 0):
@@ -76,15 +79,16 @@ func _draw():
 			print("Processing row %s of %s" % [row_count, matrix_size])
 			var cell_count: int = 0
 			for element in row:
-				var x: int = cell_size+(cell_size*row_count)+ gap * row_count
-				var y: int = cell_size+(cell_size*cell_count) + gap * cell_count
+				var x: int = (cell_size*row_count)+ gap * row_count
+				var y: int = (cell_size*cell_count) + gap * cell_count
 
 				x += 100
 				y += 100
 
 				var color = calculate_dynamic_color(element.to_float(), self.cell_color)
 				var rext = Rect2(x, y, cell_size, cell_size)
-				draw_rect(rext, color)
+				var texture: ViewportTexture = rect_container.get_texture()
+				draw_rect(rext,color)
 				cell_count += 1
 			row_count += 1
 			var finish: int = Time.get_ticks_usec()
@@ -95,7 +99,7 @@ func _draw():
 
 
 func create_matrix():
-	var gap: int = 2
+	var gap: int = 0
 
 	var rects = []
 	var start: int = Time.get_ticks_usec()
@@ -106,16 +110,22 @@ func create_matrix():
 			print("Processing row %s of %s" % [row_count, matrix_size])
 			var cell_count: int = 0
 			for element in row:
-				var x: int = cell_size+(cell_size*row_count)+ gap * row_count
-				var y: int = cell_size+(cell_size*cell_count) + gap * cell_count
+				var x: int = (cell_size*row_count)+ gap * row_count
+				var y: int = (cell_size*cell_count) + gap * cell_count
 				var pos: Vector2 = Vector2(x, y)
 
 				var color = calculate_dynamic_color(element.to_float(), self.cell_color)
 
 				var rect = rect_scene.instantiate()
 				rect.init(pos, color, element.to_int())
+				rect.custom_minimum_size = Vector2(cell_size, cell_size)
+				rect.size = Vector2(cell_size, cell_size)
 				rects.append(rect)
-
+				if(inverse_matrix):
+					if(element == "1"):
+						rect.get_child(0).text = str(row_count) + "*" + str(cell_count) 
+					else:
+						rect.get_child(0).text = ""
 				cell_count += 1
 			row_count += 1
 

@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://rg5cckkxqppt"]
+[gd_scene load_steps=5 format=3 uid="uid://rg5cckkxqppt"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_l4553"]
-[ext_resource type="Texture2D" uid="uid://paax8paj02n1" path="res://icon.svg" id="2_x05n1"]
+[ext_resource type="Texture2D" uid="uid://bpew5cfb5dv3c" path="res://icon.svg" id="2_x05n1"]
+[ext_resource type="Script" path="res://TEST.gd" id="3_gu113"]
 
 [sub_resource type="SystemFont" id="SystemFont_8dkal"]
 
@@ -10,6 +11,7 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_bottom = -26.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
@@ -17,7 +19,7 @@ size_flags_vertical = 3
 
 [node name="FileDialog" type="FileDialog" parent="."]
 title = "Open a File"
-size = Vector2i(325, 162)
+size = Vector2i(335, 162)
 popup_window = true
 ok_button_text = "Open"
 file_mode = 0
@@ -26,12 +28,10 @@ filters = PackedStringArray("*.csv")
 show_hidden_files = true
 
 [node name="Main" type="VBoxContainer" parent="." node_paths=PackedStringArray("fileDialog")]
-layout_mode = 1
-anchors_preset = 15
+anchors_preset = 10
 anchor_right = 1.0
-anchor_bottom = 1.0
+offset_bottom = 1107.0
 grow_horizontal = 2
-grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_l4553")
@@ -40,40 +40,56 @@ font = SubResource("SystemFont_8dkal")
 fileDialog = NodePath("../FileDialog")
 
 [node name="HSeparator" type="HSeparator" parent="Main"]
-layout_mode = 2
+offset_right = 1600.0
+offset_bottom = 4.0
 
 [node name="Toolbar" type="HBoxContainer" parent="Main"]
 custom_minimum_size = Vector2(0, 50)
-layout_mode = 2
+offset_top = 8.0
+offset_right = 1600.0
+offset_bottom = 63.0
 
 [node name="OpenFile" type="Button" parent="Main/Toolbar"]
 custom_minimum_size = Vector2(100, 50)
-layout_mode = 2
+offset_top = 2.0
+offset_right = 100.0
+offset_bottom = 52.0
 size_flags_vertical = 4
 text = "Open file ..."
 
 [node name="Color" type="VBoxContainer" parent="Main/Toolbar"]
-layout_mode = 2
+offset_left = 104.0
+offset_right = 146.0
+offset_bottom = 55.0
 
 [node name="Label" type="Label" parent="Main/Toolbar/Color"]
-layout_mode = 2
+offset_right = 42.0
+offset_bottom = 26.0
 size_flags_horizontal = 4
 text = "Color"
 horizontal_alignment = 1
 
 [node name="ColorPickerButton" type="ColorPickerButton" parent="Main/Toolbar/Color"]
 custom_minimum_size = Vector2(0, 25)
-layout_mode = 2
+offset_top = 30.0
+offset_right = 42.0
+offset_bottom = 55.0
 icon = ExtResource("2_x05n1")
 expand_icon = true
 edit_alpha = false
 
 [node name="Scale" type="Label" parent="Main/Toolbar"]
-layout_mode = 2
+offset_left = 150.0
+offset_top = 14.0
+offset_right = 190.0
+offset_bottom = 40.0
 text = "Scale"
 
 [node name="HSlider" type="HSlider" parent="Main/Toolbar"]
-layout_mode = 2
+offset_left = 194.0
+offset_top = 19.0
+offset_right = 1424.0
+offset_bottom = 35.0
 size_flags_horizontal = 3
 size_flags_vertical = 4
 max_value = 5000.0
@@ -83,26 +99,43 @@ ticks_on_borders = true
 
 [node name="Value" type="LineEdit" parent="Main/Toolbar"]
 custom_minimum_size = Vector2(100, 40)
-layout_mode = 2
+offset_left = 1428.0
+offset_top = 7.0
+offset_right = 1528.0
+offset_bottom = 47.0
 size_flags_vertical = 4
 text = "1000"
 placeholder_text = "1000
 "
 
 [node name="Button" type="Button" parent="Main/Toolbar"]
-layout_mode = 2
+offset_left = 1532.0
+offset_right = 1600.0
+offset_bottom = 55.0
 text = "TO PNG"
 
 [node name="HSeparator2" type="HSeparator" parent="Main"]
-layout_mode = 2
+offset_top = 67.0
+offset_right = 1600.0
+offset_bottom = 71.0
 
-[node name="HSeparator3" type="HSeparator" parent="Main"]
-layout_mode = 2
+[node name="SubViewportContainer" type="SubViewportContainer" parent="Main"]
+visible = false
+offset_left = 336.0
+offset_top = 75.0
+offset_right = 1264.0
+offset_bottom = 1003.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
 
-[node name="MatrixContainer" type="TextureRect" parent="Main"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
+[node name="MatrixContainer" type="SubViewport" parent="Main/SubViewportContainer"]
+unique_name_in_owner = true
+disable_3d = true
+handle_input_locally = false
+size = Vector2i(928, 928)
+size_2d_override_stretch = true
+render_target_update_mode = 0
+script = ExtResource("3_gu113")
 
 [connection signal="file_selected" from="FileDialog" to="Main" method="_on_file_dialog_file_selected"]
 [connection signal="pressed" from="Main/Toolbar/OpenFile" to="Main" method="_on_open_file_pressed"]
@@ -111,3 +144,4 @@ size_flags_vertical = 3
 [connection signal="value_changed" from="Main/Toolbar/HSlider" to="Main" method="_on_h_slider_value_changed"]
 [connection signal="text_submitted" from="Main/Toolbar/Value" to="Main" method="_on_value_text_submitted"]
 [connection signal="pressed" from="Main/Toolbar/Button" to="Main" method="_on_button_pressed"]
+[connection signal="pressed" from="Main/Toolbar/Button" to="Main/SubViewportContainer/MatrixContainer" method="_on_button_pressed"]

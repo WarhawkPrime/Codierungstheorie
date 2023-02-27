@@ -8,8 +8,8 @@
 #include "Basis.h"
 #include <bitset>
 #include <cassert>
+#include <cmath>
 #include <iostream>
-#include <math.h>
 #include <vector>
 
 // Polynom 2nd degree: ax^2 + bx + c
@@ -31,13 +31,13 @@ class Polynom {
     static const Polynom ZERO;
     static const Polynom ONE;
 
-    explicit Polynom(std::vector<int> coefficients);
+    explicit Polynom(std::vector<int> coefficients, bool _trim = true);
 
     /**
      * This uses the binary representation of the number as coefficients
      * @param coefficients_as_number
      */
-    explicit Polynom(int coefficients_as_number);
+    explicit Polynom(int coefficients_as_number, bool trim = true);
 
     /**
      *
@@ -61,24 +61,19 @@ class Polynom {
         return coefficients.size() > index ? coefficients.at(index) : 0;
     }
 
-    inline bool set_coefficient(int index, int coefficient){
-        if (index >= coefficients.size())
-        {
+    inline bool set_coefficient(int index, int coefficient) {
+        if (index >= coefficients.size()) {
             int i = coefficients.size();
-            for(; i < index; i++)
-            {
+            for (; i < index; i++) {
                 coefficients.push_back(0);
             }
             coefficients.push_back(coefficient);
             return false;
-        }
-        else
-        {
+        } else {
             coefficients.at(index) = coefficient;
             return true;
         }
     }
-
 
     // vector addition:
     // size of result is the size of the larger summand
@@ -207,10 +202,9 @@ class Polynom {
         return result_polynom;
     }
 
-    inline std::vector<int> get_coefficients() const {
+    [[nodiscard]] inline std::vector<int> get_coefficients() const {
         return coefficients;
     }
-
     /**
      * Trims unnecessary zeros from Polynom
      * removes 0 from the back (highest exponents) until non-zero number is met

@@ -7,7 +7,7 @@
 
 TEST_SUITE("Polynom Tests" * doctest::description("optional")) {
     TEST_CASE("Triming tests") {
-        auto classToTest = Polynom({1, 1});
+        auto classToTest = Polynom({1, 1}, false);
 
         CHECK_EQ(classToTest.get_degree(), 1);
 
@@ -108,7 +108,7 @@ TEST_SUITE("Polynom Tests" * doctest::description("optional")) {
     }
 
     TEST_CASE("Addition") {
-        auto p1 = Polynom({1, 1});
+        auto p1 = Polynom({1, 1}, false);
 
         auto p2 = Polynom(7);
 

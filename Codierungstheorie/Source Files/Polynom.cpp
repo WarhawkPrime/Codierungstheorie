@@ -7,13 +7,15 @@
 const Polynom Polynom::ZERO = Polynom({0});
 const Polynom Polynom::ONE = Polynom(1);
 
-Polynom::Polynom(std::vector<int> coefficients) {
+Polynom::Polynom(std::vector<int> coefficients, bool _trim) {
     this->coefficients = std::move(coefficients);
-    trim();
+    if (_trim) {
+        trim();
+    }
 }
 
 // TODO mit Bit operations ....
-Polynom::Polynom(int coefficients_as_number) {
+Polynom::Polynom(int coefficients_as_number, bool _trim) {
     auto size = ((sizeof coefficients_as_number) * 8);
 
     auto temp_coefficients = std::vector<int>(0);
@@ -26,7 +28,9 @@ Polynom::Polynom(int coefficients_as_number) {
     std::reverse(temp_coefficients.begin(), temp_coefficients.end());
     this->coefficients = std::move(temp_coefficients);
 
-    trim();
+    if (_trim) {
+        trim();
+    }
 }
 
 int Polynom::get_degree() const {
