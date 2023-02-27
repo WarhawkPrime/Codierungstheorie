@@ -5,7 +5,6 @@
 #ifndef CODIERUNGSTHEORIE_EGF_H
 #define CODIERUNGSTHEORIE_EGF_H
 
-#include "Polynom.h"
 #include <bitset>
 #include <cmath>
 #include <fstream>
@@ -13,6 +12,7 @@
 #include <utility>
 
 #include "Basis.h"
+#include "Polynom.h"
 
 /**
  * GF(p^e) : Polynome von Grad < e über GF(p)
@@ -22,8 +22,8 @@
 class EGF {
 
   private:
-    const int p;
-    const int e;
+    static const Polynom ip_by_degree[10];
+
     const Polynom irreducible_polynom;
 
     [[nodiscard]] Polynom multiplication_with_polynomial_reduction(const Polynom &a, const Polynom &b) const;
@@ -33,16 +33,23 @@ class EGF {
     [[nodiscard]] Polynom modulo_multiplication(const Polynom &a, const Polynom &b) const;
 
   public:
+    const int p;
+    const int e;
     const int order;
 
+    // Checks in EFG so that no invalid ip etc. can be used
     EGF(const int p, const int e, const Polynom &irreducible_polynom) : p(p), e(e), order(pow(p, e)),
                                                                         irreducible_polynom(irreducible_polynom) {}
 
     EGF(const int e, const Polynom &irreducible_polynom) : p(2), e(e), order(pow(p, e)),
                                                            irreducible_polynom(irreducible_polynom) {}
 
-    Polynom multiplication(const Polynom &a, const Polynom &b) const;
-    Polynom addition(const Polynom &a, const Polynom &b) const;
+    static EGF create_EGF_on_degree(int degree) {
+        return {degree, ip_by_degree[degree]};
+    }
+
+    [[nodiscard]] Polynom multiplication(const Polynom &a, const Polynom &b) const;
+    [[nodiscard]] Polynom addition(const Polynom &a, const Polynom &b) const;
 
     /**
      *

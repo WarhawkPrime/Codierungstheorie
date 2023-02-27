@@ -2,6 +2,18 @@
 #include "Header Files/ModularPolynomArithmetic.h"
 #include <cassert>
 
+const Polynom EGF::ip_by_degree[10] = {
+    Polynom(7), // Kein explizites irreduzibles Polynom für diesen Grad angegeben
+    Polynom(7), // Kein explizites irreduzibles Polynom für diesen Grad angegeben
+    Polynom(7),
+    Polynom(13),
+    Polynom(25),
+    Polynom(37),
+    Polynom(97),
+    Polynom(241),
+    Polynom(285),
+    Polynom(577)};
+
 /**
  *
  * @param a An Element of this GF
