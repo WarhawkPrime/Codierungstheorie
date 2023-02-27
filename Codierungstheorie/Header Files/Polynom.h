@@ -60,30 +60,20 @@ class Polynom {
     inline int get_coefficient(int index) const {
         return coefficients.size() > index ? coefficients.at(index) : 0;
     }
-    void set_coefficient(int index, int value) {
-        if (coefficients.size() > index) {
-            coefficients.at(index) = value;
-        }
-    }
 
-    inline bool set_coefficient(int index, int coefficient){
-        if (index >= coefficients.size())
-        {
+    inline bool set_coefficient(int index, int coefficient) {
+        if (index >= coefficients.size()) {
             int i = coefficients.size();
-            for(; i < index; i++)
-            {
+            for (; i < index; i++) {
                 coefficients.push_back(0);
             }
             coefficients.push_back(coefficient);
             return false;
-        }
-        else
-        {
+        } else {
             coefficients.at(index) = coefficient;
             return true;
         }
     }
-
 
     // vector addition:
     // size of result is the size of the larger summand

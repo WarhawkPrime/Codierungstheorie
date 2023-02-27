@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://rg5cckkxqppt"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_l4553"]
-[ext_resource type="Texture2D" uid="uid://paax8paj02n1" path="res://icon.svg" id="2_x05n1"]
+[ext_resource type="Texture2D" uid="uid://bpew5cfb5dv3c" path="res://icon.svg" id="2_x05n1"]
 [ext_resource type="Script" path="res://TEST.gd" id="3_gu113"]
 
 [sub_resource type="SystemFont" id="SystemFont_8dkal"]
@@ -28,7 +28,6 @@ filters = PackedStringArray("*.csv")
 show_hidden_files = true
 
 [node name="Main" type="VBoxContainer" parent="." node_paths=PackedStringArray("fileDialog")]
-layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 1107.0
@@ -41,20 +40,17 @@ font = SubResource("SystemFont_8dkal")
 fileDialog = NodePath("../FileDialog")
 
 [node name="HSeparator" type="HSeparator" parent="Main"]
-layout_mode = 2
 offset_right = 1600.0
 offset_bottom = 4.0
 
 [node name="Toolbar" type="HBoxContainer" parent="Main"]
-custom_minimum_size = Vector2i(0, 50)
-layout_mode = 2
+custom_minimum_size = Vector2(0, 50)
 offset_top = 8.0
 offset_right = 1600.0
 offset_bottom = 63.0
 
 [node name="OpenFile" type="Button" parent="Main/Toolbar"]
-custom_minimum_size = Vector2i(100, 50)
-layout_mode = 2
+custom_minimum_size = Vector2(100, 50)
 offset_top = 2.0
 offset_right = 100.0
 offset_bottom = 52.0
@@ -62,13 +58,11 @@ size_flags_vertical = 4
 text = "Open file ..."
 
 [node name="Color" type="VBoxContainer" parent="Main/Toolbar"]
-layout_mode = 2
 offset_left = 104.0
 offset_right = 146.0
 offset_bottom = 55.0
 
 [node name="Label" type="Label" parent="Main/Toolbar/Color"]
-layout_mode = 2
 offset_right = 42.0
 offset_bottom = 26.0
 size_flags_horizontal = 4
@@ -76,8 +70,7 @@ text = "Color"
 horizontal_alignment = 1
 
 [node name="ColorPickerButton" type="ColorPickerButton" parent="Main/Toolbar/Color"]
-custom_minimum_size = Vector2i(0, 25)
-layout_mode = 2
+custom_minimum_size = Vector2(0, 25)
 offset_top = 30.0
 offset_right = 42.0
 offset_bottom = 55.0
@@ -86,7 +79,6 @@ expand_icon = true
 edit_alpha = false
 
 [node name="Scale" type="Label" parent="Main/Toolbar"]
-layout_mode = 2
 offset_left = 150.0
 offset_top = 14.0
 offset_right = 190.0
@@ -94,7 +86,6 @@ offset_bottom = 40.0
 text = "Scale"
 
 [node name="HSlider" type="HSlider" parent="Main/Toolbar"]
-layout_mode = 2
 offset_left = 194.0
 offset_top = 19.0
 offset_right = 1424.0
@@ -107,8 +98,7 @@ allow_greater = true
 ticks_on_borders = true
 
 [node name="Value" type="LineEdit" parent="Main/Toolbar"]
-custom_minimum_size = Vector2i(100, 40)
-layout_mode = 2
+custom_minimum_size = Vector2(100, 40)
 offset_left = 1428.0
 offset_top = 7.0
 offset_right = 1528.0
@@ -119,21 +109,18 @@ placeholder_text = "1000
 "
 
 [node name="Button" type="Button" parent="Main/Toolbar"]
-layout_mode = 2
 offset_left = 1532.0
 offset_right = 1600.0
 offset_bottom = 55.0
 text = "TO PNG"
 
 [node name="HSeparator2" type="HSeparator" parent="Main"]
-layout_mode = 2
 offset_top = 67.0
 offset_right = 1600.0
 offset_bottom = 71.0
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="Main"]
 visible = false
-layout_mode = 2
 offset_left = 336.0
 offset_top = 75.0
 offset_right = 1264.0

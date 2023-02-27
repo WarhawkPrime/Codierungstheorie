@@ -20,11 +20,24 @@ int compare_canonical(Polynom &a, Polynom &b) {
 }
 
 // swaps two rows
-void Matrix::swap_rows(int row_a, int row_b)
-{
+void Matrix::swap_rows(int row_a, int row_b) {
     auto temp_row = values.at(row_a);
     values.at(row_a) = values.at(row_b);
     values.at(row_b) = temp_row;
+}
+int Matrix::idx_of_max_value_in_col(int starting_row, int col_to_search) {
+    int max_row_index = 0;
+    double max_value = 0;
+
+    for (int row = starting_row; row < rows; row++) {
+        auto value = abs(values[row].get_coefficient(col_to_search));
+        if (value > max_value) {
+            max_row_index = row;
+            max_value = value;
+        }
+    }
+
+    return max_row_index;
 }
 
 // Not just sort but use the Gauss-Jordan-elimination
@@ -105,7 +118,6 @@ void Matrix::to_canonical_form() {
     }
 }
 
-
 /*
  * Gauss Jordan Elimination vorgehen:
  * 1. Auswählen der ersten Spalte von links, in der mindestens ein Wert != 0 ist
@@ -121,10 +133,9 @@ void Matrix::to_canonical_form() {
  */
 
 // Vorgehen mit einer augmented Matrix zur eventuellen Erstellung einer Generatormatrix
-Matrix Matrix::to_canonical_via_GJE()
-{
+Matrix Matrix::to_canonical_via_GJE() {
     Matrix matrix_copy = Matrix(rows, cols, values);
-    Matrix augmented_matrix = Matrix(rows, cols *2, values);
+    Matrix augmented_matrix = Matrix(rows, cols * 2, values);
 
     // init augmented matrix
     for (int i = 0; i < rows; i++) {
@@ -145,15 +156,17 @@ Matrix Matrix::to_canonical_via_GJE()
 
         augmented_matrix.swap_rows(row, max_row);
 
-        //reduce pivot point
+        // reduce pivot point
         for (int i = row + 1; i < rows; i++) {
 
             auto div = augmented_matrix.values.at(i).get_coefficient(row);
             auto div_piv = augmented_matrix.values.at(row).get_coefficient(row);
+            int factor = 1;
+            if (div_piv != 0) {
+                factor = div / div_piv;
+            }
 
-            int factor = div / div_piv;
-
-            for (int j = row; j < 2 * augmented_matrix.cols ; j++) {
+            for (int j = row; j < 2 * augmented_matrix.cols; j++) {
 
                 int diff = factor * augmented_matrix.values.at(row).get_coefficient(j);
 
@@ -165,10 +178,9 @@ Matrix Matrix::to_canonical_via_GJE()
     }
 
     // perfom back substitiution to transform augmented matrix into reduced row echolon form
-    for (int row = rows -1; row >= 0; row--)
-    {
+    for (int row = rows - 1; row >= 0; row--) {
 
-        //normalize pivot row
+        // normalize pivot row
         int pivot = augmented_matrix.values.at(row).get_coefficient(row);
 
         if (pivot != 0) {
@@ -183,7 +195,6 @@ Matrix Matrix::to_canonical_via_GJE()
                 int factor = augmented_matrix.values.at(i).get_coefficient(row) /
                              augmented_matrix.values.at(row).get_coefficient(row);
 
-
                 for (int j = row; j < 2 * augmented_matrix.cols; j++) {
                     int fac = factor * augmented_matrix.values.at(row).get_coefficient(j);
                     int dif = augmented_matrix.values.at(i).get_coefficient(j) - fac;
@@ -195,32 +206,26 @@ Matrix Matrix::to_canonical_via_GJE()
 
     // define size of canonical matrix. Check if there are all 0 rows in the non-augmented matrix part
     int row_number = 0;
-    for (int row = 0; row < rows; row++)
-    {
-        for(int col = 0; col < matrix_copy.cols; col++)
-        {
-           if (augmented_matrix.values.at(row).get_coefficient(col) != 0)
-           {
-               row_number ++;
-               break;
-           }
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < matrix_copy.cols; col++) {
+            if (augmented_matrix.values.at(row).get_coefficient(col) != 0) {
+                row_number++;
+                break;
+            }
         }
     }
 
     // extract canonical form of the matrix
     Matrix canonical_matrix = Matrix(row_number, matrix_copy.cols);
 
-    for (int i = 0; i < row_number; i++)
-    {
+    for (int i = 0; i < row_number; i++) {
         canonical_matrix.values.push_back(Polynom(0));
     }
 
-    for (int row = 0; row < row_number; row++)
-    {
-       for(int col = 0; col < matrix_copy.cols; col++)
-       {
-           canonical_matrix.values.at(row).set_coefficient(col, augmented_matrix.values.at(row).get_coefficient(col));
-       }
+    for (int row = 0; row < row_number; row++) {
+        for (int col = 0; col < matrix_copy.cols; col++) {
+            canonical_matrix.values.at(row).set_coefficient(col, augmented_matrix.values.at(row).get_coefficient(col));
+        }
     }
 
     return canonical_matrix;
@@ -245,17 +250,6 @@ Matrix Matrix::to_canonical_via_GJE()
     */
 }
 
-
-void Matrix::to_control_form() {
-
-}
-
-
-
-
-
-
-
 std::string Matrix::to_vector_str() const {
     std::string result = "(\n";
     for (const auto &item : values) {
@@ -266,21 +260,6 @@ std::string Matrix::to_vector_str() const {
     }
     result.append(")");
     return result;
-}
-
-int Matrix::idx_of_max_value_in_col(int starting_row, int col_to_search) {
-    int max_row_index = 0;
-    double max_value = 0;
-
-    for (int row = starting_row; row < rows; row++) {
-        auto value = abs(values[row].get_coefficient(col_to_search));
-        if (value > max_value) {
-            max_row_index = row;
-            max_value = value;
-        }
-    }
-
-    return max_row_index;
 }
 
 Matrix Matrix::to_control_matrix() const {

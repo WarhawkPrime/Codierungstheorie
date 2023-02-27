@@ -57,9 +57,6 @@ class Matrix {
         }
     };
 
-
-
-
     /**
      * @brief Constructor for creating a Matrix of size 'rows' by 'cols' with empty Polynom values
      *
@@ -98,6 +95,7 @@ class Matrix {
   private:
     std::vector<Polynom> values;
     const EGF egf;
+    int idx_of_max_value_in_col(int starting_row, int col_to_search);
 };
 
 #endif // CODIERUNGSTHEORIE_MATRIX_H

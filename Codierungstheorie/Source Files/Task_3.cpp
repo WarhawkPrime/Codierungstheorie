@@ -40,7 +40,6 @@ void sub_task_2() {
     auto matrix_trans = matrix_gen.transpose();
     std::cout << matrix_trans.to_vector_str();
 
-
     auto matrix_con = matrix_gen.to_control_matrix();
     std::cout << matrix_con.to_vector_str();
 }

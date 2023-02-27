@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://MatrixCell.gd" id="1_mjito"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_ucc15"]
+[sub_resource type="LabelSettings" id="LabelSettings_48k0x"]
 font_size = 8
 outline_size = 1
 outline_color = Color(0, 0, 0, 1)
@@ -16,12 +16,13 @@ script = ExtResource("1_mjito")
 
 [node name="Label" type="Label" parent="."]
 modulate = Color(0.117647, 0.831373, 0.0392157, 1)
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 text = "255"
-label_settings = SubResource("LabelSettings_ucc15")
+label_settings = SubResource("LabelSettings_48k0x")
 horizontal_alignment = 1
 vertical_alignment = 1
