@@ -133,7 +133,7 @@ void Matrix::to_canonical_form() {
  */
 
 // Vorgehen mit einer augmented Matrix zur eventuellen Erstellung einer Generatormatrix
-Matrix Matrix::to_canonical_via_GJE() {
+Matrix Matrix::to_canonical_via_GJE(const int p) {
     Matrix matrix_copy = Matrix(rows, cols, values);
     Matrix augmented_matrix = Matrix(rows, cols * 2, values);
 
@@ -224,7 +224,8 @@ Matrix Matrix::to_canonical_via_GJE() {
 
     for (int row = 0; row < row_number; row++) {
         for (int col = 0; col < matrix_copy.cols; col++) {
-            canonical_matrix.values.at(row).set_coefficient(col, augmented_matrix.values.at(row).get_coefficient(col));
+            auto val = Basis::modulo_group_mod(augmented_matrix.values.at(row).get_coefficient(col), p);
+            canonical_matrix.values.at(row).set_coefficient(col, val);
         }
     }
 
@@ -263,8 +264,10 @@ std::string Matrix::to_vector_str() const {
 }
 
 Matrix Matrix::to_control_matrix() const {
+    auto matrix_without_steps = sub_matrix(0, rows);
+
     // Transpose the original matrix
-    Matrix transposed = transpose();
+    Matrix transposed = matrix_without_steps.transpose();
 
     // Create a new matrix object to store the control matrix
     int n = cols;
@@ -297,4 +300,19 @@ Matrix Matrix::transpose() const {
     }
     transposed.values = transposed_values;
     return transposed;
+}
+Matrix Matrix::sub_matrix(int row_idx, int col_idx) const {
+    auto sub_rows = rows - row_idx;
+    auto sub_cols = cols - col_idx;
+    // Matrix result = Matrix(sub_rows, cols - col_idx);
+    std::vector<Polynom> sub_values = {};
+    for (int row = row_idx; row < rows; row++) {
+        std::vector<int> temp = {};
+        for (int col = col_idx; col < cols; col++) {
+            auto val = values.at(row).get_coefficient(col);
+            temp.push_back(val);
+        }
+        sub_values.push_back(Polynom(temp));
+    }
+    return Matrix(sub_values);
 }

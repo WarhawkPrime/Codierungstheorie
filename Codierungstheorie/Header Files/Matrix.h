@@ -65,6 +65,12 @@ class Matrix {
      */
     Matrix(const int rows, const int cols) : Matrix(rows, cols, std::vector<Polynom>()){};
 
+    void to_canonical_form();
+
+    void swap_rows(int row_a, int row_b);
+
+    Matrix to_control_matrix() const;
+
     /**
      * This method transform the matrix into its reduced row echelon form.
      * This is done using the Gaussian elimination method,
@@ -76,15 +82,11 @@ class Matrix {
      *
      * The private variable p is used as the modulus in the calculations.
      */
-    void to_canonical_form();
-
-    void swap_rows(int row_a, int row_b);
-
-    Matrix to_control_matrix() const;
-
-    Matrix to_canonical_via_GJE();
+    Matrix to_canonical_via_GJE(const int p = 2);
 
     Matrix transpose() const;
+
+    Matrix sub_matrix(int row_idx, int col_idx) const;
 
     /**
      * @brief This function returns a string representation of the matrix in the form of a list of vectors
