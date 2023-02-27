@@ -17,13 +17,14 @@ class Matrix {
 
     void swap_rows(int row_a, int row_b);
 
+    Matrix transpose();
 
     void to_canonical_form();
 
-
-    void to_control_form();
-
     Matrix to_canonical_via_GJE();
+
+    Matrix to_control_matrix();
+
 
     std::string to_vector_str() const;
 

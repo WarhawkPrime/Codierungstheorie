@@ -14,12 +14,15 @@ void sub_task_1() {
         Polynom(2)}; // 0 1 0
 
     auto mat = Matrix(3, 3, values);
-
     std::cout << mat.to_vector_str() << std::endl;
 
-    mat.GausJordan_elimination();
+
+    //mat.GausJordan_elimination();
+    Matrix can = mat.to_canonical_via_GJE();
+
+
     sep();
-    std::cout << mat.to_vector_str() << std::endl;
+    std::cout << can.to_vector_str() << std::endl;
 }
 // 2. Implementieren Sie eine Routine, welche aus einer kanonischen Generatormatrix eine Kontrollmatrix generiert.
 // 3. Implementieren Sie eine Routine, welche die Syndromtabelle erzeugt.
