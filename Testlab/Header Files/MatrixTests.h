@@ -117,7 +117,7 @@ TEST_SUITE("Matrix tests" * doctest::description("egf")) {
         CHECK(control_matrix.to_vector_str() == expected.to_vector_str());
     }
 
-    TEST_CASE("polynom x matrix")
+    TEST_CASE("polynom x matrix error recognition test")
     {
         const auto Control = Matrix({
                 Polynom({1, 0, 1}, false),
