@@ -17,7 +17,6 @@ class Polynom;
 
 void sep(std::string);
 
-
 class Matrix {
 
   public:
@@ -85,7 +84,7 @@ class Matrix {
      *
      * The private variable p is used as the modulus in the calculations.
      */
-    Matrix to_canonical_via_GJE(const int p = 2);
+    Matrix to_canonical_via_GJE(const int p = 2) const;
 
     Matrix transpose() const;
 

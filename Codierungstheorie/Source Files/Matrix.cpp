@@ -49,8 +49,7 @@ int compare_canonical(Polynom &a, Polynom &b) {
 }
 
 // swaps two rows
-void Matrix::swap_rows(int row_a, int row_b)
-{
+void Matrix::swap_rows(int row_a, int row_b) {
     auto temp_row = values.at(row_a);
     values.at(row_a) = values.at(row_b);
     values.at(row_b) = temp_row;
@@ -69,27 +68,6 @@ int Matrix::idx_of_max_value_in_col(int starting_row, int col_to_search) {
 
     return max_row_index;
 }
-
-/*
-// returns transpose matrix
-Matrix Matrix::transpose() const
-{
-    Matrix transpose = Matrix(cols, rows);
-
-    for (int i = 0; i < cols; i++)
-        transpose.values.push_back(Polynom(0));
-
-    for (int row = 0; row < rows; row++)
-    {
-        for (int col = 0; col < cols; col++)
-        {
-            transpose.values.at(col).set_coefficient(row, this->values.at(row).get_coefficient(col));
-        }
-    }
-
-    return transpose;
-}
-*/
 
 // Not just sort but use the Gauss-Jordan-elimination
 void Matrix::to_canonical_form() {
@@ -184,7 +162,7 @@ void Matrix::to_canonical_form() {
  */
 
 // Vorgehen mit einer augmented Matrix zur eventuellen Erstellung einer Generatormatrix
-Matrix Matrix::to_canonical_via_GJE(const int p) {
+Matrix Matrix::to_canonical_via_GJE(const int p) const {
     Matrix matrix_copy = Matrix(rows, cols, values);
     Matrix augmented_matrix = Matrix(rows, cols * 2, values);
 
@@ -258,32 +236,26 @@ Matrix Matrix::to_canonical_via_GJE(const int p) {
     // define size of canonical matrix. Check if there are all 0 rows in the non-augmented matrix part
     int row_number = 0;
     int col_number = 0;
-    for (int row = 0; row < rows; row++)
-    {
-        for(int col = 0; col < matrix_copy.cols; col++)
-        {
-           if (augmented_matrix.values.at(row).get_coefficient(col) != 0)
-           {
-               row_number ++;
-               break;
-           }
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < matrix_copy.cols; col++) {
+            if (augmented_matrix.values.at(row).get_coefficient(col) != 0) {
+                row_number++;
+                break;
+            }
         }
     }
 
-    for (int col = 0; col < matrix_copy.cols; col++)
-    {
-        for (int row = 0; row < rows; row++)
-        {
-            if (augmented_matrix.values.at(row).get_coefficient(col) != 0)
-            {
-                col_number ++;
+    for (int col = 0; col < matrix_copy.cols; col++) {
+        for (int row = 0; row < rows; row++) {
+            if (augmented_matrix.values.at(row).get_coefficient(col) != 0) {
+                col_number++;
                 break;
             }
         }
     }
 
     // extract canonical form of the matrix
-    //Matrix canonical_matrix = Matrix(row_number, matrix_copy.cols);
+    // Matrix canonical_matrix = Matrix(row_number, matrix_copy.cols);
     Matrix canonical_matrix = Matrix(row_number, col_number);
 
     for (int i = 0; i < row_number; i++) {
@@ -319,136 +291,6 @@ Matrix Matrix::to_canonical_via_GJE(const int p) {
     */
 }
 
-/*
-// G => H= -P^t
-Matrix Matrix::to_control_matrix() const
-{
-    // 4x3
-    Matrix generatormatrix = Matrix(rows, cols, values);
-
-    // init control matrix
-    int cols_T = 0;
-    int rows_T = 0;
-
-    if (cols >= rows)
-    {
-        cols_T = cols - rows;
-        rows_T = cols;
-    }
-    else
-    {
-        cols_T = rows - cols;
-        rows_T = rows;
-    }
-
-
-    std::cout << "col_t: " << cols_T << std::endl;
-    std::cout << "row_t: " << rows_T << std::endl;
-
-    // 3x4
-    Matrix controlmatrix = Matrix(rows_T, cols_T);
-
-    for (int i = 0; i < rows_T; i++) {
-        controlmatrix.values.push_back(Polynom(0));
-    }
-
-    std::cout << "empty control: " << std::endl;
-    std::cout << controlmatrix.to_vector_str() << std::endl;
-    std::cout << controlmatrix.values.size() << std::endl;
-
-    // transpose generator matrix
-    Matrix generatormatrix_T = generatormatrix.transpose();
-
-    std::cout << "transpose " << std::endl;
-    std::cout << generatormatrix_T.to_vector_str() << std::endl;
-
-    // calc control matrix
-    for (int col = 0; col < cols_T; col++)
-    {
-        std::cout << " col: " << col << std::endl;
-
-        for (int row = 0; row < rows_T; row++)
-        {
-            std::cout << "row: " << row << std::endl;
-
-            if (col >= rows_T)
-            {
-                std::cout << "last" << std::endl;
-                int value = (col - rows_T == row) ? 1 : 0;
-
-                controlmatrix.values.at(row).set_coefficient(col, value  );
-            }
-            else
-            {
-                std::cout << " last 0 " << std::endl;
-
-                auto val = generatormatrix_T.values.at(col).get_coefficient(row);
-
-                std::cout << " ok" << std::endl;
-                controlmatrix.values.at(row).set_coefficient(col, val);
-            }
-        }
-    }
-
-    std::cout << "return" << std::endl;
-    return controlmatrix;
-}
-*/
-
-
-
-/*
-Matrix Matrix::to_control_matrix() const
-{
-    int rows_T = cols - rows;
-    int cols_T = cols;
-
-    auto paritycheckmatrix = Matrix(rows_T, cols_T);
-
-    for (int row = 0; row < rows_T; row++) {
-        paritycheckmatrix.values.push_back(Polynom(0));
-    }
-
-    for (int row = 0; row < rows_T; row++) {
-        for (int col = 0; col < cols_T; col++) {
-
-            int pivot_col = col - (cols - rows); // Determine the corresponding row in the generator matrix.
-
-            if (pivot_col >= 0 && pivot_col < rows) {
-
-                int num_ones = 0;
-
-                for (int l = 0; l < rows; l++)
-                {
-                    if (this->values.at(l).get_coefficient(pivot_col) == 1)
-                    {
-                        num_ones++;
-                    }
-                }
-                if (num_ones % 2 == 1)
-                {
-                    paritycheckmatrix.values.at(row).set_coefficient(col-rows_T, 1); // Set coefficient based on current column being processed.
-                }
-            }
-        }
-    }
-
-    for (int row = 0; row < rows_T; row++) {
-        std::cout << std::endl;
-        for (int col = 0; col < cols_T; col++) {
-            std::cout << paritycheckmatrix.values.at(row).get_coefficient(col) << ", ";
-        }
-
-    }
-
-
-    return paritycheckmatrix;
-}
-*/
-
-
-
-
 std::string Matrix::to_vector_str() const {
     std::string result = "(\n";
     for (const auto &item : values) {
@@ -461,30 +303,42 @@ std::string Matrix::to_vector_str() const {
     return result;
 }
 
-
+// See https://en.wikipedia.org/wiki/Parity-check_matrix#Creating_a_parity_check_matrix
 Matrix Matrix::to_control_matrix() const {
-    auto matrix_without_steps = sub_matrix(0, rows);
+    // make sure matrix is in row echolon form
+    auto row_echolon_form = to_canonical_via_GJE();
 
-    // Transpose the original matrix
-    Matrix transposed = matrix_without_steps.transpose();
+    // Create the P matrix by extracting the first rows of the generator matrix
+    // TODO this is crude and only works if the first rows are the Einheitsmatrix
+    auto P_matrix = row_echolon_form.sub_matrix(0, rows); // This is P
 
-    // Create a new matrix object to store the control matrix
-    int n = cols;
-    int k = rows;
-    Matrix control_matrix = Matrix(n + n - k, n - k);
+    // Transpose the P matrix to get P^T
+    Matrix transposed = P_matrix.transpose();
 
-    // Copy the transposed matrix to the control matrix
-    control_matrix.values = transposed.values;
+    std::vector<Polynom> control_values = {};
 
-    // Append rows of zeroes to the control matrix
-    for (int i = transposed.rows; i < control_matrix.rows; i++) {
-        control_matrix.values.push_back(Polynom(0));
+    int control_matrix_rows = transposed.rows; // Rows in the control matrix
+
+    for (int r = 0; r < control_matrix_rows; ++r) {
+        std::vector<int> temp = {};
+        // Loop through each column in the control matrix
+        for (int c = 0; c < cols; ++c) {
+            auto val = 0;
+            if (r < control_matrix_rows && c < transposed.cols) { // If we're still within the bounds of P^T, copy the value from P^T
+                val = transposed.values.at(r).get_coefficient(c);
+            } else if (r == c - transposed.cols) { // If we've reached the end of P^T, create an identity matrix of size (n-k) at the end
+
+                val = 1;
+            }
+            temp.push_back(val);
+        }
+        control_values.push_back(Polynom(temp));
     }
+    Matrix control_matrix = Matrix(control_matrix_rows, cols, control_values);
 
-    // Return the control matrix
-    return control_matrix;
+    // Return the control matrix and transform it so that the identity matrix is up front
+    return control_matrix.to_canonical_via_GJE();
 }
-
 
 Matrix Matrix::transpose() const {
     Matrix transposed = Matrix(cols, rows);
@@ -501,10 +355,8 @@ Matrix Matrix::transpose() const {
     transposed.values = transposed_values;
     return transposed;
 }
+
 Matrix Matrix::sub_matrix(int row_idx, int col_idx) const {
-    //auto sub_rows = rows - row_idx;
-    //auto sub_cols = cols - col_idx;
-    // Matrix result = Matrix(sub_rows, cols - col_idx);
     std::vector<Polynom> sub_values = {};
     for (int row = row_idx; row < rows; row++) {
         std::vector<int> temp = {};
@@ -514,11 +366,5 @@ Matrix Matrix::sub_matrix(int row_idx, int col_idx) const {
         }
         sub_values.push_back(Polynom(temp));
     }
-
-    return Matrix(sub_values);;
+    return Matrix(sub_values);
 }
-
-
-
-
-
