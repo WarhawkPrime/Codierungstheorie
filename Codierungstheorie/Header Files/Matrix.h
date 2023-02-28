@@ -10,6 +10,8 @@
 #include <string>
 #include <vector>
 
+#include "Header Files/ModularArithmetic.h"
+
 class EGF;
 class Polynom;
 
@@ -95,13 +97,27 @@ class Matrix {
      */
     std::string to_vector_str() const;
 
+    void add_polynom(Polynom p) {values.push_back(p);}
+    int get_coefficient(int row, int col) {return values.at(row).get_coefficient(col);}
+    void set_coefficient(int row, int col, int value) {values.at(row).set_coefficient(col, value);}
 
+
+    const int get_p(){return egf.p;}
 
   private:
     std::vector<Polynom> values;
     const EGF egf;
     int idx_of_max_value_in_col(int starting_row, int col_to_search);
 };
+
+namespace MXA {
+
+    // polynom * matrix to calculate errorclass
+    Matrix polynom_matrix_multiplication(Polynom p, Matrix m);
+
+    // matrix * matrix to check for correctness of G * H^T = 0
+
+}
 
 
 

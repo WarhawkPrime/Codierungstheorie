@@ -4,6 +4,35 @@
 
 #include "Header Files/Matrix.h"
 
+
+namespace MXA
+{
+    // mxn x nxp -> mxp
+    // rowxcol x colxrowp -> rowxrowp
+    Matrix polynom_matrix_multiplication(Polynom p, Matrix m)
+    {
+        // polynoms row = 1, so number of coefficients == matrix.rows
+        // size of result: number of rows of first x number of cols second
+        auto result = Matrix(1, m.cols );
+
+        //fill matrix
+        result.add_polynom(Polynom(0));
+
+        //calculate values
+        for (int col = 0; col < result.cols; col++)
+        {
+            for (int p_row = 0; p_row < p.get_coefficients().size(); p_row++)
+            {
+                int value = p.get_coefficient(p_row) * m.get_coefficient(p_row, col);
+                value += result.get_coefficient(0, col);
+                result.set_coefficient(0, col, MA::mmod(value, m.get_p()) );
+            }
+        }
+
+        return result;
+    }
+}
+
 int compare_canonical(Polynom &a, Polynom &b) {
     for (int i = 0; i < a.get_degree(); ++i) {
         auto a_coeff = a.get_coefficient(i);
@@ -419,55 +448,6 @@ Matrix Matrix::to_control_matrix() const
 
 
 
-Matrix Matrix::to_control_matrix() const
-{
-    //get sub matrix
-    auto sub_matrix = this->sub_matrix(0, this->rows);
-
-    // transpose sub matrix
-    auto transpose = sub_matrix.transpose();
-
-    //determine size and add identity matrix
-    auto identity_matrix = Matrix(transpose.rows, transpose.rows);
-
-    for (int row = 0; row < identity_matrix.rows; row++)
-    {
-        identity_matrix.values.push_back(Polynom(0));
-    }
-
-    for (int row = 0; row < identity_matrix.rows; row++)
-    {
-        identity_matrix.values.at(row).set_coefficient(row, 1);
-    }
-
-    // construct control matrix with sub matrix and identity matrix
-    auto control_matrix = Matrix(transpose.rows, transpose.cols + identity_matrix.cols );
-
-    // fill matrix
-    for (int row = 0; row < control_matrix.rows; row++)
-        control_matrix.values.push_back(Polynom(0));
-
-    // add -P^T
-    for (int row = 0; row < transpose.rows; row++)
-    {
-        for (int col = 0; col < transpose.cols; col++)
-        {
-            control_matrix.values.at(row).set_coefficient(col, transpose.values.at(row).get_coefficient(col));
-        }
-    }
-
-    // add identity matrix E
-    for (int row = 0; row < identity_matrix.rows; row++)
-    {
-        for (int col = 0; col < identity_matrix.cols; col++)
-        {
-            control_matrix.values.at(row).set_coefficient(col+transpose.cols, identity_matrix.values.at(row).get_coefficient(col));
-        }
-    }
-
-    return control_matrix;
-}
-
 
 std::string Matrix::to_vector_str() const {
     std::string result = "(\n";
@@ -481,7 +461,7 @@ std::string Matrix::to_vector_str() const {
     return result;
 }
 
-/*
+
 Matrix Matrix::to_control_matrix() const {
     auto matrix_without_steps = sub_matrix(0, rows);
 
@@ -504,7 +484,7 @@ Matrix Matrix::to_control_matrix() const {
     // Return the control matrix
     return control_matrix;
 }
-*/
+
 
 Matrix Matrix::transpose() const {
     Matrix transposed = Matrix(cols, rows);
@@ -535,13 +515,10 @@ Matrix Matrix::sub_matrix(int row_idx, int col_idx) const {
         sub_values.push_back(Polynom(temp));
     }
 
-    int sub_rows = sub_values.size();
-    int sub_cols = sub_values.at(0).get_coefficients().size();
-
-    auto sub_matrix = Matrix(sub_rows, sub_cols, sub_values);
-
-    std::cout << "cols: " << sub_matrix.cols << std::endl;
-    std::cout << "rows: " << sub_matrix.rows << std::endl;
-
-    return sub_matrix;
+    return Matrix(sub_values);;
 }
+
+
+
+
+
