@@ -30,15 +30,15 @@ TEST_SUITE("Matrix tests" * doctest::description("egf")) {
 
         auto mat = Matrix(4, 3, values);
 
-        std::cout << "orig g: " << std::endl;
-        std::cout << mat.to_vector_str() << std::endl;
+        //std::cout << "orig g: " << std::endl;
+        //std::cout << mat.to_vector_str() << std::endl;
 
         const auto expected = Matrix(3, 3, std::vector<Polynom>({Polynom(1), Polynom(2), Polynom(4)}));
 
         auto res = mat.to_canonical_via_GJE();
 
-        std::cout << "canonical g" << std::endl;
-        std::cout << res.to_vector_str() << std::endl;
+        //std::cout << "canonical g" << std::endl;
+        //std::cout << res.to_vector_str() << std::endl;
 
         CHECK(res.to_vector_str() == expected.to_vector_str());
     }
@@ -52,19 +52,19 @@ TEST_SUITE("Matrix tests" * doctest::description("egf")) {
 
         auto mat = Matrix(values);
 
-        std::cout << "orig g 0: " << std::endl;
-        std::cout << mat.to_vector_str() << std::endl;
+        //std::cout << "orig g 0: " << std::endl;
+        //std::cout << mat.to_vector_str() << std::endl;
 
         const auto expected = Matrix({Polynom({1, 0, 1, 0, 1, 0}, false),
                                       Polynom({0, 1, 0, 1, 0, 1}, false)});
 
         auto res = mat.to_canonical_via_GJE();
 
-        std::cout << "canonical g 0" << std::endl;
-        std::cout << res.to_vector_str() << std::endl;
+        //std::cout << "canonical g 0" << std::endl;
+        //std::cout << res.to_vector_str() << std::endl;
 
-        std::cout << "expected canon g 0" << std::endl;
-        std::cout << expected.to_vector_str() << std::endl;
+        //std::cout << "expected canon g 0" << std::endl;
+        //std::cout << expected.to_vector_str() << std::endl;
 
 
         CHECK(res.to_vector_str() == expected.to_vector_str());
@@ -103,13 +103,10 @@ TEST_SUITE("Matrix tests" * doctest::description("egf")) {
 
         auto mat = Matrix(8, 4, values);
 
-        std::cout << "orig g 1: " << std::endl;
-        std::cout << mat.to_vector_str() << std::endl;
+        //std::cout << "orig g 1: " << std::endl;
+        //std::cout << mat.to_vector_str() << std::endl;
 
         auto res = mat.to_canonical_via_GJE();
-
-        std::cout << "canonical g 1" << std::endl;
-        std::cout << res.to_vector_str() << std::endl;
 
         std::vector<Polynom> expected_values = {
             Polynom({1, 0, 0, 0}, false),
@@ -117,10 +114,9 @@ TEST_SUITE("Matrix tests" * doctest::description("egf")) {
             Polynom({0, 0, 1, 0}, false),
             Polynom({0, 0, 0, 1}, false)};
 
-
         const auto expected = Matrix(expected_values);
-        std::cout << "expected g 1" << std::endl;
-        std::cout << res.to_vector_str() << std::endl;
+        //std::cout << "expected g 1" << std::endl;
+        //std::cout << res.to_vector_str() << std::endl;
 
         CHECK(res.to_vector_str() == expected.to_vector_str());
     }
@@ -145,95 +141,33 @@ TEST_SUITE("Matrix tests" * doctest::description("egf")) {
         std::cout << "canonical g" << std::endl;
         std::cout << gen.to_vector_str() << std::endl;
 
+
+        /*
+        auto sub_matrix = gen.sub_matrix(0, gen.rows);
+
         std::cout << "sub g" << std::endl;
-        std::cout << gen.sub_matrix(0, gen.rows).to_vector_str() << std::endl;
+        std::cout << sub_matrix.to_vector_str() << std::endl;
 
-        std::cout << std::endl
-                  << "transpose g" << std::endl;
-        std::cout << gen.transpose().to_vector_str() << std::endl;
+        auto transpose_sub_matrix = sub_matrix.transpose();
 
-        auto res = gen.to_control_matrix();
+        std::cout << std::endl << "transpose g" << std::endl;
+        std::cout << transpose_sub_matrix.to_vector_str() << std::endl;
+
+        auto control_matrix = transpose_sub_matrix.to_control_matrix();
+
         std::cout << "control g: " << std::endl;
-        std::cout << res.to_vector_str() << std::endl;
+        std::cout << control_matrix.to_vector_str() << std::endl;
+        */
 
-        CHECK(res.to_vector_str() == expected.to_vector_str());
-    }
+        auto control_matrix = gen.to_control_matrix();
 
+        std::cout << "control g: " << std::endl;
+        std::cout << control_matrix.to_vector_str() << std::endl;
 
-    TEST_CASE("Transform Matrix(4x3) to canonical form via gauss")
-    {
-        const std::vector<Polynom> values = {
-                Polynom(4),
-                Polynom(1),
-                Polynom(3)
-                };
-
-        auto mat = Matrix(3, 4, values);
-
-        std::cout << "orig g: " << std::endl;
-        std::cout << mat.to_vector_str() << std::endl;
-
-        const auto expected = Matrix(3, 3, std::vector<Polynom>({Polynom(1), Polynom(2), Polynom(4)}));
-
-        auto res = mat.to_canonical_via_GJE();
-
-        std::cout << "canonical g" << std::endl;
-        std::cout << res.to_vector_str() << std::endl;
-
-        CHECK(res.to_vector_str() == expected.to_vector_str());
-    }
-
-
-    /*
-    TEST_CASE("Transform matrix to Transpose Matrix")
-    {
-        const std::vector<Polynom> values = {
-                Polynom(4),
-                Polynom(1),
-                Polynom(3),
-                Polynom(2)};
-
-        auto mat = Matrix(4, 3, values);
-
-        std::cout << "orig g: " << std::endl;
-        std::cout << mat.to_vector_str() << std::endl;
-
-        auto transpose_mat = mat.transpose();
-
-        std::cout << "transpose: " << std::endl;
-        std::cout << transpose_mat.to_vector_str() << std::endl;
-
-        // not correct for the size of the matrix.
-        const auto expected = Matrix(3, 4, std::vector<Polynom>({Polynom(6), Polynom(3), Polynom(8)}));
-
-        std::cout << "expected: " << std::endl;
+        std::cout << "expected g: " << std::endl;
         std::cout << expected.to_vector_str() << std::endl;
 
-        CHECK(transpose_mat.to_vector_str() == expected.to_vector_str());
-    }
-    */
-
-
-    TEST_CASE("Transform Canonical Generatormatrix to Controlmatrix")
-    {
-        //Matrix generatormatrix = Matrix(3, 3, std::vector<Polynom>({Polynom(1), Polynom(2), Polynom(4)}));
-
-        const std::vector<Polynom> values = {
-                Polynom(4),
-                Polynom(1),
-                Polynom(3),
-                Polynom(2)};
-
-        auto generatormatrix = Matrix(4, 3, values);
-
-        std::cout << "generatormatrix: " << std::endl;
-        std::cout << generatormatrix.to_vector_str() << std::endl;
-
-        Matrix controlmatrix = generatormatrix.to_control_matrix();
-
-        std::cout << "control matrix: " << std::endl;
-        std::cout << controlmatrix.to_vector_str() << std::endl;
-        std::cout << "t" << std::endl;
+        CHECK(control_matrix.to_vector_str() == expected.to_vector_str());
     }
 
 }

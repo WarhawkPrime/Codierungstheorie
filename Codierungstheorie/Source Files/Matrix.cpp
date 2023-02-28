@@ -367,6 +367,108 @@ Matrix Matrix::to_control_matrix() const
 */
 
 
+
+/*
+Matrix Matrix::to_control_matrix() const
+{
+    int rows_T = cols - rows;
+    int cols_T = cols;
+
+    auto paritycheckmatrix = Matrix(rows_T, cols_T);
+
+    for (int row = 0; row < rows_T; row++) {
+        paritycheckmatrix.values.push_back(Polynom(0));
+    }
+
+    for (int row = 0; row < rows_T; row++) {
+        for (int col = 0; col < cols_T; col++) {
+
+            int pivot_col = col - (cols - rows); // Determine the corresponding row in the generator matrix.
+
+            if (pivot_col >= 0 && pivot_col < rows) {
+
+                int num_ones = 0;
+
+                for (int l = 0; l < rows; l++)
+                {
+                    if (this->values.at(l).get_coefficient(pivot_col) == 1)
+                    {
+                        num_ones++;
+                    }
+                }
+                if (num_ones % 2 == 1)
+                {
+                    paritycheckmatrix.values.at(row).set_coefficient(col-rows_T, 1); // Set coefficient based on current column being processed.
+                }
+            }
+        }
+    }
+
+    for (int row = 0; row < rows_T; row++) {
+        std::cout << std::endl;
+        for (int col = 0; col < cols_T; col++) {
+            std::cout << paritycheckmatrix.values.at(row).get_coefficient(col) << ", ";
+        }
+
+    }
+
+
+    return paritycheckmatrix;
+}
+*/
+
+
+
+Matrix Matrix::to_control_matrix() const
+{
+    //get sub matrix
+    auto sub_matrix = this->sub_matrix(0, this->rows);
+
+    // transpose sub matrix
+    auto transpose = sub_matrix.transpose();
+
+    //determine size and add identity matrix
+    auto identity_matrix = Matrix(transpose.rows, transpose.rows);
+
+    for (int row = 0; row < identity_matrix.rows; row++)
+    {
+        identity_matrix.values.push_back(Polynom(0));
+    }
+
+    for (int row = 0; row < identity_matrix.rows; row++)
+    {
+        identity_matrix.values.at(row).set_coefficient(row, 1);
+    }
+
+    // construct control matrix with sub matrix and identity matrix
+    auto control_matrix = Matrix(transpose.rows, transpose.cols + identity_matrix.cols );
+
+    // fill matrix
+    for (int row = 0; row < control_matrix.rows; row++)
+        control_matrix.values.push_back(Polynom(0));
+
+    // add -P^T
+    for (int row = 0; row < transpose.rows; row++)
+    {
+        for (int col = 0; col < transpose.cols; col++)
+        {
+            control_matrix.values.at(row).set_coefficient(col, transpose.values.at(row).get_coefficient(col));
+        }
+    }
+
+    // add identity matrix E
+    for (int row = 0; row < identity_matrix.rows; row++)
+    {
+        for (int col = 0; col < identity_matrix.cols; col++)
+        {
+            control_matrix.values.at(row).set_coefficient(col+transpose.cols, identity_matrix.values.at(row).get_coefficient(col));
+        }
+    }
+
+    return control_matrix;
+}
+
+
 std::string Matrix::to_vector_str() const {
     std::string result = "(\n";
     for (const auto &item : values) {
@@ -379,6 +481,7 @@ std::string Matrix::to_vector_str() const {
     return result;
 }
 
+/*
 Matrix Matrix::to_control_matrix() const {
     auto matrix_without_steps = sub_matrix(0, rows);
 
@@ -401,6 +504,7 @@ Matrix Matrix::to_control_matrix() const {
     // Return the control matrix
     return control_matrix;
 }
+*/
 
 Matrix Matrix::transpose() const {
     Matrix transposed = Matrix(cols, rows);
@@ -418,8 +522,8 @@ Matrix Matrix::transpose() const {
     return transposed;
 }
 Matrix Matrix::sub_matrix(int row_idx, int col_idx) const {
-    auto sub_rows = rows - row_idx;
-    auto sub_cols = cols - col_idx;
+    //auto sub_rows = rows - row_idx;
+    //auto sub_cols = cols - col_idx;
     // Matrix result = Matrix(sub_rows, cols - col_idx);
     std::vector<Polynom> sub_values = {};
     for (int row = row_idx; row < rows; row++) {
@@ -430,5 +534,14 @@ Matrix Matrix::sub_matrix(int row_idx, int col_idx) const {
         }
         sub_values.push_back(Polynom(temp));
     }
-    return Matrix(sub_values);
+
+    int sub_rows = sub_values.size();
+    int sub_cols = sub_values.at(0).get_coefficients().size();
+
+    auto sub_matrix = Matrix(sub_rows, sub_cols, sub_values);
+
+    std::cout << "cols: " << sub_matrix.cols << std::endl;
+    std::cout << "rows: " << sub_matrix.rows << std::endl;
+
+    return sub_matrix;
 }

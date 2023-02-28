@@ -15,6 +15,7 @@ class Polynom;
 
 void sep(std::string);
 
+
 class Matrix {
 
   public:
@@ -94,10 +95,14 @@ class Matrix {
      */
     std::string to_vector_str() const;
 
+
+
   private:
     std::vector<Polynom> values;
     const EGF egf;
     int idx_of_max_value_in_col(int starting_row, int col_to_search);
 };
+
+
 
 #endif // CODIERUNGSTHEORIE_MATRIX_H
