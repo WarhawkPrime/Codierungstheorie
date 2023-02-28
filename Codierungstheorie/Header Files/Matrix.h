@@ -15,7 +15,6 @@ class Polynom;
 
 void sep(std::string);
 
-
 class Matrix {
 
   public:
@@ -83,7 +82,7 @@ class Matrix {
      *
      * The private variable p is used as the modulus in the calculations.
      */
-    Matrix to_canonical_via_GJE(const int p = 2);
+    Matrix to_canonical_via_GJE(const int p = 2) const;
 
     Matrix transpose() const;
 
@@ -95,14 +94,10 @@ class Matrix {
      */
     std::string to_vector_str() const;
 
-
-
   private:
     std::vector<Polynom> values;
     const EGF egf;
     int idx_of_max_value_in_col(int starting_row, int col_to_search);
 };
-
-
 
 #endif // CODIERUNGSTHEORIE_MATRIX_H
