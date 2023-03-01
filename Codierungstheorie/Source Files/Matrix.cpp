@@ -36,6 +36,7 @@ namespace MXA
     }
 
 
+
     Matrix polynom_matrix_multiplication(std::shared_ptr<Polynom> p, Matrix m)
     {
 
@@ -62,9 +63,38 @@ namespace MXA
         return result;
     }
 
+    Matrix matrix_matrix_multiplication(const Matrix& a, const Matrix& b)
+    {
+        auto res = Matrix(a.rows, b.cols);
 
+        for (int i = 0; i < res.rows; i++) {
+            res.add_polynom(Polynom(0));
+        }
 
-    //
+        // row X col
+        for (int row = 0; row < a.rows; row++)
+        {
+            for (int col = 0; col < b.cols; col++)
+            {
+                int value = 0;
+
+                for (int k = 0; k < b.rows; k++)
+                {
+                    value += a.get_coefficient(row, k) * b.get_coefficient(k, col);
+                }
+                res.set_coefficient(row, col, MA::mmod(value, res.get_p()));
+
+                /*
+                int value = a.get_coefficient(row, col) * b.get_coefficient(col, row);
+                value += res.get_coefficient(row, col);
+                res.set_coefficient(row, col, MA::mmod(value, res.get_p()));
+                */
+            }
+        }
+
+        return res;
+    }
+
     Syndrom_table create_syndrom_table(Matrix parity_check_matrix)
     {
         //init syndrom tabel
@@ -79,46 +109,79 @@ namespace MXA
         for (int i = 0; i < max_polynom_size; i++)
             helper.set_coefficient(i, 1);
 
-
-        // create hashmap with values
-
-        std::vector< std::shared_ptr<Polynom>> error_list = std::vector<std::shared_ptr<Polynom>>();
-
-        // create list of all syndroms
-        std::vector<std::shared_ptr<Matrix>> syndrom_list = std::vector<std::shared_ptr<Matrix>>();
-
         // fill syndrom table
-
-
         for (int i = 0; i < helper.as_int()+1; i++)
         {
             // error
             std::shared_ptr<Polynom> error = std::make_shared<Polynom>(i);
-            error_list.push_back(error);
 
             // syndrom
             auto syndrom_res = MXA::polynom_matrix_multiplication(error,parity_check_matrix );
             std::shared_ptr<Matrix> syndrom = std::make_shared<Matrix>(syndrom_res);
-            syndrom_list.push_back(syndrom);
+
+            // insert into map
+            // syndrom matrices must be unique. prefer errors with the least amount of 1s
+            bool found = false;
+            for (auto it = st.syndrom_table.begin(); it != st.syndrom_table.end(); ++it) {
+                if (it->first->to_vector_str() == syndrom->to_vector_str()) {
+                    found = true;
+                    if (error->get_non_zero_number() < it->second->get_non_zero_number()) {
+                        //erase
+                        st.syndrom_table.erase(it);
+
+                        //insert
+                        st.syndrom_table.insert({syndrom, error});
+                    }
+                }
+            }
+
+            if (!found)
+                st.syndrom_table.insert({syndrom, error});
 
         }
-
-        // add error table to syndrom
-        st.errors = error_list;
-        st.syndrom = syndrom_list;
-
-
-        std::cout << "errors" << std::endl;
-        for (auto ei : st.errors)
-        {
-            std::cout << ei->to_vector_str() << std::endl;
-        }
-
         return st;
     }
 
+    Matrix calculate_syndrom(Polynom codeword, Matrix parity_check_matrix)
+    {
+        auto syndrom = polynom_matrix_multiplication(codeword, parity_check_matrix);
+        return syndrom;
+    }
+
+    Polynom correct_codeword(Polynom codeword, Syndrom_table syndrom_table)
+    {
+        // calc syndrom of codeword
+        auto syndrom = calculate_syndrom(codeword, syndrom_table.parity_check_matrix);
+
+        // find syndrom in syndrom_table
+        if (syndrom_table.syndrom_table.find(std::make_shared<Matrix>(syndrom)) != syndrom_table.syndrom_table.end())
+        {
+            // if found, get error code
+            auto error_poly = syndrom_table.syndrom_table.find(std::make_shared<Matrix>(syndrom))->second;
+            return codeword + *error_poly.get();
+        }
+        else
+        {
+            return codeword;
+        }
+    }
 
 }
+
+int Matrix::number_of_non_zero()
+{
+    int non_zero = 0;
+    for (auto p : this->values)
+    {
+        for (auto c : p.get_coefficients())
+        {
+            if (c != 0)
+                non_zero++;
+        }
+    }
+    return non_zero;
+}
+
 
 int compare_canonical(Polynom &a, Polynom &b) {
     for (int i = 0; i < a.get_degree(); ++i) {
