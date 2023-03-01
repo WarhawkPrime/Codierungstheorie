@@ -80,12 +80,16 @@ namespace MXA
             helper.set_coefficient(i, 1);
 
 
+        // create hashmap with values
+
         std::vector< std::shared_ptr<Polynom>> error_list = std::vector<std::shared_ptr<Polynom>>();
 
         // create list of all syndroms
         std::vector<std::shared_ptr<Matrix>> syndrom_list = std::vector<std::shared_ptr<Matrix>>();
 
         // fill syndrom table
+
+
         for (int i = 0; i < helper.as_int()+1; i++)
         {
             // error
