@@ -1,5 +1,6 @@
 
 #include "Header Files/CodierungAblauf/CodierungsAblauf.h"
+#include "Header Files/CodierungAblauf/VariableErrorKanal.h"
 #include "Header Files/Helper.h"
 #include "Header Files/ModularPolynomArithmetic.h"
 #include "Header Files/Polynom.h"
@@ -61,7 +62,7 @@ int main(int argc, char **argv) {
     auto ablauf = CodierungsAblauf();
     ablauf.message = "Hello World!";
 
-    ablauf.kanal = new NoErrorKanal();
+    ablauf.kanal = new VariableErrorKanal(1);
     ablauf.code = new PlainCode();
 
     ablauf.run();

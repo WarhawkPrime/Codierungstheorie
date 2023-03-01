@@ -11,18 +11,20 @@ void CodierungsAblauf::run() {
     std::cout << "Message: " << message << std::endl;
 
     msg_words = message_to_words();
+    std::cout << "Encode: " << std::endl;
     for (Polynom word : msg_words) {
         auto code_word = code->encode(word);
         code_words.push_back(code_word);
         std::cout << (char)word.as_int() << "->" << (char)code_word.as_int() << std::endl;
     }
 
+    std::cout << "Transfer: " << std::endl;
     for (Polynom code_word : code_words) {
         auto transferred_code_word = kanal->transfer(code_word);
-        transferred_words.push_back(code_word);
+        transferred_words.push_back(transferred_code_word);
         std::cout << (char)code_word.as_int() << "->" << (char)transferred_code_word.as_int() << std::endl;
     }
-
+    std::cout << "Decode: " << std::endl;
     for (Polynom transferred_word : transferred_words) {
         auto decoded_word = code->decode(transferred_word);
         decoded_words.push_back(decoded_word);
