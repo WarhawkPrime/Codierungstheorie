@@ -197,17 +197,11 @@ TEST_SUITE("Matrix tests" * doctest::description("egf")) {
 
         MXA::Syndrom_table s = MXA::create_syndrom_table(Control);
 
-        for (auto syndrom : s.syndrom) {
-            std::cout << syndrom->to_vector_str() << std::endl;
-        }
         CHECK(s.syndrom_table.size() == 8);
-        auto syndrom = Matrix({
-            Polynom({1, 0, 1})
-        });
 
-        auto syndrom_1 = Matrix({
-                                      Polynom({0, 0, 1})
-                              });
+        auto syndrom = Matrix({Polynom({1, 0, 1})});
+
+        auto syndrom_1 = Matrix({Polynom({0, 0, 1})});
 
         CHECK( (s.syndrom_table.find(std::make_shared<Matrix>(syndrom)) != s.syndrom_table.end()) == true);
         CHECK( (s.syndrom_table.find(std::make_shared<Matrix>(syndrom_1)) != s.syndrom_table.end()) == true);
