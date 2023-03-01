@@ -124,8 +124,8 @@ TEST_SUITE("Matrix tests" * doctest::description("egf")) {
         auto mat = Matrix(values);
 
         const auto expected = Matrix({Polynom({1, 0, 0, 1, 1}, false),
-                                            Polynom({0, 1, 0, 1, 0}, false),
-                                            Polynom({0, 0, 1, 0, 1}, false)});
+                                      Polynom({0, 1, 0, 1, 0}, false),
+                                      Polynom({0, 0, 1, 0, 1}, false)});
 
         auto gen = mat.to_canonical_via_GJE();
 
@@ -134,14 +134,13 @@ TEST_SUITE("Matrix tests" * doctest::description("egf")) {
         CHECK(control_matrix.to_vector_str() == expected.to_vector_str());
     }
 
-    TEST_CASE("polynom x matrix error recognition test")
-    {
+    TEST_CASE("polynom x matrix error recognition test") {
         const auto Control = Matrix({
-                Polynom({1, 0, 1}, false),
-                Polynom({1, 1, 1}, false),
-                Polynom({1, 0, 0}, false),
-                Polynom({0, 1, 0}, false),
-                Polynom({0, 0, 1}, false),
+            Polynom({1, 0, 1}, false),
+            Polynom({1, 1, 1}, false),
+            Polynom({1, 0, 0}, false),
+            Polynom({0, 1, 0}, false),
+            Polynom({0, 0, 1}, false),
         });
 
         auto e0 = Polynom({0,0,0,0,0}, false);
@@ -153,17 +152,11 @@ TEST_SUITE("Matrix tests" * doctest::description("egf")) {
         auto res1 = MXA::polynom_matrix_multiplication(e2, Control);
         auto res3 = MXA::polynom_matrix_multiplication(e3, Control);
 
-        auto exp = Matrix({
-            Polynom({0, 0, 1}, false)
-        });
+        auto exp = Matrix({Polynom({0, 0, 1}, false)});
 
-        auto exp1 = Matrix({
-            Polynom({0, 1, 0}, false)
-        });
+        auto exp1 = Matrix({Polynom({0, 1, 0}, false)});
 
-        auto exp3 = Matrix({
-                                   Polynom({1, 0, 1}, false)
-                           });
+        auto exp3 = Matrix({Polynom({1, 0, 1}, false)});
 
         CHECK(exp.to_vector_str() == res.to_vector_str());
         CHECK(exp1.to_vector_str() == res1.to_vector_str());
@@ -195,15 +188,18 @@ TEST_SUITE("Matrix tests" * doctest::description("egf")) {
     {
 
         const auto Control = Matrix({
-                                    Polynom({1, 0, 1}, false),
-                                    Polynom({1, 1, 1}, false),
-                                    Polynom({1, 0, 0}, false),
-                                    Polynom({0, 1, 0}, false),
-                                    Polynom({0, 0, 1}, false),
-                                    });
+            Polynom({1, 0, 1}, false),
+            Polynom({1, 1, 1}, false),
+            Polynom({1, 0, 0}, false),
+            Polynom({0, 1, 0}, false),
+            Polynom({0, 0, 1}, false),
+        });
 
         MXA::Syndrom_table s = MXA::create_syndrom_table(Control);
 
+        for (auto syndrom : s.syndrom) {
+            std::cout << syndrom->to_vector_str() << std::endl;
+        }
         CHECK(s.syndrom_table.size() == 8);
         auto syndrom = Matrix({
             Polynom({1, 0, 1})
@@ -248,11 +244,10 @@ TEST_SUITE("Matrix tests" * doctest::description("egf")) {
         auto correction_p3 = MXA::correct_codeword(p3, s);
         CHECK(ex3.to_vector_str() == correction_p3.to_vector_str());
     }
-
 }
 
-/*
-TEST_CASE("Transform Matrix to canonical form") {
+// TODO @Dennis
+/*TEST_CASE("Transform Matrix to canonical form") {
 
     std::vector<Polynom> values = {
         Polynom({1, 1, 0, 1, 0, 0, 1}, false),
@@ -271,5 +266,4 @@ TEST_CASE("Transform Matrix to canonical form") {
     const auto expected = Matrix(expected_values);
 
     CHECK(res.to_vector_str() == expected.to_vector_str());
-}
-*/
+}*/
