@@ -19,11 +19,14 @@ namespace MXA
         result.add_polynom(Polynom(0));
 
         //calculate values
+        //
         for (int col = 0; col < result.cols; col++)
         {
-            for (int p_row = 0; p_row < p.get_coefficients().size(); p_row++)
+            //for (int p_row = 0; p_row < p.get_coefficients().size(); p_row++)
+            for (int p_row = p.get_coefficients().size()-1; p_row > -1; p_row--)
             {
-                int value = p.get_coefficient(p_row) * m.get_coefficient(p_row, col);
+                //int value = p.get_coefficient(p_row) * m.get_coefficient(p_row, col);
+                int value = p.get_coefficient(p_row) * m.get_coefficient((m.rows - p_row -1), col);
                 value += result.get_coefficient(0, col);
                 result.set_coefficient(0, col, MA::mmod(value, m.get_p()) );
             }
@@ -31,6 +34,86 @@ namespace MXA
 
         return result;
     }
+
+
+    Matrix polynom_matrix_multiplication(std::shared_ptr<Polynom> p, Matrix m)
+    {
+
+        // polynoms row = 1, so number of coefficients == matrix.rows
+        // size of result: number of rows of first x number of cols second
+        auto result = Matrix(1, m.cols );
+
+        //fill matrix
+        result.add_polynom(Polynom(0));
+
+        //calculate values
+        for (int col = 0; col < result.cols; col++)
+        {
+            //for (int p_row = 0; p_row < p->get_coefficients().size(); p_row++)
+            for (int p_row = p->get_coefficients().size()-1; p_row > -1; p_row--)
+            {
+                //int value = p->get_coefficient(p_row) * m.get_coefficient(p_row, col);
+                int value = p->get_coefficient(p_row) * m.get_coefficient((m.rows - p_row -1), col);
+                value += result.get_coefficient(0, col);
+                result.set_coefficient(0, col, MA::mmod(value, m.get_p()) );
+            }
+        }
+
+        return result;
+    }
+
+
+
+    //
+    Syndrom_table create_syndrom_table(Matrix parity_check_matrix)
+    {
+        //init syndrom tabel
+        Syndrom_table st = Syndrom_table(parity_check_matrix);
+
+        // create list of all possible errors. Max number: q^n-k : 2^5-2 = 2^3 = 8
+        // d-1 / 2 max number of "safe" syndroms
+
+        // create helper polynom to get max number of errors
+        int max_polynom_size = parity_check_matrix.rows;
+        auto helper = Polynom(0);
+        for (int i = 0; i < max_polynom_size; i++)
+            helper.set_coefficient(i, 1);
+
+
+        std::vector< std::shared_ptr<Polynom>> error_list = std::vector<std::shared_ptr<Polynom>>();
+
+        // create list of all syndroms
+        std::vector<std::shared_ptr<Matrix>> syndrom_list = std::vector<std::shared_ptr<Matrix>>();
+
+        // fill syndrom table
+        for (int i = 0; i < helper.as_int()+1; i++)
+        {
+            // error
+            std::shared_ptr<Polynom> error = std::make_shared<Polynom>(i);
+            error_list.push_back(error);
+
+            // syndrom
+            auto syndrom_res = MXA::polynom_matrix_multiplication(error,parity_check_matrix );
+            std::shared_ptr<Matrix> syndrom = std::make_shared<Matrix>(syndrom_res);
+            syndrom_list.push_back(syndrom);
+
+        }
+
+        // add error table to syndrom
+        st.errors = error_list;
+        st.syndrom = syndrom_list;
+
+
+        std::cout << "errors" << std::endl;
+        for (auto ei : st.errors)
+        {
+            std::cout << ei->to_vector_str() << std::endl;
+        }
+
+        return st;
+    }
+
+
 }
 
 int compare_canonical(Polynom &a, Polynom &b) {

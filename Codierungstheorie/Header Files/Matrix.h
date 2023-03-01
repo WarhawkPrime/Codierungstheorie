@@ -9,8 +9,12 @@
 #include <cassert>
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "Header Files/ModularArithmetic.h"
+
+
+
 
 class EGF;
 class Polynom;
@@ -113,8 +117,24 @@ namespace MXA {
 
     // polynom * matrix to calculate errorclass
     Matrix polynom_matrix_multiplication(Polynom p, Matrix m);
+    Matrix polynom_matrix_multiplication(std::shared_ptr<Polynom> p, Matrix m);
+
+
 
     // matrix * matrix to check for correctness of G * H^T = 0
+
+    // Syndrom table
+    struct Syndrom_table {
+
+        Syndrom_table(Matrix pcm) : parity_check_matrix(pcm) {}
+
+        std::vector<std::shared_ptr<Polynom>> errors;
+        std::vector<std::shared_ptr<Matrix>> syndrom;
+        Matrix parity_check_matrix;
+    };
+
+    Syndrom_table create_syndrom_table(Matrix parity_check_matrix);
+
 
 }
 
