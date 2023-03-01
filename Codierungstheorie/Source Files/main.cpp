@@ -1,8 +1,10 @@
 
+#include "Header Files/CodierungAblauf/CodierungsAblauf.h"
 #include "Header Files/Helper.h"
 #include "Header Files/ModularPolynomArithmetic.h"
 #include "Header Files/Polynom.h"
 #include <iostream>
+#include <memory>
 
 void lax() {
     //    auto i_p = Polynom({1, 0, 0, 0, 0, 0, 1, 1});
@@ -46,22 +48,21 @@ void lax() {
     //    sep("BIN");
     //
     //    s = egf.polynomial_reduction_bin(x, Polynom({1, 0, 1, 1}));
-    auto i_p = Polynom({1, 1, 1});
-    Polynom s = Polynom::ZERO, r = Polynom::ZERO;
-
-    auto result = MPA::gcd(i_p, Polynom(3));
-    std::cout << "Result: " << result.to_print_string(Polynom::polynom) << std::endl;
-
-    std::cout << std::endl;
+    //    auto i_p = Polynom({1, 1, 1});
+    //    Polynom s = Polynom::ZERO, r = Polynom::ZERO;
+    //
+    //    auto result = MPA::gcd(i_p, Polynom(3));
+    //    std::cout << "Result: " << result.to_print_string(Polynom::polynom) << std::endl;
+    //
+    //    std::cout << std::endl;
 }
 int main(int argc, char **argv) {
 
-    //   lax();
-    //   task1();
-    auto i_p = ip_by_degree[8];
-    auto a = Polynom(13);
-    for (const auto &item : ip_by_degree) {
-        std::cout << item.to_vector_str(8) << std::endl;
-    }
-    return 0;
+    auto ablauf = CodierungsAblauf();
+    ablauf.message = "Hello World!";
+
+    ablauf.kanal = new NoErrorKanal();
+    ablauf.code = new PlainCode();
+
+    ablauf.run();
 }
