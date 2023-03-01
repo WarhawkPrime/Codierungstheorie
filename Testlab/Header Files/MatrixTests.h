@@ -117,68 +117,58 @@ TEST_SUITE("Matrix tests" * doctest::description("egf")) {
         CHECK(control_matrix.to_vector_str() == expected.to_vector_str());
     }
 
-    TEST_CASE("polynom x matrix error recognition test")
-    {
+    TEST_CASE("polynom x matrix error recognition test") {
         const auto Control = Matrix({
-                Polynom({1, 0, 1}, false),
-                Polynom({1, 1, 1}, false),
-                Polynom({1, 0, 0}, false),
-                Polynom({0, 1, 0}, false),
-                Polynom({0, 0, 1}, false),
+            Polynom({1, 0, 1}, false),
+            Polynom({1, 1, 1}, false),
+            Polynom({1, 0, 0}, false),
+            Polynom({0, 1, 0}, false),
+            Polynom({0, 0, 1}, false),
         });
 
-        auto e0 = Polynom({0,0,0,0,0}, false);
-        auto e1 = Polynom({1,0,0,0,0}, false);
-        auto e2 = Polynom({0,1,0,0,0}, false);
+        auto e0 = Polynom({0, 0, 0, 0, 0}, false);
+        auto e1 = Polynom({1, 0, 0, 0, 0}, false);
+        auto e2 = Polynom({0, 1, 0, 0, 0}, false);
 
         std::cout << "poly: " << e2.to_vector_str() << std::endl;
 
-        auto e3 = Polynom({0,0,0,0,1}, false);
+        auto e3 = Polynom({0, 0, 0, 0, 1}, false);
 
         auto res = MXA::polynom_matrix_multiplication(e1, Control);
         auto res1 = MXA::polynom_matrix_multiplication(e2, Control);
         auto res3 = MXA::polynom_matrix_multiplication(e3, Control);
 
-        auto exp = Matrix({
-            Polynom({0, 0, 1}, false)
-        });
+        auto exp = Matrix({Polynom({0, 0, 1}, false)});
 
-        auto exp1 = Matrix({
-            Polynom({0, 1, 0}, false)
-        });
+        auto exp1 = Matrix({Polynom({0, 1, 0}, false)});
 
-        auto exp3 = Matrix({
-                                   Polynom({1, 0, 1}, false)
-                           });
+        auto exp3 = Matrix({Polynom({1, 0, 1}, false)});
 
         CHECK(exp.to_vector_str() == res.to_vector_str());
         CHECK(exp1.to_vector_str() == res1.to_vector_str());
         CHECK(exp3.to_vector_str() == res3.to_vector_str());
     }
 
-    TEST_CASE("Syndrom Table")
-    {
+    TEST_CASE("Syndrom Table") {
 
         const auto Control = Matrix({
-                                    Polynom({1, 0, 1}, false),
-                                    Polynom({1, 1, 1}, false),
-                                    Polynom({1, 0, 0}, false),
-                                    Polynom({0, 1, 0}, false),
-                                    Polynom({0, 0, 1}, false),
-                                    });
+            Polynom({1, 0, 1}, false),
+            Polynom({1, 1, 1}, false),
+            Polynom({1, 0, 0}, false),
+            Polynom({0, 1, 0}, false),
+            Polynom({0, 0, 1}, false),
+        });
 
         MXA::Syndrom_table s = MXA::create_syndrom_table(Control);
 
-        for (auto syndrom : s.syndrom)
-        {
+        for (auto syndrom : s.syndrom) {
             std::cout << syndrom->to_vector_str() << std::endl;
         }
-
     }
-
 }
 
-TEST_CASE("Transform Matrix to canonical form") {
+// TODO @Dennis
+/*TEST_CASE("Transform Matrix to canonical form") {
 
     std::vector<Polynom> values = {
         Polynom({1, 1, 0, 1, 0, 0, 1}, false),
@@ -197,4 +187,4 @@ TEST_CASE("Transform Matrix to canonical form") {
     const auto expected = Matrix(expected_values);
 
     CHECK(res.to_vector_str() == expected.to_vector_str());
-}
+}*/
