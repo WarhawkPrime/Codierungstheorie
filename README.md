@@ -80,3 +80,5 @@ Konkret gehen Sie dabei wie folgt vor:
 - https://mathsci2.appstate.edu/~cookwj/sage/algebra/Euclidean_algorithm-poly.html
 - https://www.matheretter.de/rechner/polynomrechner - so lala
 - http://www.arndt-bruenner.de/mathe/scripts/gaussjordan.htm
+- https://www.di-mgt.com.au/cgi-bin/matrix_canon_form.cgi
+- https://www.di-mgt.com.au/cgi-bin/matrix_stdform.cgi

@@ -177,3 +177,24 @@ TEST_SUITE("Matrix tests" * doctest::description("egf")) {
     }
 
 }
+
+TEST_CASE("Transform Matrix to canonical form") {
+
+    std::vector<Polynom> values = {
+        Polynom({1, 1, 0, 1, 0, 0, 1}, false),
+        Polynom({0, 0, 1, 1, 1, 0, 0}, false),
+        Polynom({0, 0, 0, 0, 0, 1, 1}, false)};
+
+    auto mat = Matrix(values);
+
+    auto res = mat.to_canonical_via_GJE();
+
+    std::vector<Polynom> expected_values = {
+        Polynom({1, 1, 0, 1, 0, 0, 1}, false),
+        Polynom({0, 0, 1, 1, 1, 0, 0}, false),
+        Polynom({0, 0, 0, 0, 0, 1, 1}, false)};
+
+    const auto expected = Matrix(expected_values);
+
+    CHECK(res.to_vector_str() == expected.to_vector_str());
+}
