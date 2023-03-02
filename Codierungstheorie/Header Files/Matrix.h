@@ -7,16 +7,13 @@
 
 #include "EGF.h"
 #include <cassert>
-#include <string>
-#include <vector>
-#include <memory>
 #include <map>
+#include <memory>
+#include <string>
 #include <unordered_map>
+#include <vector>
 
 #include "Header Files/ModularArithmetic.h"
-
-
-
 
 class EGF;
 class Polynom;
@@ -30,7 +27,7 @@ class Matrix {
     const int cols; // Often N
     int p = 2;
 
-    //Matrix() : rows(0), cols(0),egf(EGF::create_EGF_on_degree(cols)) {};
+    // Matrix() : rows(0), cols(0),egf(EGF::create_EGF_on_degree(cols)) {};
 
     /**
      * @brief This constructor initializes a matrix with the given number of rows and columns, and sets the values of the matrix to the given vector of Polynom objects.
@@ -81,6 +78,7 @@ class Matrix {
     void swap_rows(int row_a, int row_b);
 
     Matrix to_control_matrix() const;
+    Matrix to_generator_matrix() const;
 
     /**
      * This method transform the matrix into its reduced row echelon form.
@@ -105,77 +103,70 @@ class Matrix {
      */
     std::string to_vector_str() const;
 
-    void add_polynom(Polynom p) {values.push_back(p);}
-    int get_coefficient(int row, int col) const {return values.at(row).get_coefficient(col);}
-    void set_coefficient(int row, int col, int value) {values.at(row).set_coefficient(col, value);}
+    void add_polynom(Polynom p) { values.push_back(p); }
+    int get_coefficient(int row, int col) const { return values.at(row).get_coefficient(col); }
+    void set_coefficient(int row, int col, int value) { values.at(row).set_coefficient(col, value); }
 
-    const int get_p(){return egf.p;}
+    const int get_p() { return egf.p; }
 
-    int number_of_non_zero ();
+    int number_of_non_zero();
 
-private:
     std::vector<Polynom> values;
+
+  private:
     const EGF egf;
     int idx_of_max_value_in_col(int starting_row, int col_to_search);
 };
 
 namespace MXA {
 
-    // hash function for matrix class
-    struct MatrixHashFunction
-    {
-        size_t operator()(const std::shared_ptr<Matrix>& m) const
-        {
-            //implementation of hash function
-            std::hash<std::string> string_hash;
-            return string_hash(m->to_vector_str());
-        }
-    };
+// hash function for matrix class
+struct MatrixHashFunction {
+    size_t operator()(const std::shared_ptr<Matrix> &m) const {
+        // implementation of hash function
+        std::hash<std::string> string_hash;
+        return string_hash(m->to_vector_str());
+    }
+};
 
-    // equality function for matrix class
-    struct MatrixEqualityFunction
-    {
-        bool operator()(const std::shared_ptr<Matrix>& a, const std::shared_ptr<Matrix>& b) const {
-            return a->to_vector_str() == b->to_vector_str();
-        }
-    };
+// equality function for matrix class
+struct MatrixEqualityFunction {
+    bool operator()(const std::shared_ptr<Matrix> &a, const std::shared_ptr<Matrix> &b) const {
+        return a->to_vector_str() == b->to_vector_str();
+    }
+};
 
+// polynom * matrix to calculate errorclass
+Matrix polynom_matrix_multiplication(Polynom p, Matrix m);
+Matrix polynom_matrix_multiplication(std::shared_ptr<Polynom> p, Matrix m);
 
-    // polynom * matrix to calculate errorclass
-    Matrix polynom_matrix_multiplication(Polynom p, Matrix m);
-    Matrix polynom_matrix_multiplication(std::shared_ptr<Polynom> p, Matrix m);
+// matrix * matrix to check for correctness of G * H^T = 0
+Matrix matrix_matrix_multiplication(const Matrix &a, const Matrix &b);
 
+// Syndrom table
+struct Syndrom_table {
 
-    // matrix * matrix to check for correctness of G * H^T = 0
-    Matrix matrix_matrix_multiplication(const Matrix& a, const Matrix& b);
+    Syndrom_table(Matrix pcm) : parity_check_matrix(pcm) {}
 
-    // Syndrom table
-    struct Syndrom_table {
+    std::vector<std::shared_ptr<Polynom>> errors;
+    std::vector<std::shared_ptr<Matrix>> syndrom;
 
-        Syndrom_table(Matrix pcm) : parity_check_matrix(pcm) {}
+    std::unordered_map<std::shared_ptr<Matrix>, std::shared_ptr<Polynom>, MatrixHashFunction, MatrixEqualityFunction> syndrom_table;
+    Matrix parity_check_matrix;
+};
 
-        std::vector<std::shared_ptr<Polynom>> errors;
-        std::vector<std::shared_ptr<Matrix>> syndrom;
+Syndrom_table create_syndrom_table(Matrix parity_check_matrix);
 
-        std::unordered_map<std::shared_ptr<Matrix>, std::shared_ptr<Polynom>, MatrixHashFunction, MatrixEqualityFunction> syndrom_table;
-        Matrix parity_check_matrix;
-    };
+Matrix calculate_syndrom(Matrix parity_check_matrix);
 
-    Syndrom_table create_syndrom_table(Matrix parity_check_matrix);
-
-
-    Matrix calculate_syndrom(Matrix parity_check_matrix);
-
-    /**
-     * @brief this function takes an incoming codeword and its corresponding syndrom_table and attempts to return the corrected
-     * codeword
-     * @param codeword
-     * @param syndrom_table
-     * @return corrected codeword
-     */
-    Polynom correct_codeword(Polynom codeword, Syndrom_table syndrom_table);
-}
-
-
+/**
+ * @brief this function takes an incoming codeword and its corresponding syndrom_table and attempts to return the corrected
+ * codeword
+ * @param codeword
+ * @param syndrom_table
+ * @return corrected codeword
+ */
+Polynom correct_codeword(Polynom codeword, Syndrom_table syndrom_table);
+} // namespace MXA
 
 #endif // CODIERUNGSTHEORIE_MATRIX_H

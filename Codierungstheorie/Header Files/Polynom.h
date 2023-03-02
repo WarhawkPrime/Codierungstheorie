@@ -37,7 +37,7 @@ class Polynom {
      * This uses the binary representation of the number as coefficients
      * @param coefficients_as_number
      */
-    explicit Polynom(int coefficients_as_number, bool trim = true);
+    explicit Polynom(int coefficients_as_number, bool trim = true, int custom_size = 0);
 
     /**
      *
@@ -59,14 +59,12 @@ class Polynom {
 
     inline int get_non_zero_number() const {
         int non_zero = 0;
-        for(auto c: coefficients)
-        {
+        for (auto c : coefficients) {
             if (c != 0)
                 non_zero++;
         }
         return non_zero;
     }
-
 
     inline int get_coefficient(int index) const {
         return coefficients.size() > index ? coefficients.at(index) : 0;

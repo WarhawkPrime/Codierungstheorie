@@ -15,8 +15,15 @@ Polynom::Polynom(std::vector<int> coefficients, bool _trim) {
 }
 
 // TODO mit Bit operations ....
-Polynom::Polynom(int coefficients_as_number, bool _trim) {
-    auto size = ((sizeof coefficients_as_number) * 8);
+Polynom::Polynom(int coefficients_as_number, bool _trim, int custom_size) {
+
+    int size = 0;
+    if (coefficients_as_number > 0) {
+        size = floor(log2(coefficients_as_number)) + 1;
+    }
+    if (custom_size != 0 && custom_size >= size) {
+        size = custom_size;
+    }
 
     auto temp_coefficients = std::vector<int>(0);
 

@@ -6,6 +6,7 @@
 #define CODIERUNGSTHEORIE_HAMMINGCODE_H
 
 #include "Code.h"
+#include "Header Files/Matrix.h"
 
 class HammingCode : public Code {
   public:
@@ -13,11 +14,15 @@ class HammingCode : public Code {
     explicit HammingCode(const int m);
 
     // Weil d imm 3 ist generator matrix mit 2 lin. unabhängigen Vektoren
-    void create_generator_matrix();
+    Matrix create_control_matrix();
+    Polynom decode(Polynom codeword) const override;
+    Polynom encode(Polynom msg) const override;
+    Matrix control_matrix;
+    Matrix generator_matrix;
 
   private:
-    const int calculate_N() {
-        return 8;
+    const int calculate_N() const {
+        return pow(2, m) - 1;
     }
 };
 
