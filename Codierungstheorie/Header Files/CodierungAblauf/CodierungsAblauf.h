@@ -27,6 +27,9 @@ class CodierungsAblauf {
     std::string message;
 
     void run();
+    void encode_message();
+    void transfer_message();
+    void decode_message();
 };
 
 #endif // CODIERUNGSTHEORIE_CODIERUNGSABLAUF_H

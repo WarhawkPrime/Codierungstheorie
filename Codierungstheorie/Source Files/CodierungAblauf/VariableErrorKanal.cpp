@@ -15,4 +15,3 @@ Polynom VariableErrorKanal::transfer(Polynom word) const {
     }
     return result;
 }
-VariableErrorKanal::VariableErrorKanal(const int error_per_word) : error_per_word(error_per_word) {}
