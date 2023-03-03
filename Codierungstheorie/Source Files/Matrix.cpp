@@ -490,6 +490,7 @@ Matrix Matrix::sub_matrix(int row_idx, int col_idx) const {
     for (int row = row_idx; row < rows; row++) {
         std::vector<int> temp = {};
         for (int col = col_idx; col < cols; col++) {
+            std::cout << row << ", " << col << std::endl;
             auto val = values.at(row).get_coefficient(col);
             temp.push_back(val);
         }
@@ -498,11 +499,6 @@ Matrix Matrix::sub_matrix(int row_idx, int col_idx) const {
     return Matrix(rows - row_idx, cols - col_idx, sub_values);
 }
 Matrix Matrix::to_generator_matrix() const {
-
-    auto P_matrix = sub_matrix(0, rows).transpose(); // This is P
-
-    std::cout << P_matrix.to_vector_str() << std::endl;
-
     int generator_matrix_rows = cols - rows;
     int generator_matrix_cols = cols;
 
@@ -513,7 +509,7 @@ Matrix Matrix::to_generator_matrix() const {
         for (int c = 0; c < generator_matrix_cols; ++c) {
             auto val = 0;
             if (c >= generator_matrix_rows) {
-                val = P_matrix.values.at(r).get_coefficient(c - generator_matrix_rows);
+                val = values.at(c - generator_matrix_rows).get_coefficient(r);
             } else if (r == c) {
                 val = 1;
             }
