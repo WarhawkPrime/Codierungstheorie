@@ -9,7 +9,7 @@ std::string word_to_string(int word) {
     const char c = (char)word;
     result += c;
     result.append(": ");
-    result.append(std::bitset<8>(word).to_string());
+    result.append(std::bitset<16>(word).to_string());
     return result;
 }
 
@@ -38,7 +38,9 @@ void CodierungsAblauf::decode_message() {
     for (Polynom transferred_word : transferred_words) {
         auto decoded_word = code->decode(transferred_word);
         decoded_words.push_back(decoded_word);
-        std::cout << word_to_string(transferred_word.as_int()) << "->" << word_to_string(decoded_word.as_int()) << std::endl;
+        std::cout << std::endl
+                  << "VvV"
+                  << word_to_string(transferred_word.as_int()) << "->" << word_to_string(decoded_word.as_int()) << std::endl;
     }
 }
 void CodierungsAblauf::transfer_message() {

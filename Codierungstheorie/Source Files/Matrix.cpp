@@ -143,7 +143,10 @@ Polynom correct_codeword(Polynom codeword, Syndrom_table syndrom_table) {
     if (syndrom_table.syndrom_table.find(std::make_shared<Matrix>(syndrom)) != syndrom_table.syndrom_table.end()) {
         // if found, get error code
         auto error_poly = syndrom_table.syndrom_table.find(std::make_shared<Matrix>(syndrom))->second;
-        return codeword + *error_poly.get();
+        std::cout << "s: " << syndrom.to_vector_str() << std::endl;
+        std::cout << "e: " << error_poly.get()->to_vector_str() << std::endl;
+        auto result = (codeword + *error_poly.get()) % 2;
+        return result;
     } else {
         return codeword;
     }
