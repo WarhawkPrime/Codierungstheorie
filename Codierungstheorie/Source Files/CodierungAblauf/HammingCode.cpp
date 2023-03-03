@@ -20,7 +20,6 @@ Matrix HammingCode::create_control_matrix() {
         auto base = pow(2, i);
         for (int j = 1; j < base; ++j) {
             auto temp = Polynom(base + j, false);
-            std::cout << temp.to_vector_str(3) << std::endl;
             result.emplace_back(temp);
         }
         identity_values.push_back(Polynom(base, false, m));

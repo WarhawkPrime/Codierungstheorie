@@ -5,7 +5,12 @@
 #include "Header Files/CodierungAblauf/CodierungsAblauf.h"
 // TODO @Noah Convertieren der nachricht in Wörter via code länge oder mit dem Code selbst...
 std::string word_to_string(int word) {
-    return std::bitset<8>(word).to_string();
+    std::string result = std::string();
+    const char c = (char)word;
+    result += c;
+    result.append(": ");
+    result.append(std::bitset<8>(word).to_string());
+    return result;
 }
 
 void CodierungsAblauf::run() {
@@ -54,7 +59,7 @@ std::vector<Polynom> CodierungsAblauf::message_to_words() const {
     auto words = std::vector<Polynom>();
     //    if (code->n >= 8) {
     for (const char c : message) {
-        words.push_back(Polynom(c, false));
+        words.push_back(Polynom(c, false, 11));
     }
     //    } else {
     //        for (const char c : message) {
