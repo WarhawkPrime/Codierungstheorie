@@ -106,16 +106,23 @@ Syndrom_table create_syndrom_table(Matrix parity_check_matrix) {
         // insert into map
         // syndrom matrices must be unique. prefer errors with the least amount of 1s
         bool found = false;
-        for (auto it = st.syndrom_table.begin(); it != st.syndrom_table.end(); ++it) {
+        auto it = st.syndrom_table.begin();
+        while (it != st.syndrom_table.end()) {
             if (it->first->to_vector_str() == syndrom->to_vector_str()) {
                 found = true;
                 if (error->get_non_zero_number() < it->second->get_non_zero_number()) {
-                    // erase
-                    st.syndrom_table.erase(it);
+                    //erase
+                    it = st.syndrom_table.erase(it);
 
-                    // insert
+                    //insert
                     st.syndrom_table.insert({syndrom, error});
                 }
+                else {
+                    ++it;
+                }
+            }
+            else {
+                ++it;
             }
         }
 
