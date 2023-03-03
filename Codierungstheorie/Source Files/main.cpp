@@ -9,29 +9,32 @@ int main(int argc, char **argv) {
 
     std::cout << Polynom(5, false).to_print_string(Polynom::vector) << std::endl;
 
-    auto msg = 0b101;
-
     auto ablauf = CodierungsAblauf();
     ablauf.message = "Hello World!";
 
     ablauf.kanal = new VariableErrorKanal(1);
-    auto code = new HammingCode(3);
-    Matrix &controlMatrix = code->control_matrix;
-    Matrix &generatorMatrix = code->generator_matrix;
+    auto code = new HammingCode(4);
+    ablauf.code = code;
+    const Matrix &controlMatrix = code->control_matrix;
+    const Matrix &generatorMatrix = code->generator_matrix;
     std::cout << "H  M: " << controlMatrix.to_vector_str() << std::endl;
 
     std::cout << "G  M: " << generatorMatrix.to_vector_str() << std::endl;
 
-    std::cout << "H2 M: " << generatorMatrix.to_control_matrix().to_vector_str() << std::endl;
-    ablauf.code = code;
+    std::cout << "HT M: " << controlMatrix.transpose().to_rows_as_numbers_str() << std::endl;
 
-    auto enc = MXA::polynom_matrix_multiplication(Polynom(5), generatorMatrix).values[0];
+    auto msg = Polynom(0b0000110001, false);
+    //    auto enc = MXA::polynom_matrix_multiplication(msg, generatorMatrix).values[0];
+    auto enc = MXA::matrix_matrix_multiplication(Matrix({msg}), generatorMatrix).values[0];
 
-    std::cout << "enc M: " << enc.to_vector_str() << std::endl;
+    std::cout
+        << "enc V: 000010000110001" << std::endl;
 
-    auto dec = MXA::polynom_matrix_multiplication(enc, controlMatrix.transpose()).values[0];
+    std::cout << "enc V: " << enc.to_vector_str() << std::endl;
 
-    std::cout << "dec M: " << dec.to_vector_str() << std::endl;
+    auto syn = MXA::matrix_matrix_multiplication(Matrix({enc}), controlMatrix.transpose()).values[0];
+
+    std::cout << "syn V: " << syn.to_vector_str() << std::endl;
 
     // ablauf.run();
 }

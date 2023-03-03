@@ -52,44 +52,44 @@ void CodierungsAblauf::encode_message() {
 }
 std::vector<Polynom> CodierungsAblauf::message_to_words() const {
     auto words = std::vector<Polynom>();
-    if (code->n >= 8) {
-        for (const char c : message) {
-            words.push_back(Polynom(c, false));
-        }
-    } else {
-        for (const char c : message) {
-            const auto char_s = sizeof(char);
-            auto ratio = std::ceil(char_s / (float)code->n);
-            auto word = std::bitset<char_s>(c);
-            for (int i = 0; i <= char_s; i += ratio) {
-                auto value = 0;
-                for (int r = 0; r < ratio; ++r) {
-                    auto bit = word[r + i];
-                    value = (value << 1) + bit;
-                }
-                words.push_back(Polynom(value, false));
-            }
-        }
+    //    if (code->n >= 8) {
+    for (const char c : message) {
+        words.push_back(Polynom(c, false));
     }
+    //    } else {
+    //        for (const char c : message) {
+    //            const auto char_s = sizeof(char);
+    //            auto ratio = std::ceil(char_s / (float)code->n);
+    //            auto word = std::bitset<char_s>(c);
+    //            for (int i = 0; i <= char_s; i += ratio) {
+    //                auto value = 0;
+    //                for (int r = 0; r < ratio; ++r) {
+    //                    auto bit = word[r + i];
+    //                    value = (value << 1) + bit;
+    //                }
+    //                words.push_back(Polynom(value, false));
+    //            }
+    //        }
+    //    }
     return words;
 }
 std::string CodierungsAblauf::words_to_string(std::vector<Polynom> words) const {
     auto result = std::string();
-    if (code->n >= 8) {
-        for (const Polynom word : words) {
-            result.push_back(word.as_int());
-        }
-    } else {
-        const auto char_s = sizeof(char);
-        int ratio = std::ceil(char_s / (float)code->n);
-        for (int i = 0; i < words.size(); i += ratio) {
-            int result_char = 0;
-            for (int r = 0; r < ratio; ++r) {
-                auto word = words[r + i];
-                result_char = (result_char >> ratio) + word.as_int();
-            }
-            result.push_back(result_char);
-        }
+    //    if (code->n >= 8) {
+    for (const Polynom word : words) {
+        result.push_back(word.as_int());
     }
+    //    } else {
+    //        const auto char_s = sizeof(char);
+    //        int ratio = std::ceil(char_s / (float)code->n);
+    //        for (int i = 0; i < words.size(); i += ratio) {
+    //            int result_char = 0;
+    //            for (int r = 0; r < ratio; ++r) {
+    //                auto word = words[r + i];
+    //                result_char = (result_char >> ratio) + word.as_int();
+    //            }
+    //            result.push_back(result_char);
+    //        }
+    //    }
     return result;
 }

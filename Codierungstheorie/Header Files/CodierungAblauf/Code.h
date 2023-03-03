@@ -11,8 +11,10 @@ class Code {
   public:
     // TODO should be const. But can only be set in the constructor body since the code ist generate there. CPP man strikes again
     const int n;
+    const int k;
+    const int d;
 
-    explicit Code(const int n = 8) : n(n) {}
+    explicit Code(const int n = 8, const int k = 0, const int d = 0) : n(n), k(k), d(0) {}
 
     virtual Polynom decode(Polynom codeword) const = 0;
     virtual Polynom encode(Polynom msg) const = 0;

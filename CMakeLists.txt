@@ -18,7 +18,7 @@ add_executable(Codierungstheorie
         "Codierungstheorie/Header Files/Polynom.h"
         "Codierungstheorie/Source Files/EGF.cpp"
         "Codierungstheorie/Header Files/EGF.h"
-        "Codierungstheorie/Header Files/ModularPolynomArithmetic.h" "Codierungstheorie/Source Files/ModularPolynomArithmetic.cpp" "Codierungstheorie/Source Files/Matrix.cpp" "Codierungstheorie/Header Files/Matrix.h" "Codierungstheorie/Header Files/CodierungAblauf/Kanal.h" "Codierungstheorie/Source Files/CodierungAblauf/CodierungsAblauf.cpp" "Codierungstheorie/Header Files/CodierungAblauf/CodierungsAblauf.h" "Codierungstheorie/Header Files/CodierungAblauf/Code.h" "Codierungstheorie/Source Files/CodierungAblauf/VariableErrorKanal.cpp" "Codierungstheorie/Header Files/CodierungAblauf/VariableErrorKanal.h" "Codierungstheorie/Header Files/CodierungAblauf/HammingCode.cpp" "Codierungstheorie/Header Files/CodierungAblauf/HammingCode.h")
+        "Codierungstheorie/Header Files/ModularPolynomArithmetic.h" "Codierungstheorie/Source Files/ModularPolynomArithmetic.cpp" "Codierungstheorie/Source Files/Matrix.cpp" "Codierungstheorie/Header Files/Matrix.h" "Codierungstheorie/Header Files/CodierungAblauf/Kanal.h" "Codierungstheorie/Source Files/CodierungAblauf/CodierungsAblauf.cpp" "Codierungstheorie/Header Files/CodierungAblauf/CodierungsAblauf.h" "Codierungstheorie/Header Files/CodierungAblauf/Code.h" "Codierungstheorie/Source Files/CodierungAblauf/VariableErrorKanal.cpp" "Codierungstheorie/Header Files/CodierungAblauf/VariableErrorKanal.h" "Codierungstheorie/Source Files/CodierungAblauf/HammingCode.cpp" "Codierungstheorie/Header Files/CodierungAblauf/HammingCode.h")
 
 target_include_directories(Codierungstheorie PUBLIC Codierungstheorie/Header Files)
 

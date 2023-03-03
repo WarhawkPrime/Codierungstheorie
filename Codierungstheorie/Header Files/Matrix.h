@@ -102,6 +102,7 @@ class Matrix {
      * @return string representation of the matrix
      */
     std::string to_vector_str() const;
+    std::string to_rows_as_numbers_str() const;
 
     void add_polynom(Polynom p) { values.push_back(p); }
     int get_coefficient(int row, int col) const { return values.at(row).get_coefficient(col); }
@@ -146,16 +147,16 @@ Matrix matrix_matrix_multiplication(const Matrix &a, const Matrix &b);
 // Syndrom table
 struct Syndrom_table {
 
-    Syndrom_table(Matrix pcm) : parity_check_matrix(pcm) {}
+    Syndrom_table(std::shared_ptr<Matrix> pcm) : parity_check_matrix(pcm) {}
 
     std::vector<std::shared_ptr<Polynom>> errors;
     std::vector<std::shared_ptr<Matrix>> syndrom;
 
     std::unordered_map<std::shared_ptr<Matrix>, std::shared_ptr<Polynom>, MatrixHashFunction, MatrixEqualityFunction> syndrom_table;
-    Matrix parity_check_matrix;
+    std::shared_ptr<Matrix> parity_check_matrix;
 };
 
-Syndrom_table create_syndrom_table(Matrix parity_check_matrix);
+Syndrom_table create_syndrom_table(std::shared_ptr<Matrix> parity_check_matrix);
 
 Matrix calculate_syndrom(Matrix parity_check_matrix);
 
