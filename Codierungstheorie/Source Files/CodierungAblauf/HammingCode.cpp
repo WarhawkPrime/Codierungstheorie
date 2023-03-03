@@ -26,7 +26,7 @@ Matrix HammingCode::create_control_matrix() {
         identity_values.push_back(Polynom(base, false, m));
     }
     std::reverse(identity_values.begin(), identity_values.end());
-    result.insert(result.begin(), identity_values.begin(), identity_values.end());
+    result.insert(result.end(), identity_values.begin(), identity_values.end());
     auto gen_matrix = Matrix(calculate_N(m), m, result);
     return gen_matrix.transpose();
 }

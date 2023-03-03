@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
     ablauf.message = "Hello World!";
 
     ablauf.kanal = new VariableErrorKanal(1);
-    auto code = new HammingCode(4);
+    auto code = new HammingCode(3);
     ablauf.code = code;
     const Matrix &controlMatrix = code->control_matrix;
     const Matrix &generatorMatrix = code->generator_matrix;
@@ -21,9 +21,9 @@ int main(int argc, char **argv) {
 
     std::cout << "G  M: " << generatorMatrix.to_vector_str() << std::endl;
 
-    std::cout << "HT M: " << controlMatrix.transpose().to_rows_as_numbers_str() << std::endl;
+    std::cout << "HT M: " << controlMatrix.transpose().to_vector_str() << std::endl;
 
-    auto msg = Polynom(0b0000110001, false);
+    auto msg = Polynom(/*0b0000110001*/ 0b1101, false);
     //    auto enc = MXA::polynom_matrix_multiplication(msg, generatorMatrix).values[0];
     auto enc = MXA::matrix_matrix_multiplication(Matrix({msg}), generatorMatrix).values[0];
 

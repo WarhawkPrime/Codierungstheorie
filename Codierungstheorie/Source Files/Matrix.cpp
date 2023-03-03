@@ -81,7 +81,7 @@ Matrix matrix_matrix_multiplication(const Matrix &a, const Matrix &b) {
     return res;
 }
 
-Syndrom_table create_syndrom_table(Matrix parity_check_matrix) {
+Syndrom_table create_syndrom_table(std::shared_ptr<Matrix> parity_check_matrix) {
     // init syndrom tabel
     Syndrom_table st = Syndrom_table(parity_check_matrix);
 
@@ -89,7 +89,7 @@ Syndrom_table create_syndrom_table(Matrix parity_check_matrix) {
     // d-1 / 2 max number of "safe" syndroms
 
     // create helper polynom to get max number of errors
-    int max_polynom_size = parity_check_matrix.rows;
+    int max_polynom_size = parity_check_matrix->rows;
     auto helper = Polynom(0);
     for (int i = 0; i < max_polynom_size; i++)
         helper.set_coefficient(i, 1);
@@ -100,7 +100,7 @@ Syndrom_table create_syndrom_table(Matrix parity_check_matrix) {
         std::shared_ptr<Polynom> error = std::make_shared<Polynom>(i);
 
         // syndrom
-        auto syndrom_res = MXA::polynom_matrix_multiplication(error, parity_check_matrix);
+        auto syndrom_res = MXA::polynom_matrix_multiplication(error, *parity_check_matrix);
         std::shared_ptr<Matrix> syndrom = std::make_shared<Matrix>(syndrom_res);
 
         // insert into map
@@ -111,17 +111,15 @@ Syndrom_table create_syndrom_table(Matrix parity_check_matrix) {
             if (it->first->to_vector_str() == syndrom->to_vector_str()) {
                 found = true;
                 if (error->get_non_zero_number() < it->second->get_non_zero_number()) {
-                    //erase
+                    // erase
                     it = st.syndrom_table.erase(it);
 
-                    //insert
+                    // insert
                     st.syndrom_table.insert({syndrom, error});
-                }
-                else {
+                } else {
                     ++it;
                 }
-            }
-            else {
+            } else {
                 ++it;
             }
         }
@@ -132,8 +130,8 @@ Syndrom_table create_syndrom_table(Matrix parity_check_matrix) {
     return st;
 }
 
-Matrix calculate_syndrom(Polynom codeword, Matrix parity_check_matrix) {
-    auto syndrom = polynom_matrix_multiplication(codeword, parity_check_matrix);
+Matrix calculate_syndrom(Polynom codeword, std::shared_ptr<Matrix> parity_check_matrix) {
+    auto syndrom = polynom_matrix_multiplication(codeword, *parity_check_matrix);
     return syndrom;
 }
 
@@ -503,6 +501,8 @@ Matrix Matrix::to_generator_matrix() const {
 
     auto P_matrix = sub_matrix(0, rows).transpose(); // This is P
 
+    std::cout << P_matrix.to_vector_str() << std::endl;
+
     int generator_matrix_rows = cols - rows;
     int generator_matrix_cols = cols;
 
@@ -514,7 +514,7 @@ Matrix Matrix::to_generator_matrix() const {
             auto val = 0;
             if (c >= generator_matrix_rows) {
                 val = P_matrix.values.at(r).get_coefficient(c - generator_matrix_rows);
-            } else if (r == c) { // Identity matrix upfroty
+            } else if (r == c) {
                 val = 1;
             }
             temp.push_back(val);
