@@ -87,12 +87,26 @@ void sub_task_4() {
     //auto parity_check_matrix = gen.to_control_matrix();
 
     //0000000000000000
-    const std::vector<Polynom> v1 = {
+
+    std::vector<Polynom> v1 = {
             Polynom({0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1}, false),
             Polynom({0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1}, false),
             Polynom({0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0}, false),
             Polynom({1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0}, false)};
 
+    auto v2 = v1;
+    auto v3 = v1;
+
+
+    /*
+    std::vector<Polynom> v1 = {
+            Polynom({0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1}, false),
+            Polynom({0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1}, false),
+            Polynom({0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1}, false),
+            Polynom({1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0}, false)};
+    */
+
+    std::cout << "0" << std::endl;
 
     auto parity_check_matrix = Matrix(v1);
     //0000000000000000
@@ -122,7 +136,7 @@ void sub_task_4() {
 int main(int argc, char **argv) {
     //sub_task_1();
     //sub_task_2();
-    sub_task_3();
+    //sub_task_3();
     sub_task_4();
     std::cout << " it just works " << std::endl;
 

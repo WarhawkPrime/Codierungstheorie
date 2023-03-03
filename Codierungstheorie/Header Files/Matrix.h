@@ -51,17 +51,24 @@ class Matrix {
      * - It checks that all the polynomials in the input vector have the same degree plus one.
      *   If not, it asserts that this should not happen.
      */
-    explicit Matrix(std::vector<Polynom> values) : Matrix(values.size(), values[0].get_degree() + 1, values) {
+    explicit Matrix(std::vector<Polynom> values) : Matrix(values.size(), values.at(0).get_degree() + 1, values) {
         // Check if the vector is not empty
+        std::cout << "t" << std::endl;
+
         if (values.empty()) {
             throw std::invalid_argument("Vector of Polynom objects cannot be empty.");
         }
 
+        std::cout << "t1" << std::endl;
+
         // Get the degree of the polynomials in the vector
-        int colums = values[0].get_degree() + 1;
+        int colums = values.at(0).get_degree() + 1;
+
+        std::cout << "cols: " << colums << std::endl;
 
         // Iterate through the vector and check if all polynomials have the same degree
         for (const auto &item : values) {
+            std::cout << " item " << std::endl;
             if (item.get_degree() + 1 != colums) {
                 throw std::invalid_argument("All Polynom objects in the vector must have the same degree.");
             }

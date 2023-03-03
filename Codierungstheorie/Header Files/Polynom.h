@@ -31,6 +31,12 @@ class Polynom {
     static const Polynom ZERO;
     static const Polynom ONE;
 
+    Polynom(const Polynom& other)
+    {
+        coefficients = other.coefficients;
+    }
+
+
     explicit Polynom(std::vector<int> coefficients, bool _trim = true);
 
     /**
