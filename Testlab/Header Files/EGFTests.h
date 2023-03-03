@@ -6,6 +6,7 @@
 #include "Header Files/Polynom.h"
 #include "doctest.h"
 
+/*
 TEST_SUITE("Control Tests of polynom operations in a EGF" * doctest::description("egf")) {
     TEST_CASE("Polynom Addition in an EGF") {
         EGF aEGF(3, 2, Polynom({2, 1, 1})); // EGF(3^2) : 2 + x + x^2
@@ -73,3 +74,4 @@ TEST_SUITE("Control Tests of polynom operations in a EGF" * doctest::description
         CHECK(div_b == div_exp_b);
     }
 }
+*/

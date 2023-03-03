@@ -4,7 +4,7 @@
 
 #include "Header Files/CodierungAblauf/VariableErrorKanal.h"
 Polynom VariableErrorKanal::transfer(Polynom word) const {
-    std::srand(std::time(nullptr));
+    //std::srand(std::time(nullptr));
 
     auto result = Polynom(word.get_coefficients());
 

@@ -195,11 +195,12 @@ TEST_SUITE("Matrix tests" * doctest::description("egf")) {
             Polynom({0, 0, 1}, false),
         });
 
-        MXA::Syndrom_table s = MXA::create_syndrom_table(Control);
+        MXA::Syndrom_table s = MXA::create_syndrom_table(std::make_shared<Matrix>(Control));
 
         CHECK(s.syndrom_table.size() == 8);
 
-        auto syndrom = Matrix({Polynom({1, 0, 1})});
+        auto pol = Polynom({1, 0, 1});
+        auto syndrom = Matrix({pol});
 
         auto syndrom_1 = Matrix({Polynom({0, 0, 1})});
 

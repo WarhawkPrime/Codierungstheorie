@@ -54,7 +54,7 @@ void sub_task_3() {
                                         Polynom({0, 0, 1}, false),
                                 });
 
-    MXA::Syndrom_table s = MXA::create_syndrom_table(control);
+    MXA::Syndrom_table s = MXA::create_syndrom_table(std::make_shared<Matrix>(control));
 
     for (auto const& [syndrom, error] : s.syndrom_table )
     {
@@ -84,7 +84,7 @@ void sub_task_4() {
     auto transpose_parity_check_matrix = parity_check_matrix.transpose();
 
     // create syndrom table
-    MXA::Syndrom_table syndrom_table = MXA::create_syndrom_table(transpose_parity_check_matrix);
+    MXA::Syndrom_table syndrom_table = MXA::create_syndrom_table(std::make_shared<Matrix>(transpose_parity_check_matrix));
 
     // codeword 1 0 1 0 1 with error 0 0 0 0 1
     auto codeword_with_error = Polynom({1, 0, 1, 0, 0});
