@@ -16,6 +16,7 @@ std::vector<Polynom> values = {
     Polynom({0, 1, 0, 0}, false),
     Polynom({0, 1, 0, 1}, false)};
 // 1. Implementieren Sie ein Routine, welche bei Eingabe einer Generatormatrix die kanonische Generatormatrix erzeugt.
+/*
 void sub_task_1() {
     auto matrix = Matrix(values);
     std::cout << "Original Matrix:" << std::endl
@@ -30,6 +31,7 @@ void sub_task_1() {
               << "Matrix after Gaussian elimination:" << std::endl;
     std::cout << matrix.to_vector_str() << std::endl;
 }
+ */
 // 2. Implementieren Sie eine Routine, welche aus einer kanonischen Generatormatrix eine Kontrollmatrix generiert.
 void sub_task_2() {
     std::vector<Polynom> values_gen = {
@@ -54,13 +56,15 @@ void sub_task_3() {
                                         Polynom({0, 0, 1}, false),
                                 });
 
+
     MXA::Syndrom_table s = MXA::create_syndrom_table(control);
 
+    /*
     for (auto const& [syndrom, error] : s.syndrom_table )
     {
         std::cout << "syndrom: " << syndrom->to_vector_str() << " error: " << error->to_vector_str() << std::endl;
     }
-
+     */
 }
 
 
@@ -69,6 +73,7 @@ void sub_task_3() {
 void sub_task_4() {
 
     // generator matrix
+    /*
     const std::vector<Polynom> values = {
             Polynom({1, 0, 1, 0, 1}, false),
             Polynom({0, 1, 1, 1, 1}, false)};
@@ -76,18 +81,36 @@ void sub_task_4() {
 
     // canonical generator matrix
     auto gen = mat.to_canonical_via_GJE();
+    */
 
     // control matrix
-    auto parity_check_matrix = gen.to_control_matrix();
+    //auto parity_check_matrix = gen.to_control_matrix();
+
+    //0000000000000000
+    const std::vector<Polynom> v1 = {
+            Polynom({0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1}, false),
+            Polynom({0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1}, false),
+            Polynom({0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0}, false),
+            Polynom({1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0}, false)};
+
+
+    auto parity_check_matrix = Matrix(v1);
+    //0000000000000000
+
+    std::cout << "h" << std::endl;
 
     // transposed control matrix
     auto transpose_parity_check_matrix = parity_check_matrix.transpose();
+
+    std::cout << "transpose: " << std::endl;
+    std::cout << transpose_parity_check_matrix.to_vector_str() << std::endl;
 
     // create syndrom table
     MXA::Syndrom_table syndrom_table = MXA::create_syndrom_table(transpose_parity_check_matrix);
 
     // codeword 1 0 1 0 1 with error 0 0 0 0 1
-    auto codeword_with_error = Polynom({1, 0, 1, 0, 0});
+    //auto codeword_with_error = Polynom({1, 0, 1, 0, 0});
+    auto codeword_with_error = Polynom({0, 1, 0, 0, 0, 0, 1, 1});
 
     auto corrected_codeword = correct_codeword(codeword_with_error, syndrom_table);
 
@@ -97,8 +120,10 @@ void sub_task_4() {
 
 
 int main(int argc, char **argv) {
-    sub_task_1();
-    sub_task_2();
+    //sub_task_1();
+    //sub_task_2();
     sub_task_3();
     sub_task_4();
+    std::cout << " it just works " << std::endl;
+
 }

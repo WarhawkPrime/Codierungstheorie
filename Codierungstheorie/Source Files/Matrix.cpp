@@ -95,7 +95,7 @@ namespace MXA
         return res;
     }
 
-    Syndrom_table create_syndrom_table(Matrix parity_check_matrix)
+    Syndrom_table create_syndrom_table(const Matrix parity_check_matrix)
     {
         //init syndrom tabel
         Syndrom_table st = Syndrom_table(parity_check_matrix);
@@ -115,25 +115,63 @@ namespace MXA
             // error
             std::shared_ptr<Polynom> error = std::make_shared<Polynom>(i);
 
+            //std::cout << "erroro:" << std::endl;
+            //std::cout << error->to_vector_str() << std::endl;
+
             // syndrom
             auto syndrom_res = MXA::polynom_matrix_multiplication(error,parity_check_matrix );
             std::shared_ptr<Matrix> syndrom = std::make_shared<Matrix>(syndrom_res);
 
+            //std::cout << "syndrom : " << std::endl;
+            //std::cout << syndrom->to_vector_str() << std::endl;
+
             // insert into map
             // syndrom matrices must be unique. prefer errors with the least amount of 1s
             bool found = false;
+            /*
             for (auto it = st.syndrom_table.begin(); it != st.syndrom_table.end(); ++it) {
                 if (it->first->to_vector_str() == syndrom->to_vector_str()) {
                     found = true;
                     if (error->get_non_zero_number() < it->second->get_non_zero_number()) {
+
+                        std::cout << "syndrom already in table: " << std::endl;
+                        std::cout << it->second->to_vector_str() << std::endl;
+
                         //erase
-                        st.syndrom_table.erase(it);
+                        it = st.syndrom_table.erase(it);
 
                         //insert
                         st.syndrom_table.insert({syndrom, error});
                     }
                 }
             }
+            */
+
+
+            auto it = st.syndrom_table.begin();
+            while (it != st.syndrom_table.end()) {
+                if (it->first->to_vector_str() == syndrom->to_vector_str()) {
+                    found = true;
+                    if (error->get_non_zero_number() < it->second->get_non_zero_number()) {
+
+                        //std::cout << "syndrom already in table: " << std::endl;
+                        //std::cout << it->second->to_vector_str() << std::endl;
+
+                        //erase
+                        it = st.syndrom_table.erase(it);
+
+                        //insert
+                        st.syndrom_table.insert({syndrom, error});
+                    }
+                    else {
+                        ++it;
+                    }
+                }
+                else {
+                    ++it;
+                }
+            }
+
 
             if (!found)
                 st.syndrom_table.insert({syndrom, error});

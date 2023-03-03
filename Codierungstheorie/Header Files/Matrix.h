@@ -158,7 +158,7 @@ namespace MXA {
         std::vector<std::shared_ptr<Matrix>> syndrom;
 
         std::unordered_map<std::shared_ptr<Matrix>, std::shared_ptr<Polynom>, MatrixHashFunction, MatrixEqualityFunction> syndrom_table;
-        Matrix parity_check_matrix;
+        const Matrix parity_check_matrix;
     };
 
     Syndrom_table create_syndrom_table(Matrix parity_check_matrix);
