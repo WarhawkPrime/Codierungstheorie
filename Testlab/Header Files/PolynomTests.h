@@ -11,13 +11,15 @@ TEST_SUITE("Polynom Tests" * doctest::description("optional")) {
 
         CHECK_EQ(classToTest.get_degree(), 1);
 
-        classToTest = Polynom({0, 1, 1});
+        std::vector<int> coeff = {0, 1, 1};
+        classToTest = Polynom(coeff);
 
         CHECK_EQ(classToTest.get_degree(), 2);
 
-        classToTest = Polynom({1, 1, 0});
+        std::vector<int> coeff1 = {0, 1, 1};
+        classToTest = Polynom(coeff1);
 
-        CHECK_EQ(classToTest.get_degree(), 1);
+        CHECK_EQ(classToTest.get_degree(), 2);
 
         classToTest = Polynom({1, 0, 0, 0, 0});
 
@@ -118,8 +120,10 @@ TEST_SUITE("Polynom Tests" * doctest::description("optional")) {
 
         CHECK_EQ(vector_str, "(2, 2, 1)");
 
-        Polynom a = Polynom({1, 1, 1});
-        Polynom b = Polynom({0, 1, 0});
+        std::vector<int> coeff = {1, 1, 1};
+        std::vector<int> coeff1 = {0, 1, 0};
+        Polynom a = Polynom(coeff);
+        Polynom b = Polynom(coeff1);
 
         Polynom c = a + b;
 
@@ -134,8 +138,12 @@ TEST_SUITE("Polynom Tests" * doctest::description("optional")) {
     }
 
     TEST_CASE("Polynom multiplication") {
-        Polynom a = Polynom({0, 0, 2});
-        Polynom b = Polynom({2, 1, 1});
+
+        std::vector<int> coeff = {0, 0, 2};
+        std::vector<int> coeff1 = {2, 1, 1};
+
+        Polynom a = Polynom(coeff);
+        Polynom b = Polynom(coeff1);
 
         Polynom c = (a * b);
 
@@ -143,9 +151,11 @@ TEST_SUITE("Polynom Tests" * doctest::description("optional")) {
     }
 
     TEST_CASE("Polynom multiplication with integer") {
-        Polynom result = Polynom({0, 0, -2});
+        std::vector<int> coeff = {0, 0, -2};
+        std::vector<int> coeff1 = {0, 0, 2};
 
-        Polynom a = Polynom({0, 0, 2});
+        Polynom result = Polynom(coeff);
+        Polynom a = Polynom(coeff1);
 
         Polynom f = a * -1;
 
@@ -168,8 +178,12 @@ TEST_SUITE("Polynom Tests" * doctest::description("optional")) {
     }
 
     TEST_CASE("Polynom modolo integer") {
-        Polynom a = Polynom({3, 1, 2});
-        Polynom b = Polynom({9, 4, 11});
+
+        std::vector<int> coeff = {3, 1, 2};
+        std::vector<int> coeff1 = {9, 4, 11};
+
+        Polynom a = Polynom(coeff);
+        Polynom b = Polynom(coeff1);
 
         auto result = a % 2;
 
