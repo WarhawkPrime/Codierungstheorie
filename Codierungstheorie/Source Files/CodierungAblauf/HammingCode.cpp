@@ -30,7 +30,7 @@ Matrix HammingCode::create_control_matrix() {
     return gen_matrix.transpose();
 }
 Polynom HammingCode::decode(Polynom codeword) const {
-    auto corrected_codeword = MXA::correct_codeword(codeword, syndrom_table);
+    auto corrected_codeword = remove_error(codeword);
 
     auto msg_values = std::vector<int>();
 
@@ -41,4 +41,18 @@ Polynom HammingCode::decode(Polynom codeword) const {
 }
 Polynom HammingCode::encode(Polynom msg) const {
     return MXA::matrix_matrix_multiplication(Matrix({msg}), generator_matrix).values[0];
+}
+Polynom HammingCode::remove_error(Polynom codeword) const {
+    auto ht = control_matrix.transpose();
+    auto syn = MXA::matrix_matrix_multiplication(Matrix({codeword}), ht).values[0];
+    for (int i = 0; i < ht.values.size(); ++i) {
+        if (syn.as_int() == ht.values[i].as_int()) {
+            int error_as_number = (int)pow(2, i);
+            auto error = Polynom(error_as_number, false, codeword.get_degree() + 1);
+            std::cout << "Error at position: " << i << " using " << error.to_vector_str() << " to correct." << std::endl;
+            return (codeword + error) % 2;
+        }
+    }
+    // std::cout << "No error detected -> nothing to correct!";
+    return codeword;
 }

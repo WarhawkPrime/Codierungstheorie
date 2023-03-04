@@ -7,9 +7,10 @@
 
 int main(int argc, char **argv) {
     auto ablauf = CodierungsAblauf();
-    ablauf.message = "h";
+    ablauf.message = "Hello World!";
 
     ablauf.kanal = new VariableErrorKanal(1);
+    // ablauf.kanal = new NoErrorKanal();
 
     auto code = new HammingCode(4);
     ablauf.code = code;
@@ -21,19 +22,20 @@ int main(int argc, char **argv) {
     //
     //    std::cout << "G  M: " << generatorMatrix.to_vector_str() << std::endl;
     //
-    //    std::cout << "HT M: " << controlMatrix.transpose().to_vector_str() << std::endl;
+    //    std::cout << "HT M: " << controlMatrix.transpose().to_rows_as_numbers_str() << std::endl;
 
-    auto msg = Polynom(0b00001100101 /*0b1101*/, false);
+    // auto msg = Polynom(0b00001100101 /*0b1101*/, false);
 
-    auto enc = MXA::matrix_matrix_multiplication(Matrix({msg}), generatorMatrix).values[0];
-    auto enc2 = code->encode(msg);
+    // auto enc = MXA::matrix_matrix_multiplication(Matrix({msg}), generatorMatrix).values[0];
+    // auto enc2 = code->encode(msg);
 
-    std::cout << "enc V: " << enc.to_vector_str() << std::endl;
-    std::cout << "enc2V: " << std::bitset<16>(enc2.as_int()) << std::endl;
+    // std::cout << "enc V: " << enc.to_vector_str() << std::endl;
+    // std::cout << "enc2V: " << std::bitset<16>(enc2.as_int()) << std::endl;
 
-    auto syn = MXA::matrix_matrix_multiplication(Matrix({Polynom(enc2.as_int() + 4)}), controlMatrix.transpose()).values[0];
-    std::cout << "syn V: " << syn.to_vector_str() << std::endl;
+    // auto syn = MXA::matrix_matrix_multiplication(Matrix({Polynom(0b110100001101100)}), controlMatrix.transpose()).values[0];
+    // std::cout << "syn V: " << syn.as_int() << std::endl;
 
+    // std::cout << (char)(0b110100001101100 ^ 0b000000000000100) << std::endl;
     //    for (const auto &item : code->syndrom_table.syndrom_table) {
     //        std::cout << "Syn: " << item.first.get()->values[0].as_int() << std::endl;
     //        std::cout << "Err: " << item.second.get()->as_int() << std::endl

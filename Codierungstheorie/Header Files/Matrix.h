@@ -102,7 +102,13 @@ class Matrix {
      * @return string representation of the matrix
      */
     std::string to_vector_str() const;
-    std::string to_rows_as_numbers_str() const;
+    std::string to_rows_as_numbers_str() const {
+        auto result = std::string();
+        for (Polynom row : values) {
+            result.append(std::to_string(row.as_int())).append("\n");
+        }
+        return result;
+    }
 
     void add_polynom(Polynom p) { values.push_back(p); }
     int get_coefficient(int row, int col) const { return values.at(row).get_coefficient(col); }

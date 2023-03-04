@@ -31,6 +31,7 @@ class HammingCode : public Code {
     const int calculate_K(int _m) const {
         return pow(2, _m) - 1;
     }
+    Polynom remove_error(Polynom codeword) const;
 };
 
 #endif // CODIERUNGSTHEORIE_HAMMINGCODE_H
