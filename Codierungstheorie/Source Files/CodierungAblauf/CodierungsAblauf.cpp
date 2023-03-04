@@ -22,24 +22,27 @@ void CodierungsAblauf::run() {
 
     msg_words = message_to_words();
 
-    std::cout << "Encode: " << std::endl;
+    std::cout << std::endl
+              << "Encode: " << std::endl;
     encode_message();
 
-    std::cout << "Transfer: " << std::endl;
+    std::cout << std::endl
+              << "Transfer: " << std::endl;
     transfer_message();
 
-    std::cout << "Decode: " << std::endl;
+    std::cout << std::endl
+              << "Decode: " << std::endl;
     decode_message();
 
     auto result = words_to_string(decoded_words);
-    std::cout << "Ergebnis: " << result << std::endl;
+    std::cout << std::endl
+              << "Ergebnis: " << result << std::endl;
 }
 void CodierungsAblauf::decode_message() {
     for (Polynom transferred_word : transferred_words) {
         auto decoded_word = code->decode(transferred_word);
         decoded_words.push_back(decoded_word);
         std::cout << std::endl
-                  << "VvV"
                   << word_to_string(transferred_word.as_int()) << "->" << word_to_string(decoded_word.as_int()) << std::endl;
     }
 }
