@@ -136,8 +136,8 @@ void sub_task_4() {
 int main(int argc, char **argv) {
     //sub_task_1();
     //sub_task_2();
-    //sub_task_3();
-    sub_task_4();
+    sub_task_3();
+    //sub_task_4();
     std::cout << " it just works " << std::endl;
 
 }

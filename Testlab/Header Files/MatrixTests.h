@@ -238,6 +238,15 @@ TEST_SUITE("Matrix tests" * doctest::description("egf")) {
         auto correction_p3 = MXA::correct_codeword(p3, s);
         CHECK(ex3.to_vector_str() == correction_p3.to_vector_str());
     }
+
+    TEST_CASE("Reed Mueller")
+    {
+        Matrix g = MXA::generate_reed_mueller( 1, 3);
+
+        std::cout << "reed mueller " << std::endl;
+
+        std::cout << g.to_vector_str() << std::endl;
+    }
 }
 
 // TODO @Dennis
