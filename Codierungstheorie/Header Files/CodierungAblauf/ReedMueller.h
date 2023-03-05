@@ -8,6 +8,7 @@
 
 #include "Code.h"
 #include "Header Files/Matrix.h"
+#include <iostream>
 
 // @TODO Dennis. Use Generatormatrix from ReedMueller
 // Code C(n, k, d, q)
@@ -54,6 +55,7 @@ class ReedMueller : public Code {
         inline int calc_m_over_r(int m, int r) const
         {
             if (m < r) {
+
                 exit(1);
             }
 
@@ -82,7 +84,8 @@ class ReedMueller : public Code {
         // d = 2^(m-r)
         const int calculate_d(int _r, int _m) const
         {
-            return pow(2, (_m - _r));
+            auto res = (pow(2, (_m - _r)));
+            return res;
         }
 
         /*

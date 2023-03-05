@@ -296,6 +296,12 @@ void Matrix::to_canonical_form() {
 // Vorgehen mit einer augmented Matrix zur eventuellen Erstellung einer Generatormatrix
 Matrix Matrix::to_canonical_via_GJE(const int p) const {
     Matrix matrix_copy = Matrix(rows, cols, values);
+
+
+    std::cout << "matrix: " << std::endl;
+    std::cout << matrix_copy.to_vector_str() << std::endl;
+
+
     Matrix augmented_matrix = Matrix(rows, cols * 2, values);
 
     // init augmented matrix
