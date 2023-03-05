@@ -5,7 +5,10 @@
 #include "Header Files/CodierungAblauf/ReedMueller.h"
 
 
-ReedMueller::ReedMueller(const int _m) : m(_m),
+
+
+/*
+ReedMueller::ReedMueller(const int _r, const int _m) : r(_r), m(_m),
                                          Code(calculate_N(_m), calculate_K(_m), 3),
                                          control_matrix(std::move(create_control_matrix())),
                                          syndrom_table(MXA::create_syndrom_table(std::make_shared<Matrix>(control_matrix.transpose()))),
@@ -14,6 +17,22 @@ ReedMueller::ReedMueller(const int _m) : m(_m),
         exit(1);
     }
 }
+*/
+
+
+ReedMueller::ReedMueller(const int _r, const int _m) : r(_r), m(_m),
+                                                    Code(calculate_N(_r, _m), calculate_K(_r, _m), calculate_d(_r, _m)),
+                                                       generator_matrix(std::move(generate_reed_mueller(_r, _m))),
+                                                       control_matrix(generator_matrix.to_canonical_via_GJE().to_control_matrix()),
+                                                       syndrom_table(MXA::create_syndrom_table(std::make_shared<Matrix>(control_matrix.transpose())))
+{
+
+}
+
+
+
+
+/*
 Matrix ReedMueller::create_control_matrix() {
     auto result = std::vector<Polynom>();
     auto identity_values = std::vector<Polynom>();
@@ -30,6 +49,9 @@ Matrix ReedMueller::create_control_matrix() {
     auto gen_matrix = Matrix(calculate_N(m), m, result);
     return gen_matrix.transpose();
 }
+ */
+
+
 Polynom ReedMueller::decode(Polynom codeword) const {
     auto corrected_codeword = remove_error(codeword);
 
@@ -79,8 +101,18 @@ Matrix ReedMueller::generate_reed_mueller(int r, int m)
     else if (r == 0) // is there a rule?
     {
         int row_n = 1;
-        int col_n = 1;
+        int col_n = pow(2, m);//1
 
+        // 2^m
+        auto res = Matrix(row_n, col_n);
+        res.add_polynom(Polynom({1}));
+
+        for (int i = 1; i < col_n; i++)
+        {
+            res.set_coefficient(0, i, 1);
+        }
+
+        /*
         auto p = Polynom({});
 
         if (m == 1)
@@ -98,6 +130,7 @@ Matrix ReedMueller::generate_reed_mueller(int r, int m)
 
         auto res = Matrix(row_n, col_n);
         res.add_polynom(p);
+        */
 
         return res;
     }
