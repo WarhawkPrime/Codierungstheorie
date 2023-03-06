@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
     //
 
     // reed mueller cant generate the code c(8,4,3,2)
-    auto code = new ReedMueller(1, 3);
+    auto code = new ReedMueller(1, 5);
 
     ablauf.code = code;
 

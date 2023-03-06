@@ -21,10 +21,10 @@ ReedMueller::ReedMueller(const int _r, const int _m) : r(_r), m(_m),
 
 
 ReedMueller::ReedMueller(const int _r, const int _m) : r(_r), m(_m),
+                                                    generator_matrix(std::move(generate_reed_mueller(_r, _m))),
                                                     Code(calculate_N(_r, _m), calculate_K(_r, _m), calculate_d(_r, _m)),
-                                                       generator_matrix(std::move(generate_reed_mueller(_r, _m))),
-                                                       control_matrix(generator_matrix.to_canonical_via_GJE().to_control_matrix()),
-                                                       syndrom_table(MXA::create_syndrom_table(std::make_shared<Matrix>(control_matrix.transpose())))
+                                                   control_matrix(generator_matrix.to_control_matrix()),
+                                                   syndrom_table(MXA::create_syndrom_table(std::make_shared<Matrix>(control_matrix.transpose())))
 {
 
 }
@@ -182,6 +182,9 @@ Matrix ReedMueller::generate_reed_mueller(int r, int m)
         }
 
         // lower left stays 0
+
+        std::cout << "RM: " << std::endl;
+        std::cout << gen.to_vector_str() << std::endl;
 
         // return Matrix
         return gen;

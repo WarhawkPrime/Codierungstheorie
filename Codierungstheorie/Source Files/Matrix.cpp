@@ -152,6 +152,110 @@ Polynom correct_codeword(Polynom codeword, Syndrom_table syndrom_table) {
     }
 }
 
+
+
+
+
+/**
+ * Im Endeffekt sol für jeden möglichen Fehler das Syndrom berechnet werden und in eine Tabelle gespeichert werden
+ * Aus dieser Tabelle soll man dann einen Fehler als Value bekommen, wenn als Key das zugehörige Syndrom gebildet
+ * wird
+ * @param control_matrix
+ */
+    void SyndromTable::init_syndrom_table(Matrix control_matrix)
+    {
+
+        // create list of all possible errors. Max number: q^n-k : 2^5-2 = 2^3 = 8
+        // d-1 / 2 max number of "safe" syndroms
+
+        // create helper polynom to get max number of errors
+        int max_polynom_size = control_matrix.rows;
+        auto helper = Polynom(0);
+        for (int i = 0; i < max_polynom_size; i++)
+            helper.set_coefficient(i, 1);
+
+        // fill syndrom table
+        for (int i = 0; i < helper.as_int() + 1; i++) {
+            // error
+            std::shared_ptr<Polynom> error = std::make_shared<Polynom>(i);
+
+            // syndrom
+            auto syndrom_res = MXA::polynom_matrix_multiplication(error, control_matrix);
+            std::shared_ptr<Matrix> syndrom = std::make_shared<Matrix>(syndrom_res);
+
+            // insert into map
+            // syndrom matrices must be unique. prefer errors with the least amount of 1s
+            bool found = false;
+            auto it = syndrom_map.begin();
+            while (it != syndrom_map.end()) {
+                if (it->first->to_vector_str() == syndrom->to_vector_str()) {
+                    found = true;
+                    if (error->get_non_zero_number() < it->second->get_non_zero_number()) {
+                        // erase
+                        it = syndrom_map.erase(it);
+
+                        // insert
+                        syndrom_map.insert({syndrom, error});
+                    } else {
+                        ++it;
+                    }
+                } else {
+                    ++it;
+                }
+            }
+
+            if (!found)
+                syndrom_map.insert({syndrom, error});
+        }
+    }
+
+    Polynom SyndromTable::corr_codeword(Polynom codeword) {
+        // calc syndrom of codeword
+        auto syndrom = MXA::polynom_matrix_multiplication(codeword, this->_control_matrix);
+
+        // find syndrom in syndrom_table
+        if (syndrom_map.find(std::make_shared<Matrix>(syndrom)) != syndrom_map.end()) {
+            // if found, get error code
+            auto error_poly = syndrom_map.find(std::make_shared<Matrix>(syndrom))->second;
+
+            auto result = (codeword + *error_poly.get()) % 2;
+            return result;
+        } else {
+            return codeword;
+        }
+    }
+
+
+
+    Polynom maximum_likelihood_detection(Polynom received_word, Matrix controlmatrix, SyndromTable syndromtable)
+    {
+        Polynom most_likely_codeword = received_word;
+        int min_distance = received_word.get_non_zero_number();
+
+        // iterate over all codewords
+        for (int i = 0; i < controlmatrix.rows; i++) {
+            Polynom codeword(controlmatrix.get_polynom(i));
+
+            // compute the syndrome of the codeword
+            auto syndrome = MXA::polynom_matrix_multiplication(codeword, controlmatrix);
+
+            // compute the Hamming distance between the received word and the codeword
+            Polynom distance = (received_word + syndrome.get_polynom(0)) % 2;
+
+            // if the Hamming distance is smaller than the minimum distance so far, update the minimum distance and the most likely codeword
+            if (distance.get_non_zero_number() < min_distance) {
+                min_distance = distance.get_non_zero_number();
+                most_likely_codeword = codeword;
+            }
+        }
+
+        // decode the most likely codeword using the syndrom table
+        Polynom decoded_message = syndromtable.corr_codeword(most_likely_codeword);
+
+        return decoded_message;
+    }
+
+
 } // namespace MXA
 
 int Matrix::number_of_non_zero() {

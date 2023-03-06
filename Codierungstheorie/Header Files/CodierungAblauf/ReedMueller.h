@@ -61,23 +61,31 @@ class ReedMueller : public Code {
 
             int numerator = calc_faculty(m);
             int denominator = calc_faculty(r) * calc_faculty(m-r);
-            int result = result;
+            int result = numerator / denominator;
+            return result;
         }
 
         // n = 2^m
         const int calculate_N(int _r, int _m) const
         {
+            std::cout << " N: " << pow(2, _m) << std::endl;
             return pow(2, _m);
         }
 
         // sum over r with i = 0 of all m over i
         const int calculate_K(int _r, int _m) const
         {
+            std::cout << "input: r, m: " << _r << " " << _m << std::endl;
+
             int res = 0;
-            for (int i = 0; i < _r; i++)
+            for (int i = 0; i <= _r; i++)
             {
+                std::cout << "m: " << _m << " over r: " << i << std::endl;
                 res += calc_m_over_r(_m,i);
+                std::cout << "res : "<< res << std::endl;
             }
+
+            std::cout << "k: " << res << std::endl;
             return res;
         }
 
@@ -85,6 +93,7 @@ class ReedMueller : public Code {
         const int calculate_d(int _r, int _m) const
         {
             auto res = (pow(2, (_m - _r)));
+            std::cout << "d: " << res << std::endl;
             return res;
         }
 
