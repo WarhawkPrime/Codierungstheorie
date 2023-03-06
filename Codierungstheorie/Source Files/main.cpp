@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
     ablauf.kanal = new VariableErrorKanal(1);
     // ablauf.kanal = new NoErrorKanal();
 
-    //auto code = new HammingCode(4);
+    auto code = new HammingCode(4);
 
     // need reed mueller with d=3, q=2
     // d=2^(m-r)
@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
     //
 
     // reed mueller cant generate the code c(8,4,3,2)
-    auto code = new ReedMueller(1, 5);
+    //auto code = new ReedMueller(1, 5);
 
     ablauf.code = code;
 
