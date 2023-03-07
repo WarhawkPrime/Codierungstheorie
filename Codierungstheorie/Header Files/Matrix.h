@@ -74,8 +74,7 @@ class Matrix {
      */
     Matrix(const int rows, const int cols) : Matrix(rows, cols, std::vector<Polynom>()){};
 
-    //Matrix(const int rows, const int cols) : rows(rows), cols(cols) {}
-
+    // Matrix(const int rows, const int cols) : rows(rows), cols(cols) {}
 
     void to_canonical_form();
 
@@ -115,7 +114,7 @@ class Matrix {
     }
 
     void add_polynom(Polynom p) { values.push_back(p); }
-    Polynom get_polynom(int row) {return values.at(row);}
+    Polynom get_polynom(int row) { return values.at(row); }
     int get_coefficient(int row, int col) const { return values.at(row).get_coefficient(col); }
     void set_coefficient(int row, int col, int value) { values.at(row).set_coefficient(col, value); }
 
@@ -181,13 +180,9 @@ Matrix calculate_syndrom(Polynom codeword, Matrix parity_check_matrix);
  */
 Polynom correct_codeword(Polynom codeword, Syndrom_table syndrom_table);
 
-
-
-
 class SyndromTable {
 
-public:
-
+  public:
     void init_syndrom_table(Matrix control_matrix);
 
     SyndromTable(const Matrix control_matrix) : _control_matrix(control_matrix) {
@@ -195,12 +190,10 @@ public:
         init_syndrom_table(control_matrix);
     }
 
-
     std::unordered_map<std::shared_ptr<Matrix>, std::shared_ptr<Polynom>, MatrixHashFunction, MatrixEqualityFunction> syndrom_map;
     Polynom corr_codeword(Polynom codeword);
 
-private:
-
+  private:
     // hash function for matrix class
     struct MatrixHashFunction {
         size_t operator()(const std::shared_ptr<Matrix> &m) const {
@@ -221,15 +214,11 @@ private:
     std::vector<std::shared_ptr<Matrix>> syndrom;
 
     const Matrix _control_matrix;
-
-
 };
 
+Polynom maximum_likelihood_detection(Polynom received_word, Matrix controlmatrix, SyndromTable syndromtable);
 
-
-    Polynom maximum_likelihood_detection(Polynom received_word, Matrix controlmatrix, SyndromTable syndromtable);
-
-    Matrix ns_generate_reed_mueller(int r, int m);
+Matrix ns_generate_reed_mueller(int r, int m);
 
 } // namespace MXA
 

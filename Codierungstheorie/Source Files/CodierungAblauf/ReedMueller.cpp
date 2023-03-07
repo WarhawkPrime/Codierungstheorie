@@ -4,9 +4,6 @@
 
 #include "Header Files/CodierungAblauf/ReedMueller.h"
 
-
-
-
 /*
 ReedMueller::ReedMueller(const int _r, const int _m) : r(_r), m(_m),
                                          Code(calculate_N(_m), calculate_K(_m), 3),
@@ -19,18 +16,12 @@ ReedMueller::ReedMueller(const int _r, const int _m) : r(_r), m(_m),
 }
 */
 
-
 ReedMueller::ReedMueller(const int _r, const int _m) : r(_r), m(_m),
-                                                    generator_matrix(std::move(generate_reed_mueller(_r, _m))),
-                                                    Code(calculate_N(_r, _m), calculate_K(_r, _m), calculate_d(_r, _m)),
-                                                   control_matrix(generator_matrix.to_control_matrix()),
-                                                   syndrom_table(MXA::create_syndrom_table(std::make_shared<Matrix>(control_matrix.transpose())))
-{
-
+                                                       generator_matrix(std::move(generate_reed_mueller(_r, _m))),
+                                                       Code(calculate_N(_r, _m), calculate_K(_r, _m), calculate_d(_r, _m)),
+                                                       control_matrix(generator_matrix.to_control_matrix()),
+                                                       syndrom_table(MXA::create_syndrom_table(std::make_shared<Matrix>(control_matrix.transpose()))) {
 }
-
-
-
 
 /*
 Matrix ReedMueller::create_control_matrix() {
@@ -50,7 +41,6 @@ Matrix ReedMueller::create_control_matrix() {
     return gen_matrix.transpose();
 }
  */
-
 
 Polynom ReedMueller::decode(Polynom codeword) const {
     auto corrected_codeword = remove_error(codeword);
@@ -81,27 +71,22 @@ Polynom ReedMueller::remove_error(Polynom codeword) const {
 }
 
 /**
-  *
-  * @param r order of the code
-  * @param m number of vaiables
-  * @return
-  */
-Matrix ReedMueller::generate_reed_mueller(int r, int m)
-{
+ *
+ * @param r order of the code
+ * @param m number of vaiables
+ * @return
+ */
+Matrix ReedMueller::generate_reed_mueller(int r, int m) {
     // 1xm identity matrix
-    if(m == 0)
-    {
+    if (m == 0) {
         std::vector<Polynom> values = {
-                Polynom({1}, false)
-        };
+            Polynom({1}, false)};
 
         auto res = Matrix(1, 1, values);
         return res;
-    }
-    else if (r == 0)
-    {
+    } else if (r == 0) {
         int row_n = 1;
-        int col_n = pow(2, m);//1
+        int col_n = pow(2, m); // 1
 
         // 2^m
         /*
@@ -115,8 +100,7 @@ Matrix ReedMueller::generate_reed_mueller(int r, int m)
         auto res = Matrix(row_n, col_n);
         res.add_polynom(Polynom({1}));
 
-        for (int i = 1; i < col_n; i++)
-        {
+        for (int i = 1; i < col_n; i++) {
             res.set_coefficient(0, i, 1);
         }
 
@@ -141,12 +125,11 @@ Matrix ReedMueller::generate_reed_mueller(int r, int m)
         */
 
         return res;
-    }
-    else // recursive
+    } else // recursive
     {
         // generate G1 and G2
-        Matrix G1 = generate_reed_mueller(r, m-1);
-        Matrix G2 = generate_reed_mueller(r-1, m-1);
+        Matrix G1 = generate_reed_mueller(r, m - 1);
+        Matrix G2 = generate_reed_mueller(r - 1, m - 1);
 
         int row_number = G1.rows + G2.rows;
         int col_number = G1.cols * 2;
@@ -163,29 +146,23 @@ Matrix ReedMueller::generate_reed_mueller(int r, int m)
         //            ( 0       ) G(r-1, m-1) )
 
         // upper Left rows == rows, cols == cols
-        for (int row = 0; row < G1.rows; row++)
-        {
-            for (int col = 0; col < G1.cols; col++)
-            {
+        for (int row = 0; row < G1.rows; row++) {
+            for (int col = 0; col < G1.cols; col++) {
                 gen.set_coefficient(row, col, G1.get_coefficient(row, col));
             }
         }
 
         // upper right
-        for (int row = 0; row < G1.rows; row++)
-        {
-            for (int col = 0 + G1.cols; col < (G1.cols *2); col++)
-            {
-                gen.set_coefficient(row, col, G1.get_coefficient(row, col-G1.cols));
+        for (int row = 0; row < G1.rows; row++) {
+            for (int col = 0 + G1.cols; col < (G1.cols * 2); col++) {
+                gen.set_coefficient(row, col, G1.get_coefficient(row, col - G1.cols));
             }
         }
 
         // lower right
-        for (int row = G1.rows; row < (G1.rows + G2.rows); row++)
-        {
-            for (int col = 0 + G1.cols; col < (G1.cols *2); col++)
-            {
-                gen.set_coefficient(row, col, G2.get_coefficient(row-G1.rows, col-G1.cols));
+        for (int row = G1.rows; row < (G1.rows + G2.rows); row++) {
+            for (int col = 0 + G1.cols; col < (G1.cols * 2); col++) {
+                gen.set_coefficient(row, col, G2.get_coefficient(row - G1.rows, col - G1.cols));
             }
         }
 

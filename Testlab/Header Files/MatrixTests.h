@@ -1,11 +1,11 @@
 //
 // Created by Noah Ruben on 10.01.23.
 //
-//#include "Header Files/Matrix.h"
+// #include "Header Files/Matrix.h"
 #include "Header Files/CodierungAblauf/CodierungsAblauf.h"
-#include "Header Files/CodierungAblauf/VariableErrorKanal.h"
 #include "Header Files/CodierungAblauf/ReedMueller.h"
-//#include "Header Files/SyndromTable.h"
+#include "Header Files/CodierungAblauf/VariableErrorKanal.h"
+// #include "Header Files/SyndromTable.h"
 #include "doctest.h"
 
 TEST_SUITE("Matrix tests" * doctest::description("egf")) {
@@ -244,18 +244,15 @@ TEST_SUITE("Matrix tests" * doctest::description("egf")) {
         // CHECK(ex3.to_vector_str() == correction_p3.to_vector_str());
     }
 
-    TEST_CASE("syndrom t")
-    {
-
+    TEST_CASE("syndrom t") {
 
         const auto Control = Matrix({
-                                            Polynom({1, 0, 1}, false),
-                                            Polynom({1, 1, 1}, false),
-                                            Polynom({1, 0, 0}, false),
-                                            Polynom({0, 1, 0}, false),
-                                            Polynom({0, 0, 1}, false),
-                                    });
-
+            Polynom({1, 0, 1}, false),
+            Polynom({1, 1, 1}, false),
+            Polynom({1, 0, 0}, false),
+            Polynom({0, 1, 0}, false),
+            Polynom({0, 0, 1}, false),
+        });
 
         MXA::SyndromTable sy = MXA::SyndromTable(Control);
 
@@ -271,35 +268,30 @@ TEST_SUITE("Matrix tests" * doctest::description("egf")) {
         std::cout << res.to_vector_str() << std::endl;
     }
 
-    TEST_CASE("mld syndrom")
-    {
+    TEST_CASE("mld syndrom") {
         const auto Control = Matrix({
-                                            Polynom({1, 0, 1}, false),
-                                            Polynom({1, 1, 1}, false),
-                                            Polynom({1, 0, 0}, false),
-                                            Polynom({0, 1, 0}, false),
-                                            Polynom({0, 0, 1}, false),
-                                    });
-
+            Polynom({1, 0, 1}, false),
+            Polynom({1, 1, 1}, false),
+            Polynom({1, 0, 0}, false),
+            Polynom({0, 1, 0}, false),
+            Polynom({0, 0, 1}, false),
+        });
 
         MXA::SyndromTable sy = MXA::SyndromTable(Control);
 
         auto p3 = Polynom({1, 0, 1, 0, 0});
         auto ex3 = Polynom({1, 0, 1, 0, 1});
 
-        auto corrected =  maximum_likelihood_detection(p3, Control, sy);
-
+        auto corrected = maximum_likelihood_detection(p3, Control, sy);
 
         std::cout << "exp: " << std::endl;
         std::cout << ex3.to_vector_str() << std::endl;
 
         std::cout << "res: " << std::endl;
         std::cout << corrected.to_vector_str() << std::endl;
-
     }
 
-    TEST_CASE("RM")
-    {
+    TEST_CASE("RM") {
         // for R(m-2,m) -> n,k,d,q -> 2^m, 2^m -1 -m, 4,2
         // 2,4 -> n,k,d,q -> 16, 11,4,2
         auto m = ReedMueller(1, 5);

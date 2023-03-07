@@ -152,247 +152,221 @@ Polynom correct_codeword(Polynom codeword, Syndrom_table syndrom_table) {
     }
 }
 
-
-
-
-
 /**
  * Im Endeffekt sol für jeden möglichen Fehler das Syndrom berechnet werden und in eine Tabelle gespeichert werden
  * Aus dieser Tabelle soll man dann einen Fehler als Value bekommen, wenn als Key das zugehörige Syndrom gebildet
  * wird
  * @param control_matrix
  */
-    void SyndromTable::init_syndrom_table(Matrix control_matrix)
-    {
+void SyndromTable::init_syndrom_table(Matrix control_matrix) {
 
-        // create list of all possible errors. Max number: q^n-k : 2^5-2 = 2^3 = 8
-        // d-1 / 2 max number of "safe" syndroms
+    // create list of all possible errors. Max number: q^n-k : 2^5-2 = 2^3 = 8
+    // d-1 / 2 max number of "safe" syndroms
 
-        // create helper polynom to get max number of errors
-        int max_polynom_size = control_matrix.rows;
-        auto helper = Polynom(0);
-        for (int i = 0; i < max_polynom_size; i++)
-            helper.set_coefficient(i, 1);
+    // create helper polynom to get max number of errors
+    int max_polynom_size = control_matrix.rows;
+    auto helper = Polynom(0);
+    for (int i = 0; i < max_polynom_size; i++)
+        helper.set_coefficient(i, 1);
 
-        // fill syndrom table
-        for (int i = 0; i < helper.as_int() + 1; i++) {
-            // error
-            std::shared_ptr<Polynom> error = std::make_shared<Polynom>(i);
+    // fill syndrom table
+    for (int i = 0; i < helper.as_int() + 1; i++) {
+        // error
+        std::shared_ptr<Polynom> error = std::make_shared<Polynom>(i);
 
-            // syndrom
-            auto syndrom_res = MXA::polynom_matrix_multiplication(error, control_matrix);
-            std::shared_ptr<Matrix> syndrom = std::make_shared<Matrix>(syndrom_res);
+        // syndrom
+        auto syndrom_res = MXA::polynom_matrix_multiplication(error, control_matrix);
+        std::shared_ptr<Matrix> syndrom = std::make_shared<Matrix>(syndrom_res);
 
-            // insert into map
-            // syndrom matrices must be unique. prefer errors with the least amount of 1s
-            bool found = false;
-            auto it = syndrom_map.begin();
-            while (it != syndrom_map.end()) {
-                if (it->first->to_vector_str() == syndrom->to_vector_str()) {
-                    found = true;
-                    if (error->get_non_zero_number() < it->second->get_non_zero_number()) {
-                        // erase
-                        it = syndrom_map.erase(it);
+        // insert into map
+        // syndrom matrices must be unique. prefer errors with the least amount of 1s
+        bool found = false;
+        auto it = syndrom_map.begin();
+        while (it != syndrom_map.end()) {
+            if (it->first->to_vector_str() == syndrom->to_vector_str()) {
+                found = true;
+                if (error->get_non_zero_number() < it->second->get_non_zero_number()) {
+                    // erase
+                    it = syndrom_map.erase(it);
 
-                        // insert
-                        syndrom_map.insert({syndrom, error});
-                    } else {
-                        ++it;
-                    }
+                    // insert
+                    syndrom_map.insert({syndrom, error});
                 } else {
                     ++it;
                 }
+            } else {
+                ++it;
             }
+        }
 
-            if (!found)
-                syndrom_map.insert({syndrom, error});
+        if (!found)
+            syndrom_map.insert({syndrom, error});
+    }
+}
+
+Polynom SyndromTable::corr_codeword(Polynom codeword) {
+    // calc syndrom of codeword
+    auto syndrom = MXA::polynom_matrix_multiplication(codeword, this->_control_matrix);
+
+    // find syndrom in syndrom_table
+    if (syndrom_map.find(std::make_shared<Matrix>(syndrom)) != syndrom_map.end()) {
+        // if found, get error code
+        auto error_poly = syndrom_map.find(std::make_shared<Matrix>(syndrom))->second;
+
+        auto result = (codeword + *error_poly.get()) % 2;
+        return result;
+    } else {
+        return codeword;
+    }
+}
+
+Polynom maximum_likelihood_detection(Polynom received_word, Matrix controlmatrix, SyndromTable syndromtable) {
+    Polynom most_likely_codeword = received_word;
+    int min_distance = received_word.get_non_zero_number();
+
+    // iterate over all codewords
+    for (int i = 0; i < controlmatrix.rows; i++) {
+        Polynom codeword(controlmatrix.get_polynom(i));
+
+        // compute the Hamming distance between the received word and the codeword
+        Polynom distance = (received_word + codeword) % 2;
+
+        // if the Hamming distance is smaller than the minimum distance so far, update the minimum distance and the most likely codeword
+        if (distance.get_non_zero_number() < min_distance) {
+            min_distance = distance.get_non_zero_number();
+            most_likely_codeword = codeword;
         }
     }
 
-    Polynom SyndromTable::corr_codeword(Polynom codeword) {
-        // calc syndrom of codeword
-        auto syndrom = MXA::polynom_matrix_multiplication(codeword, this->_control_matrix);
+    // decode the most likely codeword using the syndrom table
+    Polynom decoded_message = syndromtable.corr_codeword(most_likely_codeword);
 
-        // find syndrom in syndrom_table
-        if (syndrom_map.find(std::make_shared<Matrix>(syndrom)) != syndrom_map.end()) {
-            // if found, get error code
-            auto error_poly = syndrom_map.find(std::make_shared<Matrix>(syndrom))->second;
+    return decoded_message;
+}
 
-            auto result = (codeword + *error_poly.get()) % 2;
-            return result;
-        } else {
-            return codeword;
+Matrix ns_generate_reed_mueller(int r, int m) {
+    std::cout << "r: " << r << "m: " << m << std::endl;
+
+    // 1xm identity matrix
+    if (m == 0) {
+        std::vector<Polynom> values = {
+            Polynom({1}, false)};
+
+        auto res = Matrix(1, 1, values);
+        return res;
+    } else if (r == 0) {
+        std::cout << "last: " << std::endl;
+
+        int row_n = 1;
+        int col_n = pow(2, m); // 1
+
+        std::cout << "last: " << col_n << std::endl;
+
+        // 2^m
+        auto res = Matrix(row_n, col_n);
+
+        res.add_polynom(Polynom((pow(2, m) - 1), false, col_n));
+
+        std::cout << "l " << std::endl;
+
+        /*
+        res.add_polynom(Polynom({1}));
+
+        for (int i = 1; i < col_n; i++)
+        {
+            std::cout << "i: " << i << std::endl;
+            res.set_coefficient(0, i, 1);
         }
-    }
+         */
 
+        /*
+        auto p = Polynom({});
 
+        if (m == 1)
+        {
+            row_n = 1;
+            col_n = 2;
+            p = Polynom({1,1}, false);
+        }
+        else if (m == 2)
+        {
+            row_n = 1;
+            col_n = 4;
+            p = Polynom({1,1,1,1}, false);
+        }
 
-    Polynom maximum_likelihood_detection(Polynom received_word, Matrix controlmatrix, SyndromTable syndromtable)
+        auto res = Matrix(row_n, col_n);
+        res.add_polynom(p);
+        */
+
+        return res;
+    } else // recursive
     {
-        Polynom most_likely_codeword = received_word;
-        int min_distance = received_word.get_non_zero_number();
+        // generate G1 and G2
 
-        // iterate over all codewords
-        for (int i = 0; i < controlmatrix.rows; i++) {
-            Polynom codeword(controlmatrix.get_polynom(i));
+        std::cout << "r: " << r - 1 << std::endl;
+        std::cout << "m: " << m - 1 << std::endl;
 
-            // compute the Hamming distance between the received word and the codeword
-            Polynom distance = (received_word + codeword) % 2;
+        Matrix G1 = ns_generate_reed_mueller(r, m - 1);
+        Matrix G2 = ns_generate_reed_mueller(r - 1, m - 1);
 
-            // if the Hamming distance is smaller than the minimum distance so far, update the minimum distance and the most likely codeword
-            if (distance.get_non_zero_number() < min_distance) {
-                min_distance = distance.get_non_zero_number();
-                most_likely_codeword = codeword;
+        int row_number = G1.rows + G2.rows;
+        int col_number = G1.cols * 2;
+
+        std::cout << "row n: " << row_number << std::endl;
+        std::cout << "col n: " << col_number << std::endl;
+
+        // create 0 Matrix with needed size
+        std::vector<Polynom> p = std::vector<Polynom>();
+
+        for (int i = 0; i < row_number; i++) {
+            p.push_back(Polynom({0}, false));
+        }
+
+        std::cout << "l: " << p.size() << std::endl;
+
+        Matrix gen = Matrix(row_number, col_number, p);
+
+        std::cout << "^" << std::endl;
+
+        for (int i = 0; i < row_number; i++) {
+            gen.add_polynom(Polynom({0}, false));
+        }
+
+        // put matrix together
+        // G(r, m) := ( G(r, m-1) G(r, m-1)   )
+        //            ( 0       ) G(r-1, m-1) )
+
+        // upper Left rows == rows, cols == cols
+        for (int row = 0; row < G1.rows; row++) {
+            for (int col = 0; col < G1.cols; col++) {
+                gen.set_coefficient(row, col, G1.get_coefficient(row, col));
             }
         }
 
-        // decode the most likely codeword using the syndrom table
-        Polynom decoded_message = syndromtable.corr_codeword(most_likely_codeword);
+        // upper right
+        for (int row = 0; row < G1.rows; row++) {
+            for (int col = 0 + G1.cols; col < (G1.cols * 2); col++) {
+                gen.set_coefficient(row, col, G1.get_coefficient(row, col - G1.cols));
+            }
+        }
 
-        return decoded_message;
+        // lower right
+        for (int row = G1.rows; row < (G1.rows + G2.rows); row++) {
+            for (int col = 0 + G1.cols; col < (G1.cols * 2); col++) {
+                gen.set_coefficient(row, col, G2.get_coefficient(row - G1.rows, col - G1.cols));
+            }
+        }
+
+        // lower left stays 0
+
+        std::cout << "RM: " << std::endl;
+        std::cout << gen.to_vector_str() << std::endl;
+
+        // return Matrix
+        return gen;
     }
-
-
-
-    Matrix ns_generate_reed_mueller(int r, int m)
-    {
-        std::cout << "r: " << r << "m: " << m << std::endl;
-
-
-        // 1xm identity matrix
-        if(m == 0)
-        {
-            std::vector<Polynom> values = {
-                    Polynom({1}, false)
-            };
-
-            auto res = Matrix(1, 1, values);
-            return res;
-        }
-        else if (r == 0)
-        {
-            std::cout << "last: " << std::endl;
-
-            int row_n = 1;
-            int col_n = pow(2, m);//1
-
-            std::cout << "last: " << col_n << std::endl;
-
-            // 2^m
-            auto res = Matrix(row_n, col_n);
-
-            res.add_polynom(Polynom( (pow(2, m)-1), false, col_n));
-
-            std::cout << "l " << std::endl;
-
-            /*
-            res.add_polynom(Polynom({1}));
-
-            for (int i = 1; i < col_n; i++)
-            {
-                std::cout << "i: " << i << std::endl;
-                res.set_coefficient(0, i, 1);
-            }
-             */
-
-            /*
-            auto p = Polynom({});
-
-            if (m == 1)
-            {
-                row_n = 1;
-                col_n = 2;
-                p = Polynom({1,1}, false);
-            }
-            else if (m == 2)
-            {
-                row_n = 1;
-                col_n = 4;
-                p = Polynom({1,1,1,1}, false);
-            }
-
-            auto res = Matrix(row_n, col_n);
-            res.add_polynom(p);
-            */
-
-            return res;
-        }
-        else // recursive
-        {
-            // generate G1 and G2
-
-            std::cout << "r: " << r-1 << std::endl;
-            std::cout << "m: " << m-1 << std::endl;
-
-            Matrix G1 = ns_generate_reed_mueller(r, m-1);
-            Matrix G2 = ns_generate_reed_mueller(r-1, m-1);
-
-            int row_number = G1.rows + G2.rows;
-            int col_number = G1.cols * 2;
-
-            std::cout << "row n: " << row_number << std::endl;
-            std::cout << "col n: " << col_number << std::endl;
-
-            // create 0 Matrix with needed size
-            std::vector<Polynom> p = std::vector<Polynom>();
-
-            for (int i = 0; i < row_number; i++) {
-                p.push_back(Polynom({0}, false));
-            }
-
-            std::cout << "l: " << p.size() << std::endl;
-
-            Matrix gen = Matrix(row_number, col_number, p);
-
-            std::cout << "^" << std::endl;
-
-            for (int i = 0; i < row_number; i++) {
-                gen.add_polynom(Polynom({0}, false));
-            }
-
-            // put matrix together
-            // G(r, m) := ( G(r, m-1) G(r, m-1)   )
-            //            ( 0       ) G(r-1, m-1) )
-
-            // upper Left rows == rows, cols == cols
-            for (int row = 0; row < G1.rows; row++)
-            {
-                for (int col = 0; col < G1.cols; col++)
-                {
-                    gen.set_coefficient(row, col, G1.get_coefficient(row, col));
-                }
-            }
-
-            // upper right
-            for (int row = 0; row < G1.rows; row++)
-            {
-                for (int col = 0 + G1.cols; col < (G1.cols *2); col++)
-                {
-                    gen.set_coefficient(row, col, G1.get_coefficient(row, col-G1.cols));
-                }
-            }
-
-            // lower right
-            for (int row = G1.rows; row < (G1.rows + G2.rows); row++)
-            {
-                for (int col = 0 + G1.cols; col < (G1.cols *2); col++)
-                {
-                    gen.set_coefficient(row, col, G2.get_coefficient(row-G1.rows, col-G1.cols));
-                }
-            }
-
-            // lower left stays 0
-
-            std::cout << "RM: " << std::endl;
-            std::cout << gen.to_vector_str() << std::endl;
-
-            // return Matrix
-            return gen;
-        }
-    }
-
-
-
+}
 
 } // namespace MXA
 
