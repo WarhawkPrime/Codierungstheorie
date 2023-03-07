@@ -24,8 +24,6 @@ class EGF {
   private:
     static const Polynom ip_by_degree[10];
 
-    const Polynom irreducible_polynom;
-
     [[nodiscard]] Polynom multiplication_with_polynomial_reduction(const Polynom &a, const Polynom &b) const;
 
     [[nodiscard]] Polynom modulo_addition(const Polynom &a, const Polynom &b) const;
@@ -65,11 +63,14 @@ class EGF {
 
     Polynom polynomial_reduction_bin(const Polynom &a, const Polynom &b) const;
 
+    Polynom pow_with_polynomial_reduction(const Polynom &base, const int &power) const;
+
     void print_multiplication_table(Polynom::Format output_format = Polynom::number, std::string file_name = "") const;
 
     void print_addition_table(Polynom::Format output_format = Polynom::number, std::string file_name = "") const;
 
     void print_elements(Polynom::Format output_format = Polynom::number) const;
+    const Polynom irreducible_polynom;
 };
 
 #endif // CODIERUNGSTHEORIE_EGF_H

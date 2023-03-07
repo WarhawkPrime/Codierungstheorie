@@ -31,13 +31,13 @@ class Polynom {
     static const Polynom ZERO;
     static const Polynom ONE;
 
-    explicit Polynom(std::vector<int> coefficients, bool _trim = true);
+    explicit Polynom(std::vector<int> coefficients, bool _trim = false);
 
     /**
      * This uses the binary representation of the number as coefficients
      * @param coefficients_as_number
      */
-    explicit Polynom(int coefficients_as_number, bool trim = true, int custom_size = 0);
+    explicit Polynom(int coefficients_as_number, bool trim = false, int custom_size = 0);
 
     /**
      *
@@ -206,7 +206,7 @@ class Polynom {
             result.push_back(Basis::modulo_group_mod(item, rhs_integer));
         }
         auto result_polynom = Polynom(result);
-        result_polynom.trim();
+        //        result_polynom.trim();
 
         return result_polynom;
     }

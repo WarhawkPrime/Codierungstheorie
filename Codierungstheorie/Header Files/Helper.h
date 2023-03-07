@@ -64,5 +64,4 @@ std::ostream &operator<<(std::ostream &os, std::vector<T> vec) {
 inline const std::string toString(bool boolean) {
     return boolean ? "true " : "false";
 }
-
 #endif // CODIERUNGSTHEORIE_HELPER_H

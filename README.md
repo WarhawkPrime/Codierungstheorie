@@ -68,7 +68,7 @@ Konkret gehen Sie dabei wie folgt vor:
 - [x] Task 1
 - [x] Task 2
 - [ ] Task 3
-- [ ] Task 4
+- [x] Task 4
 - [ ] Task 5
 - [ ] Task 6
 - [ ] FIXME Still pretty unorganised and duplication of code
@@ -82,3 +82,6 @@ Konkret gehen Sie dabei wie folgt vor:
 - http://www.arndt-bruenner.de/mathe/scripts/gaussjordan.htm
 - https://www.di-mgt.com.au/cgi-bin/matrix_canon_form.cgi
 - https://www.di-mgt.com.au/cgi-bin/matrix_stdform.cgi
+- https://www.partow.net/programming/polynomials/index.html
+- http://web.eecs.utk.edu/~jplank/plank/papers/CS-07-593/primitive-polynomial-table.txt
+- http://www.ee.unb.ca/cgi-bin/tervo/calc.pl

@@ -4,7 +4,7 @@
 
 const Polynom EGF::ip_by_degree[10] = {
     Polynom(7), // Kein explizites irreduzibles Polynom für diesen Grad angegeben
-    Polynom(7), // Kein explizites irreduzibles Polynom für diesen Grad angegeben
+    Polynom(3), // Kein explizites irreduzibles Polynom für diesen Grad angegeben
     Polynom(7),
     Polynom(13),
     Polynom(25),
@@ -241,4 +241,17 @@ void EGF::print_elements(Polynom::Format output_format) const {
     }
 
     std::cout << std::endl;
+}
+Polynom EGF::pow_with_polynomial_reduction(const Polynom &base, const int &power) const {
+    if (power == 0) {
+        return Polynom::ONE;
+    } else if (power == 1) {
+        return base;
+    }
+
+    Polynom result = Polynom(base);
+    for (int i = 0; i <= power; ++i) {
+        result = multiplication_with_polynomial_reduction(result, base);
+    }
+    return result;
 }

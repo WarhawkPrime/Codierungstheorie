@@ -9,12 +9,12 @@ TEST_SUITE("Matrix tests" * doctest::description("egf")) {
     TEST_CASE("Transpose Matrix and back") {
 
         const auto control = Matrix({
-                                    Polynom({1, 0, 1}, false),
-                                    Polynom({1, 1, 1}, false),
-                                    Polynom({1, 0, 0}, false),
-                                    Polynom({0, 1, 0}, false),
-                                    Polynom({0, 0, 1}, false),
-                                    });
+            Polynom({1, 0, 1}, false),
+            Polynom({1, 1, 1}, false),
+            Polynom({1, 0, 0}, false),
+            Polynom({0, 1, 0}, false),
+            Polynom({0, 0, 1}, false),
+        });
 
         auto transpose = control.transpose();
         auto orig = transpose.transpose();
@@ -143,10 +143,10 @@ TEST_SUITE("Matrix tests" * doctest::description("egf")) {
             Polynom({0, 0, 1}, false),
         });
 
-        auto e0 = Polynom({0,0,0,0,0}, false);
-        auto e1 = Polynom({1,0,0,0,0}, false);
-        auto e2 = Polynom({0,1,0,0,0}, false);
-        auto e3 = Polynom({0,0,0,0,1}, false);
+        auto e0 = Polynom({0, 0, 0, 0, 0}, false);
+        auto e1 = Polynom({1, 0, 0, 0, 0}, false);
+        auto e2 = Polynom({0, 1, 0, 0, 0}, false);
+        auto e3 = Polynom({0, 0, 0, 0, 1}, false);
 
         auto res = MXA::polynom_matrix_multiplication(e1, Control);
         auto res1 = MXA::polynom_matrix_multiplication(e2, Control);
@@ -163,11 +163,10 @@ TEST_SUITE("Matrix tests" * doctest::description("egf")) {
         CHECK(exp3.to_vector_str() == res3.to_vector_str());
     }
 
-    TEST_CASE("Generator and Control Matrix multiplication")
-    {
+    TEST_CASE("Generator and Control Matrix multiplication") {
         const std::vector<Polynom> values = {
-                Polynom({1, 0, 1, 0, 1}, false),
-                Polynom({0, 1, 1, 1, 1}, false)};
+            Polynom({1, 0, 1, 0, 1}, false),
+            Polynom({0, 1, 1, 1, 1}, false)};
         auto mat = Matrix(values);
 
         auto gen = mat.to_canonical_via_GJE();
@@ -184,8 +183,7 @@ TEST_SUITE("Matrix tests" * doctest::description("egf")) {
         CHECK(res.to_vector_str() == expected.to_vector_str());
     }
 
-    TEST_CASE("Syndrom Table")
-    {
+    TEST_CASE("Syndrom Table") {
 
         const auto Control = Matrix({
             Polynom({1, 0, 1}, false),
@@ -195,9 +193,9 @@ TEST_SUITE("Matrix tests" * doctest::description("egf")) {
             Polynom({0, 0, 1}, false),
         });
 
-        //MXA::Syndrom_table s = MXA::create_syndrom_table(std::make_shared<Matrix>(Control));
+        // MXA::Syndrom_table s = MXA::create_syndrom_table(std::make_shared<Matrix>(Control));
 
-        //CHECK(s.syndrom_table.size() == 8);
+        // CHECK(s.syndrom_table.size() == 8);
 
         std::vector<int> coeffs = {1, 0, 1};
         auto pol = Polynom(coeffs);
@@ -206,22 +204,21 @@ TEST_SUITE("Matrix tests" * doctest::description("egf")) {
         std::vector<int> coeffs1 = {0, 0, 1};
         auto syndrom_1 = Matrix({Polynom(coeffs1)});
 
-        //CHECK( (s.syndrom_table.find(std::make_shared<Matrix>(syndrom)) != s.syndrom_table.end()) == true);
-        //CHECK( (s.syndrom_table.find(std::make_shared<Matrix>(syndrom_1)) != s.syndrom_table.end()) == true);
+        // CHECK( (s.syndrom_table.find(std::make_shared<Matrix>(syndrom)) != s.syndrom_table.end()) == true);
+        // CHECK( (s.syndrom_table.find(std::make_shared<Matrix>(syndrom_1)) != s.syndrom_table.end()) == true);
     }
 
     // @TODO Dennis
-    TEST_CASE("Code correction")
-    {
+    TEST_CASE("Code correction") {
         const auto Control = Matrix({
-                                    Polynom({1, 0, 1}, false),
-                                    Polynom({1, 1, 1}, false),
-                                    Polynom({1, 0, 0}, false),
-                                    Polynom({0, 1, 0}, false),
-                                    Polynom({0, 0, 1}, false),
-                                    });
+            Polynom({1, 0, 1}, false),
+            Polynom({1, 1, 1}, false),
+            Polynom({1, 0, 0}, false),
+            Polynom({0, 1, 0}, false),
+            Polynom({0, 0, 1}, false),
+        });
 
-        //MXA::Syndrom_table s = MXA::create_syndrom_table(std::make_shared<Matrix>(Control));
+        // MXA::Syndrom_table s = MXA::create_syndrom_table(std::make_shared<Matrix>(Control));
 
         // error: 00000
         auto p1 = Polynom({1, 1, 1, 1, 0});
@@ -233,14 +230,14 @@ TEST_SUITE("Matrix tests" * doctest::description("egf")) {
         auto p3 = Polynom({1, 0, 1, 0, 0});
         auto ex3 = Polynom({1, 0, 1, 0, 1});
 
-        //auto correction_p1 = MXA::correct_codeword(p1, s);
-        //CHECK(ex1.to_vector_str() == correction_p1.to_vector_str());
+        // auto correction_p1 = MXA::correct_codeword(p1, s);
+        // CHECK(ex1.to_vector_str() == correction_p1.to_vector_str());
 
-        //auto correction_p2 = MXA::correct_codeword(p2, s);
-        //CHECK(ex2.to_vector_str() == correction_p2.to_vector_str());
+        // auto correction_p2 = MXA::correct_codeword(p2, s);
+        // CHECK(ex2.to_vector_str() == correction_p2.to_vector_str());
 
-        //auto correction_p3 = MXA::correct_codeword(p3, s);
-        //CHECK(ex3.to_vector_str() == correction_p3.to_vector_str());
+        // auto correction_p3 = MXA::correct_codeword(p3, s);
+        // CHECK(ex3.to_vector_str() == correction_p3.to_vector_str());
     }
 }
 

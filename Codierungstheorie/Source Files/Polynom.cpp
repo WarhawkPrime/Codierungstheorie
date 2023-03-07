@@ -10,7 +10,7 @@ const Polynom Polynom::ONE = Polynom(1);
 Polynom::Polynom(std::vector<int> coefficients, bool _trim) {
     this->coefficients = std::move(coefficients);
     if (_trim) {
-        trim();
+        //        trim();
     }
 }
 
@@ -36,7 +36,7 @@ Polynom::Polynom(int coefficients_as_number, bool _trim, int custom_size) {
     this->coefficients = std::move(temp_coefficients);
 
     if (_trim) {
-        trim();
+        //        trim();
     }
 }
 
@@ -77,10 +77,10 @@ std::string Polynom::to_vector_str(const int _size) const {
 
 std::string Polynom::to_polynom_str() const {
     int lenght = coefficients.size();
-    std::string result = std::to_string(coefficients[0]) + " + ";
+    std::string result = std::to_string(get_coefficient(0)) + " + ";
     for (int i = 1; i < lenght; ++i) {
         result +=
-            std::to_string(coefficients[i]) + "x^" + std::to_string(i) + " + ";
+            std::to_string(get_coefficient(i)) + "x^" + std::to_string(i) + " + ";
     }
     result = result.substr(0, result.length() - 3);
     return result;
@@ -109,9 +109,8 @@ int Polynom::as_int() const {
     int result = 0;
     auto size = coefficients.size();
     for (int i = size - 1; i >= 0; --i) {
-        result = (result << 1) + coefficients[i];
+        result = (result << 1) + get_coefficient(i);
     }
-
     return result;
 }
 
