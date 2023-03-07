@@ -103,18 +103,15 @@ Matrix ReedMueller::generate_reed_mueller(int r, int m)
         int row_n = 1;
         int col_n = pow(2, m);//1
 
-        std::cout << "n" << std::endl;
-
         // 2^m
+        /*
         auto res = Matrix(row_n, col_n);
         res.add_polynom(Polynom( (pow(2, m)-1), false, col_n));
 
 
-        std::cout << "nope " << std::endl;
-
         std::cout << res.to_vector_str() << std::endl;
+        */
 
-        /*
         auto res = Matrix(row_n, col_n);
         res.add_polynom(Polynom({1}));
 
@@ -122,7 +119,6 @@ Matrix ReedMueller::generate_reed_mueller(int r, int m)
         {
             res.set_coefficient(0, i, 1);
         }
-         */
 
         /*
         auto p = Polynom({});
@@ -195,8 +191,8 @@ Matrix ReedMueller::generate_reed_mueller(int r, int m)
 
         // lower left stays 0
 
-        //std::cout << "RM: " << std::endl;
-        //std::cout << gen.to_vector_str() << std::endl;
+        std::cout << "RM: " << std::endl;
+        std::cout << gen.to_vector_str() << std::endl;
 
         // return Matrix
         return gen;
