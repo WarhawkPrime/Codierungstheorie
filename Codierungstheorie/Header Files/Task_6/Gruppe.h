@@ -21,12 +21,6 @@ class Gruppe {
 
     Gruppe(int q, const std::vector<std::vector<int>> &addTable, const std::vector<std::vector<int>> &mulTable, const std::vector<int> &elements);
 
-    /**
-     * Achtung diese Polynome sind normale Polynome mit p = 10
-     * @returns die Paramenter ... CPP kram
-     */
-    void calculate_generator_and_control_polynomial(int d, Polynom &generator_polynomial, Polynom &control_polynomial);
-
   private:
     int find_primitive() const;
     const std::vector<std::vector<int>> mul_table;

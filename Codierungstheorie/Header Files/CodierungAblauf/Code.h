@@ -14,7 +14,7 @@ class Code {
     const int k;
     const int d;
 
-    explicit Code(const int n = 8, const int k = 0, const int d = 0) : n(n), k(k), d(0) {}
+    explicit Code(const int n = 8, const int k = 0, const int d = 0) : n(n), k(k), d(d) {}
 
     virtual Polynom decode(Polynom codeword) const = 0;
     virtual Polynom encode(Polynom msg) const = 0;

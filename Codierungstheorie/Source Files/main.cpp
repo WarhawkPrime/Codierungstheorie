@@ -1,5 +1,6 @@
 
 
+#include "Header Files/EGF.h"
 #include "Header Files/Helper.h"
 #include "Header Files/Task_6/Gruppe.h"
 #include "Header Files/Task_6/ReedSolomonCode.h"
@@ -84,13 +85,6 @@ int main(int argc, char **argv) {
         }
     }
 
-    for (int i = 0; i < q; i++) {
-        for (int j = 0; j < q; j++) {
-            std::cout << mul_table[i][j] << " ";
-        }
-        std::cout << std::endl;
-    }
-
     for (int a = 0; a < q; ++a) {
         for (int b = 0; b < q; ++b) {
             auto a_p = Polynom(a);
@@ -103,7 +97,6 @@ int main(int argc, char **argv) {
 
     std::vector<int> elements = generate_vector(q);
 
-    std::cout << elements << std::endl;
     auto g = Gruppe(q, add_table, mul_table, elements);
 
     auto primitiv = g.primitive;
@@ -112,7 +105,8 @@ int main(int argc, char **argv) {
     Polynom H = Polynom(0);
     Polynom G = Polynom(0);
 
-    g.calculate_generator_and_control_polynomial(5, G, H);
+    auto code = ReedSolomonCode(e, 5, g);
+    code.fill_generator_and_control_matrix();
 
     return 0;
 }

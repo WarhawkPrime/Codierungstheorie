@@ -31,7 +31,11 @@ add_executable(Codierungstheorie
                "Codierungstheorie/Source Files/CodierungAblauf/HammingCode.cpp"
                "Codierungstheorie/Header Files/CodierungAblauf/HammingCode.h"
                "Codierungstheorie/Source Files/CodierungAblauf/ReedMueller.cpp"
-               "Codierungstheorie/Header Files/CodierungAblauf/ReedMueller.h" "Codierungstheorie/Header Files/Task_6/ReedSolomonCode.cpp" "Codierungstheorie/Header Files/Task_6/ReedSolomonCode.h" "Codierungstheorie/Header Files/Task_6/Gruppe.cpp" "Codierungstheorie/Header Files/Task_6/Gruppe.h")
+               "Codierungstheorie/Header Files/CodierungAblauf/ReedMueller.h"
+               "Codierungstheorie/Header Files/Task_6/ReedSolomonCode.cpp"
+               "Codierungstheorie/Header Files/Task_6/ReedSolomonCode.h"
+               "Codierungstheorie/Header Files/Task_6/Gruppe.cpp"
+               "Codierungstheorie/Header Files/Task_6/Gruppe.h")
 
 target_include_directories(Codierungstheorie PUBLIC Codierungstheorie/Header Files)
 
@@ -135,28 +139,28 @@ target_include_directories(Task_4 PUBLIC Codierungstheorie/Header Files)
 
 
 add_executable(Task_5
-        "Codierungstheorie/Source Files/Task_5.cpp"
-        "Codierungstheorie/Header Files/Helper.h"
-        "Codierungstheorie/Source Files/ModularArithmetic.cpp"
-        "Codierungstheorie/Header Files/ModularArithmetic.h"
-        "Codierungstheorie/Header Files/Basis.h"
-        "Codierungstheorie/Source Files/Polynom.cpp"
-        "Codierungstheorie/Header Files/Polynom.h"
-        "Codierungstheorie/Source Files/EGF.cpp"
-        "Codierungstheorie/Header Files/EGF.h"
-        "Codierungstheorie/Header Files/ModularPolynomArithmetic.h"
-        "Codierungstheorie/Source Files/ModularPolynomArithmetic.cpp"
-        "Codierungstheorie/Source Files/Matrix.cpp"
-        "Codierungstheorie/Header Files/Matrix.h"
-        "Codierungstheorie/Header Files/CodierungAblauf/Kanal.h"
-        "Codierungstheorie/Source Files/CodierungAblauf/CodierungsAblauf.cpp"
-        "Codierungstheorie/Header Files/CodierungAblauf/CodierungsAblauf.h"
-        "Codierungstheorie/Header Files/CodierungAblauf/Code.h"
-        "Codierungstheorie/Source Files/CodierungAblauf/VariableErrorKanal.cpp"
-        "Codierungstheorie/Header Files/CodierungAblauf/VariableErrorKanal.h"
-        "Codierungstheorie/Source Files/CodierungAblauf/HammingCode.cpp"
-        "Codierungstheorie/Header Files/CodierungAblauf/HammingCode.h"
-        "Codierungstheorie/Source Files/CodierungAblauf/ReedMueller.cpp"
-        "Codierungstheorie/Header Files/CodierungAblauf/ReedMueller.h")
+               "Codierungstheorie/Source Files/Task_5.cpp"
+               "Codierungstheorie/Header Files/Helper.h"
+               "Codierungstheorie/Source Files/ModularArithmetic.cpp"
+               "Codierungstheorie/Header Files/ModularArithmetic.h"
+               "Codierungstheorie/Header Files/Basis.h"
+               "Codierungstheorie/Source Files/Polynom.cpp"
+               "Codierungstheorie/Header Files/Polynom.h"
+               "Codierungstheorie/Source Files/EGF.cpp"
+               "Codierungstheorie/Header Files/EGF.h"
+               "Codierungstheorie/Header Files/ModularPolynomArithmetic.h"
+               "Codierungstheorie/Source Files/ModularPolynomArithmetic.cpp"
+               "Codierungstheorie/Source Files/Matrix.cpp"
+               "Codierungstheorie/Header Files/Matrix.h"
+               "Codierungstheorie/Header Files/CodierungAblauf/Kanal.h"
+               "Codierungstheorie/Source Files/CodierungAblauf/CodierungsAblauf.cpp"
+               "Codierungstheorie/Header Files/CodierungAblauf/CodierungsAblauf.h"
+               "Codierungstheorie/Header Files/CodierungAblauf/Code.h"
+               "Codierungstheorie/Source Files/CodierungAblauf/VariableErrorKanal.cpp"
+               "Codierungstheorie/Header Files/CodierungAblauf/VariableErrorKanal.h"
+               "Codierungstheorie/Source Files/CodierungAblauf/HammingCode.cpp"
+               "Codierungstheorie/Header Files/CodierungAblauf/HammingCode.h"
+               "Codierungstheorie/Source Files/CodierungAblauf/ReedMueller.cpp"
+               "Codierungstheorie/Header Files/CodierungAblauf/ReedMueller.h")
 
 target_include_directories(Task_5 PUBLIC Codierungstheorie/Header Files)

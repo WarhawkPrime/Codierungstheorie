@@ -23,8 +23,8 @@ void sep(std::string);
 class Matrix {
 
   public:
-    const int rows; // Often M
-    const int cols; // Often N
+    int rows; // Often M
+    int cols; // Often N
     int p = 2;
 
     // Matrix() : rows(0), cols(0),egf(EGF::create_EGF_on_degree(cols)) {};
@@ -125,7 +125,7 @@ class Matrix {
     std::vector<Polynom> values;
 
   private:
-    const EGF egf;
+    EGF egf;
     int idx_of_max_value_in_col(int starting_row, int col_to_search);
 };
 
