@@ -2,6 +2,8 @@
 // Created by Noah Ruben on 10.01.23.
 //
 //#include "Header Files/Matrix.h"
+#include "Header Files/CodierungAblauf/CodierungsAblauf.h"
+#include "Header Files/CodierungAblauf/VariableErrorKanal.h"
 #include "Header Files/CodierungAblauf/ReedMueller.h"
 //#include "Header Files/SyndromTable.h"
 #include "doctest.h"
@@ -301,9 +303,34 @@ TEST_SUITE("Matrix tests" * doctest::description("egf")) {
 
     TEST_CASE("RM")
     {
+        // for R(m-2,m) -> n,k,d,q -> 2^m, 2^m -1 -m, 4,2
+        // 2,4 -> n,k,d,q -> 16, 11,4,2
         auto m = ReedMueller(1, 5);
-        std::cout << "m: " << std::endl;
+        std::cout << "Reed Mueller: " << std::endl;
         std::cout << m.generator_matrix.to_vector_str() << std::endl;
+
+        /*
+        auto ablauf = CodierungsAblauf();
+        ablauf.message = "Hello World!";
+
+        ablauf.kanal = new VariableErrorKanal(1);
+
+        auto code = new ReedMueller(2,4);
+        ablauf.code = code;
+
+        ablauf.run();
+
+        const Matrix &controlMatrix = code->control_matrix;
+        const Matrix &generatorMatrix = code->generator_matrix;
+
+        std::cout << "H  M: " << std::endl
+                  << controlMatrix.to_vector_str() << std::endl;
+        std::cout << "G  M: " << std::endl
+                  << generatorMatrix.to_vector_str() << std::endl;
+
+        delete ablauf.kanal;
+        delete code;
+         */
     }
 }
 

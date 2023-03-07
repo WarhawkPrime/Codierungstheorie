@@ -236,11 +236,8 @@ Polynom correct_codeword(Polynom codeword, Syndrom_table syndrom_table) {
         for (int i = 0; i < controlmatrix.rows; i++) {
             Polynom codeword(controlmatrix.get_polynom(i));
 
-            // compute the syndrome of the codeword
-            auto syndrome = MXA::polynom_matrix_multiplication(codeword, controlmatrix);
-
             // compute the Hamming distance between the received word and the codeword
-            Polynom distance = (received_word + syndrome.get_polynom(0)) % 2;
+            Polynom distance = (received_word + codeword) % 2;
 
             // if the Hamming distance is smaller than the minimum distance so far, update the minimum distance and the most likely codeword
             if (distance.get_non_zero_number() < min_distance) {
@@ -254,6 +251,147 @@ Polynom correct_codeword(Polynom codeword, Syndrom_table syndrom_table) {
 
         return decoded_message;
     }
+
+
+
+    Matrix ns_generate_reed_mueller(int r, int m)
+    {
+        std::cout << "r: " << r << "m: " << m << std::endl;
+
+
+        // 1xm identity matrix
+        if(m == 0)
+        {
+            std::vector<Polynom> values = {
+                    Polynom({1}, false)
+            };
+
+            auto res = Matrix(1, 1, values);
+            return res;
+        }
+        else if (r == 0)
+        {
+            std::cout << "last: " << std::endl;
+
+            int row_n = 1;
+            int col_n = pow(2, m);//1
+
+            std::cout << "last: " << col_n << std::endl;
+
+            // 2^m
+            auto res = Matrix(row_n, col_n);
+
+            res.add_polynom(Polynom( (pow(2, m)-1), false, col_n));
+
+            std::cout << "l " << std::endl;
+
+            /*
+            res.add_polynom(Polynom({1}));
+
+            for (int i = 1; i < col_n; i++)
+            {
+                std::cout << "i: " << i << std::endl;
+                res.set_coefficient(0, i, 1);
+            }
+             */
+
+            /*
+            auto p = Polynom({});
+
+            if (m == 1)
+            {
+                row_n = 1;
+                col_n = 2;
+                p = Polynom({1,1}, false);
+            }
+            else if (m == 2)
+            {
+                row_n = 1;
+                col_n = 4;
+                p = Polynom({1,1,1,1}, false);
+            }
+
+            auto res = Matrix(row_n, col_n);
+            res.add_polynom(p);
+            */
+
+            return res;
+        }
+        else // recursive
+        {
+            // generate G1 and G2
+
+            std::cout << "r: " << r-1 << std::endl;
+            std::cout << "m: " << m-1 << std::endl;
+
+            Matrix G1 = ns_generate_reed_mueller(r, m-1);
+            Matrix G2 = ns_generate_reed_mueller(r-1, m-1);
+
+            int row_number = G1.rows + G2.rows;
+            int col_number = G1.cols * 2;
+
+            std::cout << "row n: " << row_number << std::endl;
+            std::cout << "col n: " << col_number << std::endl;
+
+            // create 0 Matrix with needed size
+            std::vector<Polynom> p = std::vector<Polynom>();
+
+            for (int i = 0; i < row_number; i++) {
+                p.push_back(Polynom({0}, false));
+            }
+
+            std::cout << "l: " << p.size() << std::endl;
+
+            Matrix gen = Matrix(row_number, col_number, p);
+
+            std::cout << "^" << std::endl;
+
+            for (int i = 0; i < row_number; i++) {
+                gen.add_polynom(Polynom({0}, false));
+            }
+
+            // put matrix together
+            // G(r, m) := ( G(r, m-1) G(r, m-1)   )
+            //            ( 0       ) G(r-1, m-1) )
+
+            // upper Left rows == rows, cols == cols
+            for (int row = 0; row < G1.rows; row++)
+            {
+                for (int col = 0; col < G1.cols; col++)
+                {
+                    gen.set_coefficient(row, col, G1.get_coefficient(row, col));
+                }
+            }
+
+            // upper right
+            for (int row = 0; row < G1.rows; row++)
+            {
+                for (int col = 0 + G1.cols; col < (G1.cols *2); col++)
+                {
+                    gen.set_coefficient(row, col, G1.get_coefficient(row, col-G1.cols));
+                }
+            }
+
+            // lower right
+            for (int row = G1.rows; row < (G1.rows + G2.rows); row++)
+            {
+                for (int col = 0 + G1.cols; col < (G1.cols *2); col++)
+                {
+                    gen.set_coefficient(row, col, G2.get_coefficient(row-G1.rows, col-G1.cols));
+                }
+            }
+
+            // lower left stays 0
+
+            std::cout << "RM: " << std::endl;
+            std::cout << gen.to_vector_str() << std::endl;
+
+            // return Matrix
+            return gen;
+        }
+    }
+
+
 
 
 } // namespace MXA
@@ -399,13 +537,8 @@ void Matrix::to_canonical_form() {
 
 // Vorgehen mit einer augmented Matrix zur eventuellen Erstellung einer Generatormatrix
 Matrix Matrix::to_canonical_via_GJE(const int p) const {
+
     Matrix matrix_copy = Matrix(rows, cols, values);
-
-
-    std::cout << "matrix: " << std::endl;
-    std::cout << matrix_copy.to_vector_str() << std::endl;
-
-
     Matrix augmented_matrix = Matrix(rows, cols * 2, values);
 
     // init augmented matrix

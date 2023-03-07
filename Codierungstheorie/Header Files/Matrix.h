@@ -50,6 +50,7 @@ class Matrix {
      */
     explicit Matrix(std::vector<Polynom> values) : Matrix(values.size(), values[0].get_degree() + 1, values) {
         // Check if the vector is not empty
+
         if (values.empty()) {
             throw std::invalid_argument("Vector of Polynom objects cannot be empty.");
         }
@@ -72,6 +73,9 @@ class Matrix {
      * @param cols The number of columns in the matrix
      */
     Matrix(const int rows, const int cols) : Matrix(rows, cols, std::vector<Polynom>()){};
+
+    //Matrix(const int rows, const int cols) : rows(rows), cols(cols) {}
+
 
     void to_canonical_form();
 
@@ -192,7 +196,7 @@ public:
     }
 
 
-
+    std::unordered_map<std::shared_ptr<Matrix>, std::shared_ptr<Polynom>, MatrixHashFunction, MatrixEqualityFunction> syndrom_map;
     Polynom corr_codeword(Polynom codeword);
 
 private:
@@ -218,14 +222,14 @@ private:
 
     const Matrix _control_matrix;
 
-    std::unordered_map<std::shared_ptr<Matrix>, std::shared_ptr<Polynom>, MatrixHashFunction, MatrixEqualityFunction> syndrom_map;
+
 };
 
 
 
     Polynom maximum_likelihood_detection(Polynom received_word, Matrix controlmatrix, SyndromTable syndromtable);
 
-
+    Matrix ns_generate_reed_mueller(int r, int m);
 
 } // namespace MXA
 

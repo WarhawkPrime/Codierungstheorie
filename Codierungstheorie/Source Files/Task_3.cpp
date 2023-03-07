@@ -54,11 +54,20 @@ void sub_task_3() {
         Polynom({0, 0, 1}, false),
     });
 
+    /*
     MXA::Syndrom_table s = MXA::create_syndrom_table(std::make_shared<Matrix>(control));
 
     for (auto const &[syndrom, error] : s.syndrom_table) {
         std::cout << "syndrom: " << syndrom->to_vector_str() << " error: " << error->to_vector_str() << std::endl;
     }
+     */
+
+    MXA::SyndromTable st = MXA::SyndromTable(control);
+
+    for (auto const &[syndrom, error] : st.syndrom_map) {
+        std::cout << "syndrom: " << syndrom->to_vector_str() << " error: " << error->to_vector_str() << std::endl;
+    }
+
 }
 
 // 4. Implementieren Sie eine Routine, welche die Fehlerkorrektur mittels Maximum-Likelihood-Decodierung und Syndromtabelle durchführt.
@@ -80,12 +89,18 @@ void sub_task_4() {
     auto transpose_parity_check_matrix = parity_check_matrix.transpose();
 
     // create syndrom table
-    MXA::Syndrom_table syndrom_table = MXA::create_syndrom_table(std::make_shared<Matrix>(transpose_parity_check_matrix));
+
+    MXA::SyndromTable st = MXA::SyndromTable(transpose_parity_check_matrix);
+
+
+    //MXA::Syndrom_table syndrom_table = MXA::create_syndrom_table(std::make_shared<Matrix>(transpose_parity_check_matrix));
 
     // codeword 1 0 1 0 1 with error 0 0 0 0 1
     auto codeword_with_error = Polynom({1, 0, 1, 0, 0});
 
-    auto corrected_codeword = correct_codeword(codeword_with_error, syndrom_table);
+    //auto corrected_codeword = correct_codeword(codeword_with_error, syndrom_table);
+
+    auto corrected_codeword = st.corr_codeword(codeword_with_error);
 
     std::cout << " codeword with error: " << codeword_with_error.to_vector_str() << std::endl;
     std::cout << " corrected codeword : " << corrected_codeword.to_vector_str() << std::endl;
@@ -93,8 +108,8 @@ void sub_task_4() {
 
 // @TODO Dennis
 int main(int argc, char **argv) {
-    //sub_task_1();
-    //sub_task_2();
-    //sub_task_3();
-    //sub_task_4();
+    sub_task_1();
+    sub_task_2();
+    sub_task_3();
+    sub_task_4();
 }

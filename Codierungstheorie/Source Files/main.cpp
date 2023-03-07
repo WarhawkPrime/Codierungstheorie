@@ -1,12 +1,27 @@
 
-#include "Header Files/CodierungAblauf/CodierungsAblauf.h"
-#include "Header Files/CodierungAblauf/HammingCode.h"
-#include "Header Files/CodierungAblauf/VariableErrorKanal.h"
+//#include "Header Files/CodierungAblauf/CodierungsAblauf.h"
+//#include "Header Files/CodierungAblauf/HammingCode.h"
+//#include "Header Files/CodierungAblauf/VariableErrorKanal.h"
 #include "Header Files/CodierungAblauf/ReedMueller.h"
-#include "Header Files/ModularPolynomArithmetic.h"
+//#include "Header Files/ModularPolynomArithmetic.h"
 #include <memory>
 
 int main(int argc, char **argv) {
+
+    /*
+    std::cout << "test: " << std::endl;
+
+    auto o = MXA::ns_generate_reed_mueller(1,5);
+    std::cout << "o. " << std::endl;
+    std::cout << o.to_vector_str() << std::endl;
+
+    auto m = ReedMueller(1, 3);
+    std::cout << "m: " << std::endl;
+    //std::cout << m.generator_matrix.to_vector_str() << std::endl;
+
+    std::cout << "r" << std::endl;
+
+
     auto ablauf = CodierungsAblauf();
     ablauf.message = "Hello World!";
 
@@ -21,7 +36,9 @@ int main(int argc, char **argv) {
     // RM(r, m)
     //
 
+    // k >= 8
     // reed mueller cant generate the code c(8,4,3,2)
+    // 1,3 -> 8,4,4,2
     //auto code = new ReedMueller(1, 5);
 
     ablauf.code = code;
@@ -35,7 +52,11 @@ int main(int argc, char **argv) {
 
         std::cout << "HT M: " << controlMatrix.transpose().to_rows_as_numbers_str() << std::endl;
 
-     auto msg = Polynom(0b00001100101 /*0b1101*/, false);
+     auto msg = Polynom(0b00001100101 /*0b1101*/
+
+    /*
+    , false);
+
 
      auto enc = MXA::matrix_matrix_multiplication(Matrix({msg}), generatorMatrix).values[0];
      auto enc2 = code->encode(msg);
@@ -53,4 +74,5 @@ int main(int argc, char **argv) {
         }
 
     ablauf.run();
+    */
 }
