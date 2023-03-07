@@ -50,6 +50,7 @@ class Matrix {
      */
     explicit Matrix(std::vector<Polynom> values) : Matrix(values.size(), values[0].get_degree() + 1, values) {
         // Check if the vector is not empty
+
         if (values.empty()) {
             throw std::invalid_argument("Vector of Polynom objects cannot be empty.");
         }
@@ -72,6 +73,9 @@ class Matrix {
      * @param cols The number of columns in the matrix
      */
     Matrix(const int rows, const int cols) : Matrix(rows, cols, std::vector<Polynom>()){};
+
+    //Matrix(const int rows, const int cols) : rows(rows), cols(cols) {}
+
 
     void to_canonical_form();
 
@@ -111,6 +115,7 @@ class Matrix {
     }
 
     void add_polynom(Polynom p) { values.push_back(p); }
+    Polynom get_polynom(int row) {return values.at(row);}
     int get_coefficient(int row, int col) const { return values.at(row).get_coefficient(col); }
     void set_coefficient(int row, int col, int value) { values.at(row).set_coefficient(col, value); }
 
@@ -151,6 +156,7 @@ Matrix polynom_matrix_multiplication(std::shared_ptr<Polynom> p, Matrix m);
 Matrix matrix_matrix_multiplication(const Matrix &a, const Matrix &b);
 
 // Syndrom table
+
 struct Syndrom_table {
 
     Syndrom_table(std::shared_ptr<Matrix> pcm) : parity_check_matrix(pcm) {}
@@ -164,7 +170,7 @@ struct Syndrom_table {
 
 Syndrom_table create_syndrom_table(std::shared_ptr<Matrix> parity_check_matrix);
 
-Matrix calculate_syndrom(Matrix parity_check_matrix);
+Matrix calculate_syndrom(Polynom codeword, Matrix parity_check_matrix);
 
 /**
  * @brief this function takes an incoming codeword and its corresponding syndrom_table and attempts to return the corrected
@@ -174,6 +180,57 @@ Matrix calculate_syndrom(Matrix parity_check_matrix);
  * @return corrected codeword
  */
 Polynom correct_codeword(Polynom codeword, Syndrom_table syndrom_table);
+
+
+
+
+class SyndromTable {
+
+public:
+
+    void init_syndrom_table(Matrix control_matrix);
+
+    SyndromTable(const Matrix control_matrix) : _control_matrix(control_matrix) {
+
+        init_syndrom_table(control_matrix);
+    }
+
+
+    std::unordered_map<std::shared_ptr<Matrix>, std::shared_ptr<Polynom>, MatrixHashFunction, MatrixEqualityFunction> syndrom_map;
+    Polynom corr_codeword(Polynom codeword);
+
+private:
+
+    // hash function for matrix class
+    struct MatrixHashFunction {
+        size_t operator()(const std::shared_ptr<Matrix> &m) const {
+            // implementation of hash function
+            std::hash<std::string> string_hash;
+            return string_hash(m->to_vector_str());
+        }
+    };
+
+    // equality function for matrix class
+    struct MatrixEqualityFunction {
+        bool operator()(const std::shared_ptr<Matrix> &a, const std::shared_ptr<Matrix> &b) const {
+            return a->to_vector_str() == b->to_vector_str();
+        }
+    };
+
+    std::vector<std::shared_ptr<Polynom>> errors;
+    std::vector<std::shared_ptr<Matrix>> syndrom;
+
+    const Matrix _control_matrix;
+
+
+};
+
+
+
+    Polynom maximum_likelihood_detection(Polynom received_word, Matrix controlmatrix, SyndromTable syndromtable);
+
+    Matrix ns_generate_reed_mueller(int r, int m);
+
 } // namespace MXA
 
 #endif // CODIERUNGSTHEORIE_MATRIX_H
