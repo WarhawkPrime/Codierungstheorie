@@ -17,12 +17,6 @@ void rotate_vector(std::vector<int> &vec) {
     vec[0] = last;
 }
 
-Polynom ReedSolomonCode::decode(Polynom codeword) const {
-    return codeword;
-}
-Polynom ReedSolomonCode::encode(Polynom msg) const {
-    return msg;
-}
 ReedSolomonCode::ReedSolomonCode(
     int e,
     int _d,
@@ -88,8 +82,13 @@ void ReedSolomonCode::fill_control_matrix() {
     }
     std::vector<Polynom> c_matrix_values = std::vector<Polynom>();
     c_matrix_values.push_back(Polynom(padded_coefficients, false));
+
     for (int i = 0; i < pad; ++i) {
         rotate_vector(padded_coefficients);
+        /* Alternativ wäre auch ein shift mit alpha möglich:
+        auto shift_with_alpha = Polynom({gruppe.POW(alpha, i)});
+        auto shifted_C = gruppe.POLY_MUL(shift_with_alpha, control_polynomial);
+        */
         c_matrix_values.push_back(Polynom(padded_coefficients, false));
     }
     control_matrix = new Matrix(c_matrix_values);
@@ -107,8 +106,20 @@ void ReedSolomonCode::fill_generator_matrix() {
     g_matrix_values.push_back(Polynom(padded_coefficients, false));
     for (int i = 0; i < pad; ++i) {
         rotate_vector(padded_coefficients);
+        /* Alternativ wäre auch ein shift mit alpha möglich:
+        auto shift_with_alpha = Polynom({gruppe.POW(alpha, i)});
+        auto shifted_g = gruppe.POLY_MUL(shift_with_alpha, generator_polynomial);
+        */
         g_matrix_values.push_back(Polynom(padded_coefficients, false));
     }
     generator_matrix = new Matrix(g_matrix_values);
     std::cout << "G: " << generator_matrix->to_vector_str() << std::endl;
+}
+
+Polynom ReedSolomonCode::decode(Polynom codeword) const {
+    return codeword;
+}
+Polynom ReedSolomonCode::encode(Polynom msg) const {
+    // Eigene Matrixmultiplikation in der Gruppe...
+    return msg;
 }
