@@ -17,12 +17,6 @@ void rotate_vector(std::vector<int> &vec) {
     vec[0] = last;
 }
 
-Polynom ReedSolomonCode::decode(Polynom codeword) const {
-    return codeword;
-}
-Polynom ReedSolomonCode::encode(Polynom msg) const {
-    return msg;
-}
 ReedSolomonCode::ReedSolomonCode(
     int e,
     int _d,
@@ -83,13 +77,29 @@ void ReedSolomonCode::fill_control_matrix() {
     // Pad g(x)
     std::vector<int> padded_coefficients = std::vector<int>(n, 0);
 
-    for (int i = 0; i < control_polynomial.get_coefficients().size(); ++i) {
+
+    /*
+     * for (int i = 0; i < control_polynomial.get_coefficients().size(); ++i) {
         padded_coefficients.at(i) = control_polynomial.get_coefficient(i);
     }
+     */
+
+    // reverse h(x) werte für H
+    for (int i = control_polynomial.get_degree(); i >= 0; --i) {
+        padded_coefficients.at(i) = control_polynomial.get_coefficients().at(i);
+    }
+
     std::vector<Polynom> c_matrix_values = std::vector<Polynom>();
     c_matrix_values.push_back(Polynom(padded_coefficients, false));
+
     for (int i = 0; i < pad; ++i) {
         rotate_vector(padded_coefficients);
+        /* Alternativ wäre auch ein shift mit alpha möglich:
+        auto shift_with_alpha = Polynom({gruppe.POW(alpha, i)});
+        auto shifted_C = gruppe.POLY_MUL(shift_with_alpha, control_polynomial);
+
+         Vlt. geht das auch nicht da in H die werte von h(x) umgekehrt sind.
+        */
         c_matrix_values.push_back(Polynom(padded_coefficients, false));
     }
     control_matrix = new Matrix(c_matrix_values);
@@ -107,11 +117,24 @@ void ReedSolomonCode::fill_generator_matrix() {
     g_matrix_values.push_back(Polynom(padded_coefficients, false));
     for (int i = 0; i < pad; ++i) {
         rotate_vector(padded_coefficients);
+        /* Alternativ wäre auch ein shift mit alpha möglich:
+        auto shift_with_alpha = Polynom({gruppe.POW(alpha, i)});
+        auto shifted_g = gruppe.POLY_MUL(shift_with_alpha, generator_polynomial);
+        */
         g_matrix_values.push_back(Polynom(padded_coefficients, false));
     }
     generator_matrix = new Matrix(g_matrix_values);
     std::cout << "G: " << generator_matrix->to_vector_str() << std::endl;
 }
+
+Polynom ReedSolomonCode::decode(Polynom codeword) const {
+    return codeword;
+}
+Polynom ReedSolomonCode::encode(Polynom msg) const {
+    // Eigene Matrixmultiplikation in der Gruppe...
+    return msg;
+}
+
 
 /**
 Vandermonde Matrix:
