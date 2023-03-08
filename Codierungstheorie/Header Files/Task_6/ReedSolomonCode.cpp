@@ -52,7 +52,7 @@ void ReedSolomonCode::calculate_generator_and_control_polynomial(Polynom &genera
     // Generate divisors
     for (int i = 0; i < teiler_anz; ++i) {
         // Teiler in der Form: x + a^i
-        auto a_pow_element = ((-gruppe.POW(alpha, i)) + q) % 8;
+        auto a_pow_element = ((-gruppe.POW(alpha, i)) + q); //% 8;
         teiler.push_back(Polynom({a_pow_element, 1}, false));
     }
 
@@ -111,4 +111,74 @@ void ReedSolomonCode::fill_generator_matrix() {
     }
     generator_matrix = new Matrix(g_matrix_values);
     std::cout << "G: " << generator_matrix->to_vector_str() << std::endl;
+}
+
+/**
+Vandermonde Matrix:
+
+1    a_1    a_1^2        a_1^(q-2)
+1    a_2    a_2^2        a_2^(q-2)
+1    a_3    a_3^2        a3^(q-2)
+.
+.
+.
+1 *0   a^(d-1)*1    a^((d-1)*2)    a^((d-1)*(q-2))
+
+
+
+a^1*0               a^1*(q-2)
+a^2*0
+a^3*0
+
+a^(d-1)*0           a^(d-1)*(q-2)
+
+
+ * @return
+ */
+Matrix ReedSolomonCode::get_Vandermonde_matrix()
+{
+    //int e;
+    //int q;
+    const int a = alpha;
+
+    //std::cout << "alpha: " << a << "q: " << q << "d: " << d << std::endl;
+
+    // 2 <= d <= q-2
+
+    // size of Matrix.
+    // Rows-> 1 <= i <= d-1
+    // Cols -> 0 <= j <= q-2
+    int row_number = d;     // up to d-1 elements->d rows   0..d-1
+    int col_number = q-1;   // up to q-2 elements->q-1 cols 0..q-2
+
+    //std::cout << "row: " << row_number << "col: " << col_number << std::endl;
+
+    // init 0 Matrix
+    Matrix vm = Matrix(row_number, col_number);
+
+    for (int i = 0; i < row_number; i++) {
+        vm.add_polynom(Polynom({0}, false));
+    }
+
+    // fill matrix
+
+    //
+    for (int d = 1; d <= row_number; d++)
+    {
+        //
+        for (int q = 0; q < col_number; q++)
+        {
+
+            //std::cout << "a: " << a << ", d:" << d << ", q:" << q << std::endl;
+            //std::cout << "a: " << a << "d*q" << d*q << std::endl;
+            //auto a_element = gruppe.POW(a, d*q  ); // gruppe.MUL( (d), (q) // (-gruppe.POW(alpha, i)) + q); //% 8;
+
+            auto a_element = pow(a, d*q);
+
+            //std::cout << "a el: " << a_element << std::endl;
+            vm.set_coefficient(d-1, q, a_element);
+        }
+    }
+
+    return vm;
 }

@@ -98,7 +98,12 @@ void sub_task_4() {
 
     // auto corrected_codeword = correct_codeword(codeword_with_error, syndrom_table);
 
-    auto corrected_codeword = st.corr_codeword(codeword_with_error);
+    //auto corrected_codeword = st.corr_codeword(codeword_with_error);
+    //auto corrected_codeword = st.corr_codeword(codeword_with_error);
+
+    auto corrected_codeword = MXA::maximum_likelihood_detection(codeword_with_error, transpose_parity_check_matrix, st);
+
+
 
     std::cout << " codeword with error: " << codeword_with_error.to_vector_str() << std::endl;
     std::cout << " corrected codeword : " << corrected_codeword.to_vector_str() << std::endl;

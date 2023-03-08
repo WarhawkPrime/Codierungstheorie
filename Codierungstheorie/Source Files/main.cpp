@@ -108,5 +108,8 @@ int main(int argc, char **argv) {
     auto code = ReedSolomonCode(e, 5, g);
     code.fill_generator_and_control_matrix();
 
+    std::cout << "Vandermonde: " << std::endl;
+    std::cout << code.get_Vandermonde_matrix().to_vector_str() << std::endl;
+
     return 0;
 }

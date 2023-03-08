@@ -29,6 +29,8 @@ class ReedSolomonCode : public Code {
     void fill_generator_matrix();
     void fill_control_matrix();
 
+    int get_alpha() const {return alpha;}
+
   public:
     explicit ReedSolomonCode(int e, int _d, Gruppe &gruppe);
     /**
@@ -37,6 +39,8 @@ class ReedSolomonCode : public Code {
      */
     void calculate_generator_and_control_polynomial(Polynom &generator_polynomial, Polynom &control_polynomial);
     void fill_generator_and_control_matrix();
+
+    Matrix get_Vandermonde_matrix();
 };
 
 #endif // CODIERUNGSTHEORIE_REEDSOLOMONCODE_H
