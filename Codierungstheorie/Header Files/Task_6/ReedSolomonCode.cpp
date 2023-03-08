@@ -77,9 +77,11 @@ void ReedSolomonCode::fill_control_matrix() {
     // Pad g(x)
     std::vector<int> padded_coefficients = std::vector<int>(n, 0);
 
-    for (int i = 0; i < control_polynomial.get_coefficients().size(); ++i) {
-        padded_coefficients.at(i) = control_polynomial.get_coefficient(i);
+    // reverse h(x) werte für H
+    for (int i = control_polynomial.get_degree(); i >= 0; --i) {
+        padded_coefficients.at(i) = control_polynomial.get_coefficients().at(i);
     }
+
     std::vector<Polynom> c_matrix_values = std::vector<Polynom>();
     c_matrix_values.push_back(Polynom(padded_coefficients, false));
 
@@ -88,6 +90,8 @@ void ReedSolomonCode::fill_control_matrix() {
         /* Alternativ wäre auch ein shift mit alpha möglich:
         auto shift_with_alpha = Polynom({gruppe.POW(alpha, i)});
         auto shifted_C = gruppe.POLY_MUL(shift_with_alpha, control_polynomial);
+
+         Vlt. geht das auch nicht da in H die werte von h(x) umgekehrt sind.
         */
         c_matrix_values.push_back(Polynom(padded_coefficients, false));
     }
