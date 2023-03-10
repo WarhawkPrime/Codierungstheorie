@@ -1,7 +1,8 @@
 # How to use this project
 
-Öffne diesen Ordner mit einer [Godot 4](https://godotengine.org/article/dev-snapshot-godot-4-0-beta-10#downloads) beta
+Öffne diesen Ordner mit [Godot 4](https://godotengine.org)
 
-Oder starte die [MatrixVisualisation](MatrixVisualisation.console.exe) Anwendung (Win10), fast render only ...
+This is how is works:
 
-Damit die Anwendung startet muss auch [MatrixVisualisation.pck](MatrixVisualisation.pck) vorhanden sein.
+[![Video of the Programm working](https://youtu.be/Zp5MMOwEn70)](https://youtu.be/Zp5MMOwEn70)
+

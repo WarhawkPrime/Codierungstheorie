@@ -8,16 +8,6 @@
 
 config_version=5
 
-_global_script_classes=[{
-"base": "ColorRect",
-"class": &"MatrixCell",
-"language": &"GDScript",
-"path": "res://MatrixCell.gd"
-}]
-_global_script_class_icons={
-"MatrixCell": ""
-}
-
 [application]
 
 config/name="MultMatrix"
@@ -31,6 +21,10 @@ window/size/viewport_width=1600
 window/size/viewport_height=1024
 window/size/resizable=false
 window/size/borderless=true
+
+[editor]
+
+movie_writer/movie_file="D:/dev/uni/Codierungstheorie/MultMatrix/mov.avi"
 
 [rendering]
 
