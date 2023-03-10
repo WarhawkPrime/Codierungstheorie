@@ -16,7 +16,7 @@ class Gruppe {
 
     int ADD(int a, int b) const;
     int MUL(int a, int b) const;
-    Polynom POLY_MUL(Polynom &a, Polynom &b) const;
+    Polynom POLY_MUL(const Polynom &a, const Polynom &b) const;
     int POW(int a, int e) const;
 
     Gruppe(int q, const std::vector<std::vector<int>> &addTable, const std::vector<std::vector<int>> &mulTable, const std::vector<int> &elements);

@@ -34,24 +34,24 @@ int Gruppe::POW(int a, int e) const {
 }
 
 int Gruppe::find_primitive() const {
-    for (int a = 2; a < q; ++a) { // Start bei 2 weil 0^x = 0 und 1^x = 1
+    for (int element_of_gf = 2; element_of_gf < q; ++element_of_gf) { // Start bei 2 weil 0^x = 0 und 1^x = 1
         auto is_primitive = true;
         for (int e = 1; e < q - 1; ++e) {
-            auto power = POW(a, e);
-            if (power == 1) {
+            auto result = POW(element_of_gf, e);
+            if (result == 1) {
                 is_primitive = false;
                 break;
             }
         }
         if (is_primitive) {
-            return a;
+            return element_of_gf;
         }
     }
     std::cerr << "NO primitive found";
     exit(1); // NO primitive found;
 }
 
-Polynom Gruppe::POLY_MUL(Polynom &a, Polynom &b) const {
+Polynom Gruppe::POLY_MUL(const Polynom &a, const Polynom &b) const {
     unsigned int result_size = a.get_coefficients().size() + b.get_coefficients().size() - 1;
 
     std::vector<int> result_coefficients(result_size, 0);

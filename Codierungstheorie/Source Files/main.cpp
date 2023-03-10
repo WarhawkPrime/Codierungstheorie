@@ -106,7 +106,8 @@ int main(int argc, char **argv) {
     Polynom G = Polynom(0);
 
     auto code = ReedSolomonCode(e, 5, g);
-    code.fill_generator_and_control_matrix();
+
+    std::cout << "g(x)*h(x)= " << g.POLY_MUL(code.control_polynomial, code.generator_polynomial).to_polynom_str() << std::endl;
 
     std::cout << "Vandermonde: " << std::endl;
     std::cout << code.get_Vandermonde_matrix().to_vector_str() << std::endl;

@@ -46,16 +46,34 @@ void ReedSolomonCode::calculate_generator_and_control_polynomial(Polynom &genera
     // Generate divisors
     for (int i = 0; i < teiler_anz; ++i) {
         // Teiler in der Form: x + a^i
-        auto a_pow_element = ((-gruppe.POW(alpha, i)) + q); //% 8;
+        auto a_pow_element = ((q - gruppe.POW(alpha, i)));
         teiler.push_back(Polynom({a_pow_element, 1}, false));
     }
 
-    auto teiler_g = std::vector<Polynom>(teiler.begin() + 1, teiler.begin() + (d - 1));
+    auto teiler_g = std::vector<Polynom>(teiler.begin() + 1, teiler.begin() + d);
 
     // Restliche Teiler plus x-a^0
     auto teiler_h = std::vector<Polynom>(teiler.begin() + d, teiler.end());
     teiler_h.push_back(teiler.at(0));
 
+    /* Debug
+    std::cout << "ALL: " << std::endl;
+    for (const auto &item : teiler) {
+        std::cout << item.to_polynom_str() << std::endl;
+    }
+    std::cout << std::endl;
+
+    std::cout << "G: " << std::endl;
+    for (const auto &item : teiler_g) {
+        std::cout << item.to_polynom_str() << std::endl;
+    }
+    std::cout << std::endl;
+
+    std::cout << "H: " << std::endl;
+    for (const auto &item : teiler_h) {
+        std::cout << item.to_polynom_str() << std::endl;
+    }
+    */
     generator_polynomial = Polynom(1, false);
     for (auto item : teiler_g) {
         generator_polynomial = gruppe.POLY_MUL(generator_polynomial, item);
@@ -77,16 +95,9 @@ void ReedSolomonCode::fill_control_matrix() {
     // Pad g(x)
     std::vector<int> padded_coefficients = std::vector<int>(n, 0);
 
-
-    /*
-     * for (int i = 0; i < control_polynomial.get_coefficients().size(); ++i) {
-        padded_coefficients.at(i) = control_polynomial.get_coefficient(i);
-    }
-     */
-
     // reverse h(x) werte für H
     for (int i = control_polynomial.get_degree(); i >= 0; --i) {
-        padded_coefficients.at(i) = control_polynomial.get_coefficients().at(i);
+        padded_coefficients.at(control_polynomial.get_degree() - i) = control_polynomial.get_coefficients().at(i);
     }
 
     std::vector<Polynom> c_matrix_values = std::vector<Polynom>();
@@ -130,8 +141,16 @@ void ReedSolomonCode::fill_generator_matrix() {
 Polynom ReedSolomonCode::decode(Polynom codeword) const {
     return codeword;
 }
+
 Polynom ReedSolomonCode::encode(Polynom msg) const {
     // Eigene Matrixmultiplikation in der Gruppe...
+    /* m * g(x) = c % x^n-1
+    auto result = gruppe.POLY_MUL(msg, generator_polynomial);
+    auto s = Polynom(0);
+    auto xhochiwas = Polynom(pow(2,n)+1);
+    MPA::m_mod(result, xhochiwas, result, s, 2);
+    return result;
+     */
     return msg;
 }
 

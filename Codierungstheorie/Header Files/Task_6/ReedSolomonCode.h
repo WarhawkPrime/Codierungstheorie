@@ -18,11 +18,13 @@ class ReedSolomonCode : public Code {
     Polynom decode(Polynom codeword) const override;
     Polynom encode(Polynom msg) const override;
 
+    Polynom control_polynomial = Polynom(0);
+
+    Polynom generator_polynomial = Polynom(0);
+
   private:
     Gruppe gruppe;
     int alpha;
-    Polynom generator_polynomial = Polynom(0);
-    Polynom control_polynomial = Polynom(0);
     Matrix *control_matrix = new Matrix(0, 0);   // DAS IST DOCH DUMM UND MUSS ANDERS GEHEN
     Matrix *generator_matrix = new Matrix(0, 0); // DAS IST DOCH DUMM UND MUSS ANDERS GEHEN
 
