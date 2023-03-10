@@ -6,6 +6,7 @@
 #include "Header Files/CodierungAblauf/ReedMueller.h"
 #include "Header Files/CodierungAblauf/VariableErrorKanal.h"
 
+// in MatrixTests.h
 int main(int argc, char **argv) {
     // auto ablauf = CodierungsAblauf();
     // ablauf.message = "Hello World!";

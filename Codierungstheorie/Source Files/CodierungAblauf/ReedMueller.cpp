@@ -168,9 +168,6 @@ Matrix ReedMueller::generate_reed_mueller(int r, int m) {
 
         // lower left stays 0
 
-        std::cout << "RM: " << std::endl;
-        std::cout << gen.to_vector_str() << std::endl;
-
         // return Matrix
         return gen;
     }

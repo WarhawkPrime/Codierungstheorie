@@ -23,7 +23,7 @@ TEST_SUITE("Polynom Tests" * doctest::description("optional")) {
 
         classToTest = Polynom({1, 0, 0, 0, 0});
 
-        CHECK_EQ(classToTest.get_degree(), 0);
+        CHECK_EQ(classToTest.get_degree(), 4);
 
         classToTest = Polynom({0, 0, 1, 0, 1});
 
@@ -53,8 +53,8 @@ TEST_SUITE("Polynom Tests" * doctest::description("optional")) {
         auto vector_str = classToTest.to_vector_str();
         auto asInt = classToTest.as_int();
 
-        CHECK(polynom_str == "0 + 1x^1 + 1x^2");
-        CHECK(vector_str == "(0, 1, 1)");
+        CHECK(polynom_str == "0 + 1x^1 + 1x^2 + 0x^3");
+        CHECK(vector_str == "(0, 1, 1, 0)");
         CHECK_EQ(asInt, 6);
 
         auto coeff2 = {1, 1};
@@ -174,7 +174,7 @@ TEST_SUITE("Polynom Tests" * doctest::description("optional")) {
 
         auto p3 = a * 0;
 
-        CHECK(p3.to_vector_str() == "(0)");
+        CHECK(p3.to_vector_str() == "(0, 0, 0)");
     }
 
     TEST_CASE("Polynom modolo integer") {
@@ -187,7 +187,7 @@ TEST_SUITE("Polynom Tests" * doctest::description("optional")) {
 
         auto result = a % 2;
 
-        CHECK_EQ(result.to_vector_str(), "(1, 1)");
+        CHECK_EQ(result.to_vector_str(), "(1, 1, 0)");
 
         result = b % 3;
 

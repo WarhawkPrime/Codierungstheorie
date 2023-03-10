@@ -56,7 +56,11 @@ add_executable(Testlab
                "Codierungstheorie/Header Files/Matrix.h"
                "Testlab/Header Files/MatrixTests.h"
                "Codierungstheorie/Source Files/CodierungAblauf/ReedMueller.cpp"
-               "Codierungstheorie/Header Files/CodierungAblauf/ReedMueller.h" "Codierungstheorie/Header Files/Task_6/ReedSolomonCode.cpp" "Codierungstheorie/Header Files/Task_6/ReedSolomonCode.h")
+               "Codierungstheorie/Header Files/CodierungAblauf/ReedMueller.h"
+                "Codierungstheorie/Header Files/Task_6/Gruppe.h"
+                "Codierungstheorie/Header Files/Task_6/Gruppe.cpp"
+                "Codierungstheorie/Header Files/Task_6/ReedSolomonCode.cpp"
+                "Codierungstheorie/Header Files/Task_6/ReedSolomonCode.h")
 
 
 target_include_directories(Testlab PUBLIC Testlab/Header Files)

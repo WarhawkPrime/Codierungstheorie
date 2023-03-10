@@ -294,7 +294,7 @@ TEST_SUITE("Matrix tests" * doctest::description("egf")) {
     TEST_CASE("RM") {
         // for R(m-2,m) -> n,k,d,q -> 2^m, 2^m -1 -m, 4,2
         // 2,4 -> n,k,d,q -> 16, 11,4,2
-        auto m = ReedMueller(1, 5);
+        auto m = ReedMueller(2, 4);
         std::cout << "m: " << std::endl;
         std::cout << m.generator_matrix.to_vector_str() << std::endl;
 
